@@ -22,11 +22,11 @@ import android.util.Log;
  * - Data Traffic
  */
 public class PeriodicDataCollector extends IntentService {
-    private static final String ACTION_RAM = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.RAM";
-    private static final String EXTRA_RAM_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.extra.PARAM1";
-    private static final String EXTRA_RAM_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.extra.PARAM2";
+    public static final int ACTION_RAM_REQUEST_CODE = 1;
+    public static final String ACTION_RAM = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.RAM";
 
-    private static final String ACTION_CPU = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.CPU";
+    public static final int ACTION_CPU_REQUEST_CODE = 2;
+    public static final String ACTION_CPU = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.CPU";
 
     public PeriodicDataCollector() {
         super("PeriodicDataCollector");
@@ -39,11 +39,9 @@ public class PeriodicDataCollector extends IntentService {
      * @see IntentService
      */
     // TODO: Customize helper method
-    public static void startActionRAM(Context context, String param1, String param2) {
+    public static void startActionRAM(Context context) {
         Intent intent = new Intent(context, PeriodicDataCollector.class);
         intent.setAction(ACTION_RAM);
-        intent.putExtra(EXTRA_RAM_PARAM1, param1);
-        intent.putExtra(EXTRA_RAM_PARAM2, param2);
         context.startService(intent);
     }
 
@@ -66,9 +64,7 @@ public class PeriodicDataCollector extends IntentService {
             final String action = intent.getAction();
 
             if (ACTION_RAM.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_RAM_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_RAM_PARAM2);
-                handleActionRAM(param1, param2);
+                handleActionRAM();
             }
             else if (ACTION_CPU.equals(action)) {
                 handleActionCPU();
@@ -80,9 +76,9 @@ public class PeriodicDataCollector extends IntentService {
      * Handle action RAM in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionRAM(String param1, String param2) {
+    private void handleActionRAM() {
         // TODO: Handle action RAM
-        Log.i( "RAM", param1 + " " + param2);
+        Log.i( "RAM", "RAM service called successfully");
     }
 
     /**
@@ -90,7 +86,7 @@ public class PeriodicDataCollector extends IntentService {
      * parameters.
      */
     private void handleActionCPU() {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+        // TODO: Handle action CPU
+        Log.i( "CPU", "CPU service called successfully");
     }
 }

@@ -20,6 +20,12 @@
             android:name=".Collectors.PeriodicDataCollector.PeriodicDataCollector"
             android:exported="false">
         </service>
+
+        <receiver
+            android:name=".Collectors.CollectorsReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
     </application>
 
 </manifest>
