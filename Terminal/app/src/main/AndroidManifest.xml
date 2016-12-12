@@ -25,12 +25,17 @@
             android:name=".Collectors.CollectorsReceiver"
             android:enabled="true"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
         </receiver>
-        <receiver
+
+        <service
             android:name=".Collectors.EventfulDataCollector.EventfulDataCollector"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

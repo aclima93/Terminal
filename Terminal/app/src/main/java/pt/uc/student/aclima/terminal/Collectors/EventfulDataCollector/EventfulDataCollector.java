@@ -1,17 +1,59 @@
 package pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector;
 
-import android.content.BroadcastReceiver;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-public class EventfulDataCollector extends BroadcastReceiver {
+import static android.content.ContentValues.TAG;
+
+/**
+ * An {@link IntentService} subclass for handling asynchronous task requests in
+ * a service on a separate handler thread.
+ * <p>
+ * TODO: Customize class - update intent actions, extra parameters and static
+ * helper methods.
+ */
+public class EventfulDataCollector extends IntentService {
+
+    private static final String ACTION_TIME_CHANGED = "pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.action.TIME_CHANGED";
+    private static final String EXTRA_TIME_CHANGED_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.extra.TIME_CHANGED_PARAM1";
+
     public EventfulDataCollector() {
+        super("EventfulDataCollector");
+    }
+
+    /**
+     * Starts this service to perform action Foo with the given parameters. If
+     * the service is already performing a task this action will be queued.
+     *
+     * @see IntentService
+     */
+    // TODO: Customize helper method
+    public static void startActionTimeChanged(Context context, String param1) {
+        Intent intent = new Intent(context, EventfulDataCollector.class);
+        intent.setAction(ACTION_TIME_CHANGED);
+        intent.putExtra(EXTRA_TIME_CHANGED_PARAM1, param1);
+        context.startService(intent);
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-        throw new UnsupportedOperationException("Not yet implemented");
+    protected void onHandleIntent(Intent intent) {
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (action.equals(ACTION_TIME_CHANGED)) {
+                final String param1 = intent.getStringExtra(EXTRA_TIME_CHANGED_PARAM1);
+                handleActionTimeChanged(param1);
+            }
+        }
+    }
+
+    /**
+     * Handle action Foo in the provided background thread with the provided
+     * parameters.
+     */
+    private void handleActionTimeChanged(String newTime) {
+        Log.d("TIME_CHANGED", "TIME_CHANGED service called");
+        Log.d(TAG, "changed time: " + newTime);
     }
 }

@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.Date;
+
+import pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.EventfulDataCollector;
 import pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicDataCollector;
 
 import static pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicDataCollector.ACTION_CPU;
@@ -20,11 +23,17 @@ public class CollectorsReceiver extends BroadcastReceiver {
 
         final String action = intent.getAction();
 
-        if (ACTION_RAM.equals(action)) {
+        if (action.equals(ACTION_RAM)) {
             PeriodicDataCollector.startActionRAM(context);
         }
-        else if (ACTION_CPU.equals(action)) {
+        else if (action.equals(ACTION_CPU)) {
             PeriodicDataCollector.startActionCPU(context);
+        }
+        else if (action.equals(Intent.ACTION_TIME_CHANGED)
+                || action.equals(Intent.ACTION_DATE_CHANGED)
+                || action.equals(Intent.ACTION_TIMEZONE_CHANGED)) {
+
+            EventfulDataCollector.startActionTimeChanged(context, new Date(System.currentTimeMillis()).toString());
         }
     }
 }

@@ -17,9 +17,21 @@ public class CollectorsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collectors);
 
+        //schedulePeriodicAlarms();
+    }
+
+    /**
+     * Schedule the Periodic Data Collector Alarms
+     * */
+    private void schedulePeriodicAlarms() {
+
+        // RAM
         scheduleAlarm(PeriodicDataCollector.ACTION_RAM_REQUEST_CODE, PeriodicDataCollector.ACTION_RAM, 5 * 1000);
 
+        // CPU
         scheduleAlarm(PeriodicDataCollector.ACTION_CPU_REQUEST_CODE, PeriodicDataCollector.ACTION_CPU, 15 * 1000);
+
+
     }
 
     // Setup a recurring alarm every 5 seconds
