@@ -92,8 +92,7 @@ public class PeriodicDataCollector extends IntentService {
      * parameters.
      */
     private void handleActionRAM() {
-        // TODO: Handle action RAM
-        Log.i( "RAM", "RAM service called successfully");
+        Log.d( "RAM", "RAM service called");
         getRAMInfo();
     }
 
@@ -103,7 +102,7 @@ public class PeriodicDataCollector extends IntentService {
      */
     private void handleActionCPU() {
         // TODO: Handle action CPU
-        Log.i( "CPU", "CPU service called successfully");
+        Log.d( "CPU", "CPU service called successfully");
     }
 
     public void getRAMInfo(){
