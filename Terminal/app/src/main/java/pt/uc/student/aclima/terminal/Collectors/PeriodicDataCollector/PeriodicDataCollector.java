@@ -31,8 +31,6 @@ import static android.content.ContentValues.TAG;
  */
 public class PeriodicDataCollector extends IntentService {
 
-    private static Context mContext;
-
     public static final int ACTION_RAM_REQUEST_CODE = 1;
     public static final String ACTION_RAM = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.RAM";
 
@@ -51,7 +49,6 @@ public class PeriodicDataCollector extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionRAM(Context context) {
-        mContext = context;
 
         Intent intent = new Intent(context, PeriodicDataCollector.class);
         intent.setAction(ACTION_RAM);
@@ -66,7 +63,6 @@ public class PeriodicDataCollector extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionCPU(Context context) {
-        mContext = context;
 
         Intent intent = new Intent(context, PeriodicDataCollector.class);
         intent.setAction(ACTION_CPU);
@@ -107,10 +103,12 @@ public class PeriodicDataCollector extends IntentService {
 
     public void getRAMInfo(){
 
-        if(mContext != null) {
+        Context context = getApplicationContext();
+
+        if(context != null) {
 
             // get device RAM info
-            ActivityManager activityManager = (ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE);
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
 
