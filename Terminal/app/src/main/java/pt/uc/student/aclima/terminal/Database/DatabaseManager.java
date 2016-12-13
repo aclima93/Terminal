@@ -3,11 +3,7 @@ package pt.uc.student.aclima.terminal.Database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
-
-import java.io.ByteArrayOutputStream;
 
 import pt.uc.student.aclima.terminal.Database.Tables.AggregatedEventfulMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.AggregatedPeriodicMeasurementsTable;
@@ -37,7 +33,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         aggregatedEventfulMeasurementsTable = new AggregatedEventfulMeasurementsTable(this);
         aggregatedPeriodicMeasurementsTable = new AggregatedPeriodicMeasurementsTable(this);
 
-        //context.deleteDatabase(DATABASE_NAME); // TODO: comment me
+        //context.deleteDatabase(DATABASE_NAME); // TODO: should i consider this as an option ?
     }
 
     @Override
@@ -51,14 +47,15 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         Log.d("onUpgrade", "Dropping tables...");
 
         // Drop older tables
-        db.execSQL("DROP TABLE IF EXISTS " + SubjectsTableManager.SUBJECTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TopicsTableManager.TOPICS);
-        db.execSQL("DROP TABLE IF EXISTS " + EntriesTableManager.ENTRIES);
-        db.execSQL("DROP TABLE IF EXISTS " + AnswersTableManager.ANSWERS);
+        db.execSQL("DROP TABLE IF EXISTS " + PeriodicMeasurementsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EventfulMeasurementsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + OneTimeMeasurementsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AggregatedPeriodicMeasurementsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AggregatedEventfulMeasurementsTable.TABLE_NAME);
 
         Log.d("onUpgrade", "Dropped tables.");
 
-        // create fresh books table
+        // create new tables
         createDatabase(db);
     }
 
@@ -74,68 +71,67 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
             Log.d("createDatabase", "Creating tables...");
 
-            // Subjects table
-            database.execSQL("CREATE TABLE " + SubjectsTableManager.SUBJECTS + " ( "
-                    + SubjectsTableManager.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + SubjectsTableManager.NAME + " TEXT, "
-                    + SubjectsTableManager.DESCRIPTION + " TEXT, "
-                    + SubjectsTableManager.ICON + " BLOB)");
+            // PeriodicMeasurementsTable
+            database.execSQL("CREATE TABLE " + PeriodicMeasurementsTable.TABLE_NAME + " ( "
+                    + PeriodicMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + PeriodicMeasurementsTable.NAME + " TEXT, "
+                    + PeriodicMeasurementsTable.VALUE + " TEXT, "
+                    + PeriodicMeasurementsTable.TIMESTAMP + " DATETIME)");
 
-            // Topics table
-            database.execSQL("CREATE TABLE " + TopicsTableManager.TOPICS + " ( "
-                    + TopicsTableManager.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + TopicsTableManager.SUBJECT_ID + " INTEGER, "
-                    + TopicsTableManager.NAME + " TEXT, "
-                    + TopicsTableManager.DESCRIPTION + " TEXT, "
-                    + TopicsTableManager.ICON + " BLOB)");
+            // EventfulMeasurementsTable
+            database.execSQL("CREATE TABLE " + EventfulMeasurementsTable.TABLE_NAME + " ( "
+                    + EventfulMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + EventfulMeasurementsTable.NAME + " TEXT, "
+                    + EventfulMeasurementsTable.VALUE + " TEXT, "
+                    + EventfulMeasurementsTable.TIMESTAMP + " DATETIME)");
 
-            // Entries table
-            database.execSQL("CREATE TABLE " + EntriesTableManager.ENTRIES + " ( "
-                    + EntriesTableManager.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + EntriesTableManager.TOPIC_ID + " INTEGER, "
-                    + EntriesTableManager.QUESTION + " TEXT, "
-                    + EntriesTableManager.IMAGE + " BLOB)");
+            // OneTimeMeasurementsTable
+            database.execSQL("CREATE TABLE " + OneTimeMeasurementsTable.TABLE_NAME + " ( "
+                    + OneTimeMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + OneTimeMeasurementsTable.NAME + " TEXT, "
+                    + OneTimeMeasurementsTable.VALUE + " TEXT, "
+                    + OneTimeMeasurementsTable.TIMESTAMP + " DATETIME)");
 
-            // Answers table
-            database.execSQL("CREATE TABLE " + AnswersTableManager.ANSWERS + " ( "
-                    + AnswersTableManager.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + AnswersTableManager.ENTRY_ID + " INTEGER, "
-                    + AnswersTableManager.VALUE + " TEXT, "
-                    + AnswersTableManager.IS_CORRECT_ANSWER + " INTEGER)");
+            // AggregatedPeriodicMeasurementsTable
+            database.execSQL("CREATE TABLE " + AggregatedPeriodicMeasurementsTable.TABLE_NAME + " ( "
+                    + AggregatedPeriodicMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + AggregatedPeriodicMeasurementsTable.NAME + " TEXT, "
+                    + AggregatedPeriodicMeasurementsTable.SAMPLE_START_TIME + " DATETIME, "
+                    + AggregatedPeriodicMeasurementsTable.SAMPLE_END_TIME + " DATETIME, "
+                    + AggregatedPeriodicMeasurementsTable.HARMONIC_VALUE + " TEXT, "
+                    + AggregatedPeriodicMeasurementsTable.MEDIAN_VALUE + " TEXT, "
+                    + AggregatedPeriodicMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT)");
+
+            // AggregatedEventfulMeasurementsTable
+            database.execSQL("CREATE TABLE " + AggregatedEventfulMeasurementsTable.TABLE_NAME + " ( "
+                    + AggregatedEventfulMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + AggregatedEventfulMeasurementsTable.NAME + " TEXT, "
+                    + AggregatedEventfulMeasurementsTable.SAMPLE_START_TIME + " DATETIME, "
+                    + AggregatedEventfulMeasurementsTable.SAMPLE_END_TIME + " DATETIME, "
+                    + AggregatedEventfulMeasurementsTable.NUMBER_OF_EVENTS + " TEXT)");
 
             Log.d("createDatabase", "Created tables.");
 
         }
     }
 
-    public SubjectsTableManager getSubjectsTableManager() {
-        return subjectsTableManager;
+    public static PeriodicMeasurementsTable getPeriodicMeasurementsTable() {
+        return periodicMeasurementsTable;
     }
 
-    public TopicsTableManager getTopicsTableManager() {
-        return topicsTableManager;
+    public static EventfulMeasurementsTable getEventfulMeasurementsTable() {
+        return eventfulMeasurementsTable;
     }
 
-    public EntriesTableManager getEntriesTableManager() {
-        return entriesTableManager;
+    public static OneTimeMeasurementsTable getOneTimeMeasurementsTable() {
+        return oneTimeMeasurementsTable;
     }
 
-    public AnswersTableManager getAnswersTableManager() {
-        return answersTableManager;
+    public static AggregatedEventfulMeasurementsTable getAggregatedEventfulMeasurementsTable() {
+        return aggregatedEventfulMeasurementsTable;
     }
 
-    // convert from bitmap to byte array
-    static byte[] getBytes(Bitmap bitmap) {
-        if(bitmap != null) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-            return stream.toByteArray();
-        }
-        return new byte[0];
-    }
-
-    // convert from byte array to bitmap
-    static Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    public static AggregatedPeriodicMeasurementsTable getAggregatedPeriodicMeasurementsTable() {
+        return aggregatedPeriodicMeasurementsTable;
     }
 }
