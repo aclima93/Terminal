@@ -10,15 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.EventfulBroadcastReceiver;
 import pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicIntentService;
 
-public class CollectorsActivity extends AppCompatActivity {
+public class TerminalActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collectors);
 
-        // TODO: uncomment
-        //schedulePeriodicAlarms();
+        schedulePeriodicAlarms();
 
         // TODO: uncomment
         //schedulePeriodicAggregatorAlarms();
