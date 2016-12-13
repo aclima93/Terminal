@@ -11,8 +11,11 @@
 
         <uses-permission android:name="android.permission.GET_TASKS"/>
 
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
         <!-- Activities -->
-        <activity android:name=".CollectorsActivity">
+        <activity android:name=".TerminalActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,6 +28,11 @@
             android:name=".Collectors.PeriodicDataCollector.PeriodicIntentService"
             android:exported="false">
         </service>
+        <receiver
+            android:name=".Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
 
         <!-- Eventful Data Collector -->
         <service
@@ -62,6 +70,28 @@
                 <data android:scheme="package" />
 
             </intent-filter>
+        </receiver>
+
+        <!-- Periodic Data Aggregator -->
+        <service
+            android:name=".Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name=".Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+        <!-- Eventful Data Aggregator -->
+        <service
+            android:name=".Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name=".Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
         </receiver>
 
     </application>

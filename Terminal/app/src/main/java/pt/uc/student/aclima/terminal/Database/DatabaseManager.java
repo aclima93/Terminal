@@ -16,6 +16,8 @@ import pt.uc.student.aclima.terminal.Database.Tables.PeriodicMeasurementsTable;
  */
 public final class DatabaseManager extends SQLiteOpenHelper {
 
+    public static final String TimestampFormat = "yyyy-MM-dd HH:mm:ss.SSS zzz";
+
     private static final String DATABASE_NAME = "pt.uc.student.aclima.terminal.db";
 
     private static PeriodicMeasurementsTable periodicMeasurementsTable;
@@ -76,28 +78,31 @@ public final class DatabaseManager extends SQLiteOpenHelper {
                     + PeriodicMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + PeriodicMeasurementsTable.NAME + " TEXT, "
                     + PeriodicMeasurementsTable.VALUE + " TEXT, "
-                    + PeriodicMeasurementsTable.TIMESTAMP + " DATETIME)");
+                    + PeriodicMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT, "
+                    + PeriodicMeasurementsTable.TIMESTAMP + " TEXT)");
 
             // EventfulMeasurementsTable
             database.execSQL("CREATE TABLE " + EventfulMeasurementsTable.TABLE_NAME + " ( "
                     + EventfulMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + EventfulMeasurementsTable.NAME + " TEXT, "
                     + EventfulMeasurementsTable.VALUE + " TEXT, "
-                    + EventfulMeasurementsTable.TIMESTAMP + " DATETIME)");
+                    + EventfulMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT, "
+                    + EventfulMeasurementsTable.TIMESTAMP + " TEXT)");
 
             // OneTimeMeasurementsTable
             database.execSQL("CREATE TABLE " + OneTimeMeasurementsTable.TABLE_NAME + " ( "
                     + OneTimeMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + OneTimeMeasurementsTable.NAME + " TEXT, "
                     + OneTimeMeasurementsTable.VALUE + " TEXT, "
-                    + OneTimeMeasurementsTable.TIMESTAMP + " DATETIME)");
+                    + OneTimeMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT, "
+                    + OneTimeMeasurementsTable.TIMESTAMP + " TEXT)");
 
             // AggregatedPeriodicMeasurementsTable
             database.execSQL("CREATE TABLE " + AggregatedPeriodicMeasurementsTable.TABLE_NAME + " ( "
                     + AggregatedPeriodicMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + AggregatedPeriodicMeasurementsTable.NAME + " TEXT, "
-                    + AggregatedPeriodicMeasurementsTable.SAMPLE_START_TIME + " DATETIME, "
-                    + AggregatedPeriodicMeasurementsTable.SAMPLE_END_TIME + " DATETIME, "
+                    + AggregatedPeriodicMeasurementsTable.SAMPLE_START_TIME + " TEXT, "
+                    + AggregatedPeriodicMeasurementsTable.SAMPLE_END_TIME + " TEXT, "
                     + AggregatedPeriodicMeasurementsTable.HARMONIC_VALUE + " TEXT, "
                     + AggregatedPeriodicMeasurementsTable.MEDIAN_VALUE + " TEXT, "
                     + AggregatedPeriodicMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT)");
@@ -106,8 +111,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
             database.execSQL("CREATE TABLE " + AggregatedEventfulMeasurementsTable.TABLE_NAME + " ( "
                     + AggregatedEventfulMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + AggregatedEventfulMeasurementsTable.NAME + " TEXT, "
-                    + AggregatedEventfulMeasurementsTable.SAMPLE_START_TIME + " DATETIME, "
-                    + AggregatedEventfulMeasurementsTable.SAMPLE_END_TIME + " DATETIME, "
+                    + AggregatedEventfulMeasurementsTable.SAMPLE_START_TIME + " TEXT, "
+                    + AggregatedEventfulMeasurementsTable.SAMPLE_END_TIME + " TEXT, "
                     + AggregatedEventfulMeasurementsTable.NUMBER_OF_EVENTS + " TEXT)");
 
             Log.d("createDatabase", "Created tables.");

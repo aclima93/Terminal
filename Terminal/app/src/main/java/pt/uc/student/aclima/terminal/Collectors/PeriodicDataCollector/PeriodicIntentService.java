@@ -6,12 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Date;
 
-import static android.content.ContentValues.TAG;
+import pt.uc.student.aclima.terminal.Database.DatabaseManager;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -103,6 +100,8 @@ public class PeriodicIntentService extends IntentService {
 
         Context context = getApplicationContext();
 
+        Date timestamp = new Date();
+
         if(context != null) {
 
             // get device RAM info
@@ -110,6 +109,9 @@ public class PeriodicIntentService extends IntentService {
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
 
+            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow("available memory", memoryInfo.availMem + "", "bytes", timestamp);
+
+            /*
             Log.i(TAG, " memoryInfo.availMem " + memoryInfo.availMem + "\n");
             Log.i(TAG, " memoryInfo.lowMemory " + memoryInfo.lowMemory + "\n");
             Log.i(TAG, " memoryInfo.threshold " + memoryInfo.threshold + "\n");
@@ -136,6 +138,7 @@ public class PeriodicIntentService extends IntentService {
                     Log.i(TAG, " pidMemoryInfo.getTotalSharedDirty(): " + pidMemoryInfo.getTotalSharedDirty() + "\n");
                 }
             }
+            */
 
         }
     }

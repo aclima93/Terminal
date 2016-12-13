@@ -8,7 +8,7 @@ import pt.uc.student.aclima.terminal.Database.DatabaseManager;
 
 public class MeasurementsTable {
 
-    private DatabaseManager databaseManager;
+    protected DatabaseManager databaseManager;
 
     public static final String ID = "id";
     public static final String NAME = "name";

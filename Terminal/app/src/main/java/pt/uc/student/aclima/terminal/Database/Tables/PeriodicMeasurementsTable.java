@@ -1,6 +1,16 @@
 package pt.uc.student.aclima.terminal.Database.Tables;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import pt.uc.student.aclima.terminal.Database.DatabaseManager;
+import pt.uc.student.aclima.terminal.Database.Models.PeriodicMeasurement;
 
 /**
  * Created by aclima on 13/12/2016.
@@ -17,4 +27,102 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
     public PeriodicMeasurementsTable(DatabaseManager databaseManager) {
         super(databaseManager);
     }
+
+
+    public boolean addRow(String name, String value, String unitsOfMeasurement, Date timestamp){
+
+        Log.d("addRow",
+                "Adding row to table named " + TABLE_NAME + "\n" +
+                "name: " + name + "\n" +
+                "value: " + value + "\n" +
+                "unitsOfMeasurement: " + unitsOfMeasurement + "\n" +
+                "timestamp: " + timestamp.toString() + "\n"
+        );
+
+        boolean success;
+        SQLiteDatabase database = databaseManager.getWritableDatabase();
+
+        try {
+            database.beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(NAME, name);
+            contentValues.put(VALUE, value);
+            contentValues.put(UNITS_OF_MEASUREMENT, unitsOfMeasurement);
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+            String timestampString = simpleDateFormat.format(timestamp);
+            contentValues.put(TIMESTAMP, timestampString);
+
+            database.insertOrThrow(TABLE_NAME, NAME, contentValues);
+
+            database.setTransactionSuccessful();
+            success = true;
+
+            Log.d("addPeriodicMeasurement", "Added to table.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            success = false;
+
+            Log.d("addPeriodicMeasurement", "Failed to add to table.");
+        }
+        finally {
+            database.endTransaction();
+        }
+
+        return success;
+    }
+
+    public ArrayList<PeriodicMeasurement> getAllRows() {
+
+        Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
+
+        ArrayList<PeriodicMeasurement> rows = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_NAME;
+
+        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+
+        try {
+
+            database.beginTransaction();
+
+            PeriodicMeasurement periodicMeasurement;
+            if (cursor.moveToFirst()) {
+                do {
+
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+                    Date timestamp = simpleDateFormat.parse(cursor.getString(4));
+
+                    periodicMeasurement = new PeriodicMeasurement(
+                            cursor.getInt(0), // ID
+                            cursor.getString(1), // NAME
+                            cursor.getString(2), // VALUE
+                            cursor.getString(3), // UNITS_OF_MEASUREMENT
+                            timestamp); // TIMESTAMP
+
+                    rows.add(periodicMeasurement);
+
+                } while (cursor.moveToNext());
+            }
+
+            database.endTransaction();
+
+            Log.d("getAllRows", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+
+            Log.d("getAllRows", "Failed to get rows from table named " + TABLE_NAME + ".");
+        }
+        finally {
+            cursor.close();
+        }
+
+        return rows;
+    }
+
 }
