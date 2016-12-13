@@ -29,16 +29,16 @@ import static android.content.ContentValues.TAG;
  * - Open Ports
  * - Data Traffic
  */
-public class PeriodicDataCollector extends IntentService {
+public class PeriodicIntentService extends IntentService {
 
     public static final int ACTION_RAM_REQUEST_CODE = 1;
-    public static final String ACTION_RAM = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.RAM";
+    public static final String ACTION_RAM = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.RAM";
 
     public static final int ACTION_CPU_REQUEST_CODE = 2;
-    public static final String ACTION_CPU = "pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.action.CPU";
+    public static final String ACTION_CPU = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.CPU";
 
-    public PeriodicDataCollector() {
-        super("PeriodicDataCollector");
+    public PeriodicIntentService() {
+        super("PeriodicIntentService");
     }
 
     /**
@@ -50,7 +50,7 @@ public class PeriodicDataCollector extends IntentService {
     // TODO: Customize helper method
     public static void startActionRAM(Context context) {
 
-        Intent intent = new Intent(context, PeriodicDataCollector.class);
+        Intent intent = new Intent(context, PeriodicIntentService.class);
         intent.setAction(ACTION_RAM);
         context.startService(intent);
     }
@@ -64,7 +64,7 @@ public class PeriodicDataCollector extends IntentService {
     // TODO: Customize helper method
     public static void startActionCPU(Context context) {
 
-        Intent intent = new Intent(context, PeriodicDataCollector.class);
+        Intent intent = new Intent(context, PeriodicIntentService.class);
         intent.setAction(ACTION_CPU);
         context.startService(intent);
     }

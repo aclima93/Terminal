@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import pt.uc.student.aclima.terminal.Collectors.CollectorsReceiver;
-import pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicDataCollector;
+import pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.EventfulBroadcastReceiver;
+import pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicIntentService;
 
 public class CollectorsActivity extends AppCompatActivity {
 
@@ -26,10 +26,10 @@ public class CollectorsActivity extends AppCompatActivity {
     private void schedulePeriodicAlarms() {
 
         // RAM
-        scheduleAlarm(PeriodicDataCollector.ACTION_RAM_REQUEST_CODE, PeriodicDataCollector.ACTION_RAM, 5 * 1000);
+        scheduleAlarm(PeriodicIntentService.ACTION_RAM_REQUEST_CODE, PeriodicIntentService.ACTION_RAM, 5 * 1000);
 
         // CPU
-        scheduleAlarm(PeriodicDataCollector.ACTION_CPU_REQUEST_CODE, PeriodicDataCollector.ACTION_CPU, 15 * 1000);
+        scheduleAlarm(PeriodicIntentService.ACTION_CPU_REQUEST_CODE, PeriodicIntentService.ACTION_CPU, 15 * 1000);
 
 
     }
@@ -38,7 +38,7 @@ public class CollectorsActivity extends AppCompatActivity {
     public void scheduleAlarm(int requestCode, String action, long intervalMillis) {
 
         // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(getApplicationContext(), CollectorsReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), EventfulBroadcastReceiver.class);
         intent.setAction(action);
 
         // Create a PendingIntent to be triggered when the alarm goes off
@@ -57,7 +57,7 @@ public class CollectorsActivity extends AppCompatActivity {
     // if this is not called, intents will keep getting called, unless they are explicity killed
     // TODO: call on onDestroy? leave it running?
     public void cancelAlarm(int requestCode) {
-        Intent intent = new Intent(getApplicationContext(), CollectorsReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), EventfulBroadcastReceiver.class);
         final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);

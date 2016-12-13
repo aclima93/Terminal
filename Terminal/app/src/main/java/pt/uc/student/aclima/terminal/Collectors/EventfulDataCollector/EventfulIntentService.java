@@ -14,13 +14,13 @@ import static android.content.ContentValues.TAG;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class EventfulDataCollector extends IntentService {
+public class EventfulIntentService extends IntentService {
 
-    private static final String ACTION_TIME_CHANGED = "pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.action.TIME_CHANGED";
-    private static final String EXTRA_TIME_CHANGED_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulDataCollector.extra.TIME_CHANGED_PARAM1";
+    private static final String ACTION_TIME_CHANGED = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.action.TIME_CHANGED";
+    private static final String EXTRA_TIME_CHANGED_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.TIME_CHANGED_PARAM1";
 
-    public EventfulDataCollector() {
-        super("EventfulDataCollector");
+    public EventfulIntentService() {
+        super("EventfulIntentService");
     }
 
     /**
@@ -31,7 +31,7 @@ public class EventfulDataCollector extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionTimeChanged(Context context, String param1) {
-        Intent intent = new Intent(context, EventfulDataCollector.class);
+        Intent intent = new Intent(context, EventfulIntentService.class);
         intent.setAction(ACTION_TIME_CHANGED);
         intent.putExtra(EXTRA_TIME_CHANGED_PARAM1, param1);
         context.startService(intent);
