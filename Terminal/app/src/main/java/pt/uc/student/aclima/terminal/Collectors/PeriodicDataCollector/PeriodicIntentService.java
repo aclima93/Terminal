@@ -109,7 +109,7 @@ public class PeriodicIntentService extends IntentService {
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
 
-            boolean success = new DatabaseManager(this).getPeriodicMeasurementsTable().addRow("available memory", memoryInfo.availMem + "", "bytes", timestamp);
+            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow("available memory", memoryInfo.availMem + "", "bytes", timestamp);
 
             /*
             Log.i(TAG, " memoryInfo.availMem " + memoryInfo.availMem + "\n");
