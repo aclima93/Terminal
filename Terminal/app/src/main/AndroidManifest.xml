@@ -8,6 +8,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <uses-permission android:name="android.permission.GET_TASKS"/>
+
+        <!-- Activities -->
         <activity android:name=".CollectorsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -16,26 +20,50 @@
             </intent-filter>
         </activity>
 
+        <!-- Periodic Data Collector -->
         <service
-            android:name=".Collectors.PeriodicDataCollector.PeriodicDataCollector"
+            android:name=".Collectors.PeriodicDataCollector.PeriodicIntentService"
             android:exported="false">
         </service>
 
+        <!-- Eventful Data Collector -->
+        <service
+            android:name=".Collectors.EventfulDataCollector.EventfulIntentService"
+            android:exported="false">
+        </service>
         <receiver
-            android:name=".Collectors.CollectorsReceiver"
+            android:name=".Collectors.EventfulDataCollector.EventfulBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
+                <!-- Time -->
                 <action android:name="android.intent.action.TIME_SET"/>
                 <action android:name="android.intent.action.DATE_CHANGED"/>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
             </intent-filter>
         </receiver>
 
+        <!-- One-Time Data Collector -->
         <service
-            android:name=".Collectors.EventfulDataCollector.EventfulDataCollector"
+            android:name=".Collectors.OneTimeDataCollector.OneTimeIntentService"
             android:exported="false">
         </service>
+        <receiver
+            android:name=".Collectors.OneTimeDataCollector.OneTimeBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- Application Actions -->
+                <action android:name="android.intent.action.PACKAGE_ADDED"  />
+                <action android:name="android.intent.action.PACKAGE_CHANGED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
