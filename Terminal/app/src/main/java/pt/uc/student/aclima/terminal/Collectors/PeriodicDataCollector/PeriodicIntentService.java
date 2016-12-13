@@ -47,7 +47,6 @@ public class PeriodicIntentService extends IntentService {
      *
      * @see IntentService
      */
-    // TODO: Customize helper method
     public static void startActionRAM(Context context) {
 
         Intent intent = new Intent(context, PeriodicIntentService.class);
@@ -61,7 +60,6 @@ public class PeriodicIntentService extends IntentService {
      *
      * @see IntentService
      */
-    // TODO: Customize helper method
     public static void startActionCPU(Context context) {
 
         Intent intent = new Intent(context, PeriodicIntentService.class);
