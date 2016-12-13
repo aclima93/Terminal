@@ -16,7 +16,7 @@ import pt.uc.student.aclima.terminal.Database.Tables.PeriodicMeasurementsTable;
  */
 public final class DatabaseManager extends SQLiteOpenHelper {
 
-    public static final String TimestampFormat = "YYYY-MM-DD HH:MM:SS.SSS";
+    public static final String TimestampFormat = "yyyy-MM-dd HH:mm:ss.SSS zzz";
 
     private static final String DATABASE_NAME = "pt.uc.student.aclima.terminal.db";
 
