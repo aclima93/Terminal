@@ -10,7 +10,11 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
 
     public static final String TABLE_NAME = "PeriodicMeasurementsTable";
 
-    PeriodicMeasurementsTable(DatabaseManager databaseManager) {
+    public static final String VALUE = "value";
+    public static final String UNITS_OF_MEASUREMENT = "units_of_measurement";
+    public static final String TIMESTAMP = "timestamp";
+
+    public PeriodicMeasurementsTable(DatabaseManager databaseManager) {
         super(databaseManager);
     }
 }

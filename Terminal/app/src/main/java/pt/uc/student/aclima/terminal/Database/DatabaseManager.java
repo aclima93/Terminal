@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 
 import pt.uc.student.aclima.terminal.Database.Tables.AggregatedEventfulMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.AggregatedPeriodicMeasurementsTable;
-import pt.uc.student.aclima.terminal.Database.Tables.EntriesTableManager;
 import pt.uc.student.aclima.terminal.Database.Tables.EventfulMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.OneTimeMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.PeriodicMeasurementsTable;

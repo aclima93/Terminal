@@ -6,19 +6,16 @@ import pt.uc.student.aclima.terminal.Database.DatabaseManager;
  * Created by aclima on 13/12/2016.
  */
 
-public class AggregatedEventfulMeasurementsTable {
+public class AggregatedEventfulMeasurementsTable extends MeasurementsTable {
 
     public static final String TABLE_NAME = "AggregatedEventfulMeasurementsTable";
 
-    private DatabaseManager databaseManager;
-
-    public static final String ID = "id";
-    public static final String NAME = "name";
     public static final String NUMBER_OF_EVENTS = "number_of_events";
-    public static final String TIME_RANGE = "time_range";
+    public static final String SAMPLE_START_TIME = "sample_start_time";
+    public static final String SAMPLE_END_TIME = "sample_end_time";
 
-    AggregatedEventfulMeasurementsTable(DatabaseManager databaseManager) {
-        this.databaseManager = databaseManager;
+    public AggregatedEventfulMeasurementsTable(DatabaseManager databaseManager) {
+        super(databaseManager);
     }
 
 }
