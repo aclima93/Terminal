@@ -1,4 +1,4 @@
-package pt.uc.student.aclima.terminal.DatabaseManagers;
+package pt.uc.student.aclima.terminal.Database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +8,13 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+
+import pt.uc.student.aclima.terminal.Database.Tables.AggregatedEventfulMeasurementsTable;
+import pt.uc.student.aclima.terminal.Database.Tables.AggregatedPeriodicMeasurementsTable;
+import pt.uc.student.aclima.terminal.Database.Tables.EntriesTableManager;
+import pt.uc.student.aclima.terminal.Database.Tables.EventfulMeasurementsTable;
+import pt.uc.student.aclima.terminal.Database.Tables.OneTimeMeasurementsTable;
+import pt.uc.student.aclima.terminal.Database.Tables.PeriodicMeasurementsTable;
 
 /**
  * Created by aclima on 06/10/16.

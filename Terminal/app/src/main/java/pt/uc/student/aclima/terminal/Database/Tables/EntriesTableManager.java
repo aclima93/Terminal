@@ -1,8 +1,10 @@
-package pt.uc.student.aclima.terminal.DatabaseManagers;
+package pt.uc.student.aclima.terminal.Database.Tables;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import pt.uc.student.aclima.terminal.Database.DatabaseManager;
 
 /**
  * Created by aclima on 06/10/16.

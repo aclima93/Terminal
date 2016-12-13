@@ -1,4 +1,6 @@
-package pt.uc.student.aclima.terminal.DatabaseManagers;
+package pt.uc.student.aclima.terminal.Database.Tables;
+
+import pt.uc.student.aclima.terminal.Database.DatabaseManager;
 
 /**
  * Created by aclima on 13/12/2016.
