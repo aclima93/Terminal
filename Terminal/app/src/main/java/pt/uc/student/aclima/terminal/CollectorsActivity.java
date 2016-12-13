@@ -19,6 +19,12 @@ public class CollectorsActivity extends AppCompatActivity {
 
         // TODO: uncomment
         //schedulePeriodicAlarms();
+
+        // TODO: uncomment
+        //schedulePeriodicAggregatorAlarms();
+
+        // TODO: uncomment
+        //scheduleEventfulAggregatorAlarms();
     }
 
     /**
@@ -31,7 +37,6 @@ public class CollectorsActivity extends AppCompatActivity {
 
         // CPU
         scheduleAlarm(PeriodicIntentService.ACTION_CPU_REQUEST_CODE, PeriodicIntentService.ACTION_CPU, 15 * 1000);
-
 
     }
 

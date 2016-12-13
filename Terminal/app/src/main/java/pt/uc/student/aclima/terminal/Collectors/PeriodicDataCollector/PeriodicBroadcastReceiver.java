@@ -7,9 +7,9 @@ import android.content.Intent;
 import static pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicIntentService.ACTION_CPU;
 import static pt.uc.student.aclima.terminal.Collectors.PeriodicDataCollector.PeriodicIntentService.ACTION_RAM;
 
-public class EventfulBroadcastReceiver extends BroadcastReceiver {
+public class PeriodicBroadcastReceiver extends BroadcastReceiver {
 
-    public EventfulBroadcastReceiver() {
+    public PeriodicBroadcastReceiver() {
     }
 
     @Override
