@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import pt.uc.student.aclima.terminal.Database.DatabaseManager;
-import pt.uc.student.aclima.terminal.Database.Models.PeriodicMeasurement;
+import pt.uc.student.aclima.terminal.Database.Entries.PeriodicMeasurement;
 
 /**
  * Created by aclima on 13/12/2016.

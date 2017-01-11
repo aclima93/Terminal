@@ -1,4 +1,4 @@
-package pt.uc.student.aclima.terminal.Database.Models;
+package pt.uc.student.aclima.terminal.Database.Entries;
 
 /**
  * Created by aclima on 13/12/2016.

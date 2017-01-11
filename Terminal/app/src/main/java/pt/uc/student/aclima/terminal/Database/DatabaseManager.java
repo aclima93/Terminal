@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import pt.uc.student.aclima.terminal.Database.Tables.AggregatedEventfulMeasurementsTable;
+import pt.uc.student.aclima.terminal.Database.Tables.EventfulAggregatedMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.AggregatedPeriodicMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.EventfulMeasurementsTable;
 import pt.uc.student.aclima.terminal.Database.Tables.OneTimeMeasurementsTable;
@@ -23,8 +23,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
     private static PeriodicMeasurementsTable periodicMeasurementsTable;
     private static EventfulMeasurementsTable eventfulMeasurementsTable;
     private static OneTimeMeasurementsTable oneTimeMeasurementsTable;
-    private static AggregatedEventfulMeasurementsTable aggregatedEventfulMeasurementsTable;
-    private static AggregatedPeriodicMeasurementsTable aggregatedPeriodicMeasurementsTable;
+    private static EventfulAggregatedMeasurementsTable eventfulAggregatedMeasurementsTable;
+    private static AggregatedPeriodicMeasurementsTable periodicAggregatedMeasurementsTable;
 
     public DatabaseManager(Context context){
         super(context, DATABASE_NAME, null, 1);
@@ -32,8 +32,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         periodicMeasurementsTable = new PeriodicMeasurementsTable(this);
         eventfulMeasurementsTable = new EventfulMeasurementsTable(this);
         oneTimeMeasurementsTable = new OneTimeMeasurementsTable(this);
-        aggregatedEventfulMeasurementsTable = new AggregatedEventfulMeasurementsTable(this);
-        aggregatedPeriodicMeasurementsTable = new AggregatedPeriodicMeasurementsTable(this);
+        eventfulAggregatedMeasurementsTable = new EventfulAggregatedMeasurementsTable(this);
+        periodicAggregatedMeasurementsTable = new AggregatedPeriodicMeasurementsTable(this);
 
         //context.deleteDatabase(DATABASE_NAME); // TODO: should i consider this as an option ?
     }
@@ -53,7 +53,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + EventfulMeasurementsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + OneTimeMeasurementsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AggregatedPeriodicMeasurementsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + AggregatedEventfulMeasurementsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EventfulAggregatedMeasurementsTable.TABLE_NAME);
 
         Log.d("onUpgrade", "Dropped tables.");
 
@@ -107,13 +107,13 @@ public final class DatabaseManager extends SQLiteOpenHelper {
                     + AggregatedPeriodicMeasurementsTable.MEDIAN_VALUE + " TEXT, "
                     + AggregatedPeriodicMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT)");
 
-            // AggregatedEventfulMeasurementsTable
-            database.execSQL("CREATE TABLE " + AggregatedEventfulMeasurementsTable.TABLE_NAME + " ( "
-                    + AggregatedEventfulMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + AggregatedEventfulMeasurementsTable.NAME + " TEXT, "
-                    + AggregatedEventfulMeasurementsTable.SAMPLE_START_TIME + " TEXT, "
-                    + AggregatedEventfulMeasurementsTable.SAMPLE_END_TIME + " TEXT, "
-                    + AggregatedEventfulMeasurementsTable.NUMBER_OF_EVENTS + " TEXT)");
+            // EventfulAggregatedMeasurementsTable
+            database.execSQL("CREATE TABLE " + EventfulAggregatedMeasurementsTable.TABLE_NAME + " ( "
+                    + EventfulAggregatedMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + EventfulAggregatedMeasurementsTable.NAME + " TEXT, "
+                    + EventfulAggregatedMeasurementsTable.SAMPLE_START_TIME + " TEXT, "
+                    + EventfulAggregatedMeasurementsTable.SAMPLE_END_TIME + " TEXT, "
+                    + EventfulAggregatedMeasurementsTable.NUMBER_OF_EVENTS + " TEXT)");
 
             Log.d("createDatabase", "Created tables.");
 
@@ -132,11 +132,11 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         return oneTimeMeasurementsTable;
     }
 
-    public static AggregatedEventfulMeasurementsTable getAggregatedEventfulMeasurementsTable() {
-        return aggregatedEventfulMeasurementsTable;
+    public static EventfulAggregatedMeasurementsTable getEventfulAggregatedMeasurementsTable() {
+        return eventfulAggregatedMeasurementsTable;
     }
 
-    public static AggregatedPeriodicMeasurementsTable getAggregatedPeriodicMeasurementsTable() {
-        return aggregatedPeriodicMeasurementsTable;
+    public static AggregatedPeriodicMeasurementsTable getPeriodicAggregatedMeasurementsTable() {
+        return periodicAggregatedMeasurementsTable;
     }
 }

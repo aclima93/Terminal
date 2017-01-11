@@ -63,7 +63,7 @@ public class TerminalActivity extends AppCompatActivity {
     }
 
     // Setup a recurring alarm
-    public void scheduleAlarm(Class receiverClass, int requestCode, String action, long intervalMillis) {
+    private void scheduleAlarm(Class receiverClass, int requestCode, String action, long intervalMillis) {
 
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(getApplicationContext(), receiverClass);
@@ -84,7 +84,7 @@ public class TerminalActivity extends AppCompatActivity {
 
     // if this is not called, intents will keep getting called, unless they are explicity killed
     // TODO: call on onDestroy? leave it running?
-    public void cancelAlarm(Class receiverClass, int requestCode) {
+    private void cancelAlarm(Class receiverClass, int requestCode) {
 
         Intent intent = new Intent(getApplicationContext(), receiverClass);
 

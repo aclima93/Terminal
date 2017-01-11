@@ -1,18 +1,18 @@
-package pt.uc.student.aclima.terminal.Database.Models;
+package pt.uc.student.aclima.terminal.Database.Entries;
 
 import java.util.Date;
 
 /**
- * Created by aclima on 13/12/2016.
+ * Created by aclima on 11/01/2017.
  */
 
-public class AggregatedPeriodicMeasurement extends Measurement{
+public class AggregatedMeasurement extends Measurement {
 
     private Integer numberOfEvents;
     private Date sampleStartTime;
     private Date sampleEndTime;
 
-    public AggregatedPeriodicMeasurement(Integer id, String name, Integer numberOfEvents, Date sampleStartTime, Date sampleEndTime) {
+    public AggregatedMeasurement(Integer id, String name, Integer numberOfEvents, Date sampleStartTime, Date sampleEndTime) {
         super(id, name);
         this.numberOfEvents = numberOfEvents;
         this.sampleStartTime = sampleStartTime;
@@ -42,4 +42,5 @@ public class AggregatedPeriodicMeasurement extends Measurement{
     public void setSampleEndTime(Date sampleEndTime) {
         this.sampleEndTime = sampleEndTime;
     }
+
 }

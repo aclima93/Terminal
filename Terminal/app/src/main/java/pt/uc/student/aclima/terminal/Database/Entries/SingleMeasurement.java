@@ -1,18 +1,18 @@
-package pt.uc.student.aclima.terminal.Database.Models;
+package pt.uc.student.aclima.terminal.Database.Entries;
 
 import java.util.Date;
 
 /**
- * Created by aclima on 13/12/2016.
+ * Created by aclima on 11/01/2017.
  */
 
-public class PeriodicMeasurement extends Measurement {
+public class SingleMeasurement extends Measurement {
 
     private String value;
     private String unitsOfMeasurement;
     private Date timestamp;
 
-    public PeriodicMeasurement(Integer id, String name, String value, String unitsOfMeasurement, Date timestamp) {
+    public SingleMeasurement(Integer id, String name, String value, String unitsOfMeasurement, Date timestamp) {
         super(id, name);
         this.value = value;
         this.unitsOfMeasurement = unitsOfMeasurement;

@@ -6,13 +6,13 @@ import pt.uc.student.aclima.terminal.Database.DatabaseManager;
  * Created by aclima on 13/12/2016.
  */
 
-public class AggregatedEventfulMeasurementsTable extends AggregatedMeasurementsTable {
+public class EventfulAggregatedMeasurementsTable extends AggregatedMeasurementsTable {
 
-    public static final String TABLE_NAME = "AggregatedEventfulMeasurementsTable";
+    public static final String TABLE_NAME = "EventfulAggregatedMeasurementsTable";
 
     public static final String NUMBER_OF_EVENTS = "number_of_events";
 
-    public AggregatedEventfulMeasurementsTable(DatabaseManager databaseManager) {
+    public EventfulAggregatedMeasurementsTable(DatabaseManager databaseManager) {
         super(databaseManager);
     }
 

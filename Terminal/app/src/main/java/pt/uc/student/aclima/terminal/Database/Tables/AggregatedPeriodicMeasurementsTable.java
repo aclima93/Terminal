@@ -8,7 +8,7 @@ import pt.uc.student.aclima.terminal.Database.DatabaseManager;
 
 public class AggregatedPeriodicMeasurementsTable extends AggregatedMeasurementsTable {
 
-    public static final String TABLE_NAME = "AggregatedPeriodicMeasurementsTable";
+    public static final String TABLE_NAME = "PeriodicAggregatedMeasurementsTable";
 
     public static final String HARMONIC_VALUE = "harmonic_value";
     public static final String MEDIAN_VALUE = "median_value";
