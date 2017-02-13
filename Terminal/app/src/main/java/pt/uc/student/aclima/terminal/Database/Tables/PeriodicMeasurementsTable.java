@@ -69,6 +69,7 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         }
         finally {
             database.endTransaction();
+            database.close();
         }
 
         return success;
@@ -108,8 +109,6 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
                 } while (cursor.moveToNext());
             }
 
-            database.endTransaction();
-
             Log.d("getAllRows", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
 
         }
@@ -120,6 +119,8 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         }
         finally {
             cursor.close();
+            database.endTransaction();
+            database.close();
         }
 
         return rows;
