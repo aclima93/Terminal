@@ -21,6 +21,8 @@ public class TerminalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collectors);
 
+        // TODO: add Configuration Management Table, logic, period fetch, etc.
+
         schedulePeriodicAlarms();
 
         schedulePeriodicAggregatorAlarms();
@@ -58,6 +60,42 @@ public class TerminalActivity extends AppCompatActivity {
         scheduleAlarm(PeriodicBroadcastReceiver.class,
                 PeriodicIntentService.ACTION_CPU_REQUEST_CODE,
                 PeriodicIntentService.ACTION_CPU,
+                15 * 1000);
+
+        // GPS
+        scheduleAlarm(PeriodicBroadcastReceiver.class,
+                PeriodicIntentService.ACTION_GPS_REQUEST_CODE,
+                PeriodicIntentService.ACTION_GPS,
+                15 * 1000);
+
+        // CPU Usage
+        scheduleAlarm(PeriodicBroadcastReceiver.class,
+                PeriodicIntentService.ACTION_CPU_USAGE_REQUEST_CODE,
+                PeriodicIntentService.ACTION_CPU_USAGE,
+                15 * 1000);
+
+        // RAM Usage
+        scheduleAlarm(PeriodicBroadcastReceiver.class,
+                PeriodicIntentService.ACTION_RAM_USAGE_REQUEST_CODE,
+                PeriodicIntentService.ACTION_RAM_USAGE,
+                15 * 1000);
+
+        // Battery
+        scheduleAlarm(PeriodicBroadcastReceiver.class,
+                PeriodicIntentService.ACTION_BATTERY_REQUEST_CODE,
+                PeriodicIntentService.ACTION_BATTERY,
+                15 * 1000);
+
+        // Open Ports
+        scheduleAlarm(PeriodicBroadcastReceiver.class,
+                PeriodicIntentService.ACTION_OPEN_PORTS_REQUEST_CODE,
+                PeriodicIntentService.ACTION_OPEN_PORTS,
+                15 * 1000);
+
+        // Data Traffic
+        scheduleAlarm(PeriodicBroadcastReceiver.class,
+                PeriodicIntentService.ACTION_DATA_TRAFFIC_REQUEST_CODE,
+                PeriodicIntentService.ACTION_DATA_TRAFFIC,
                 15 * 1000);
 
     }
