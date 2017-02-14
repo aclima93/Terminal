@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -344,8 +346,32 @@ public class PeriodicIntentService extends IntentService {
         }
     }
     private void handleActionBattery() {
-        // TODO: Handle action Battery
         Log.d("Battery", "Battery service called.");
+
+        Context context = getApplicationContext();
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            // this is a tricky intent and does not require a broadcastreceiver per se
+            // Source: <a>https://developer.android.com/training/monitoring-device-state/battery-monitoring.html#MonitorLevel</a>
+            IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = context.registerReceiver(null, ifilter);
+
+            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+            float batteryPct = 100 * (level / (float) scale);
+
+            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                    "Battery Level", batteryPct + "", "%", timestamp);
+            if (!success) {
+                Log.e("Battery", "Battery service failed to add row.");
+            }
+        }
+
+
     }
     private void handleActionOpenPorts() {
         // TODO: Handle action OpenPorts
