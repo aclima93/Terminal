@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import pt.uc.student.aclima.terminal.Database.DatabaseManager;
+import pt.uc.student.aclima.terminal.Utilities.ProcessManager;
+
+import static pt.uc.student.aclima.terminal.Database.Entries.Measurement.DELIMITER;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -21,11 +26,8 @@ import pt.uc.student.aclima.terminal.Database.DatabaseManager;
  * TODO: Customize class - update intent actions, extra parameters and static helper methods.
  * 
  * Collected Data:
- * - RAM
- * - CPU
  * - GPS
  * - CPU usage
- * - RAM usage
  * - Battery
  * - Open Ports
  * - Data Traffic
@@ -153,7 +155,7 @@ public class PeriodicIntentService extends IntentService {
      * parameters.
      */
     private void handleActionRAM() {
-        Log.d( "RAM", "RAM service called.");
+        Log.d("RAM", "RAM service called.");
 
         Context context = getApplicationContext();
 
@@ -166,26 +168,140 @@ public class PeriodicIntentService extends IntentService {
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
 
-            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow("available memory", memoryInfo.availMem + "", "bytes", timestamp);
+            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow("Available System RAM", memoryInfo.availMem + "", "bytes", timestamp);
             if( !success){
-                Log.e( "RAM", "RAM service failed to add row.");
+                Log.e("RAM", "RAM service failed to add row.");
             }
         }
     }
     private void handleActionCPU() {
-        // TODO: Handle action CPU
-        Log.d( "CPU", "CPU service called.");
+        Log.d("CPU", "CPU service called.");
+
+        Context context = getApplicationContext();
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            // Source <a>https://stackoverflow.com/questions/3118234/get-memory-usage-in-android</a>
+            // Helpful <a>http://man7.org/linux/man-pages/man5/proc.5.html</a>
+            try {
+                RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
+                String load = reader.readLine();
+
+                String[] toks = load.split(" +");  // Split on one or more spaces
+
+                long idle1 = Long.parseLong(toks[4]);
+                long cpu1 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[5])
+                        + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+                // wait one second and re-read data
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                }
+
+                reader.seek(0);
+                load = reader.readLine();
+                reader.close();
+
+                toks = load.split(" +");
+
+                long idle2 = Long.parseLong(toks[4]);
+                long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[5])
+                        + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+                float entryValue = (float) 100 * (cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1));
+
+                String entryName = "Used System CPU";
+                boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                        entryName,
+                        entryValue + "", "%", timestamp);
+                if (!success) {
+                    Log.e("CPU", "CPU service failed to add row for [" + entryName + "].");
+                }
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
     }
     private void handleActionGPS() {
         // TODO: Handle action GPS
-        Log.d( "GPS", "GPS service called.");
+        Log.d("GPS", "GPS service called.");
     }
     private void handleActionCPUUsage() {
-        // TODO: Handle action CPU Usage
-        Log.d( "CPUUsage", "CPUUsage service called.");
+        Log.d("CPUUsage", "CPUUsage service called.");
+
+        Context context = getApplicationContext();
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            List<ProcessManager.Process> processes = ProcessManager.getRunningApps();
+
+            for (ProcessManager.Process process : processes) {
+
+                // Source <a>https://stackoverflow.com/questions/3118234/get-memory-usage-in-android</a>
+                // Helpful <a>http://man7.org/linux/man-pages/man5/proc.5.html</a>
+                try {
+                    RandomAccessFile readerProcPidStat = new RandomAccessFile("/proc/" + process.pid + "/stat", "r");
+                    String loadProcPidStat = readerProcPidStat.readLine();
+                    String[] toksProcPidStat = loadProcPidStat.split(" +");  // Split on one or more spaces
+
+                    RandomAccessFile readerProcUptime = new RandomAccessFile("/proc/uptime", "r");
+                    String loadProcUptime = readerProcUptime.readLine();
+                    String[] toksProcUptime = loadProcUptime.split(" +");  // Split on one or more spaces
+
+                    long utime1 = Long.parseLong(toksProcPidStat[13]);
+                    long stime1 = Long.parseLong(toksProcPidStat[14]);
+                    long process_cpu_time1 = utime1 + stime1;
+
+                    float system_uptime1 = Float.parseFloat(toksProcUptime[0]);
+
+                    // wait one second and re-read data
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                    }
+
+                    readerProcPidStat.seek(0);
+                    loadProcPidStat = readerProcPidStat.readLine();
+                    readerProcPidStat.close();
+                    toksProcPidStat = loadProcPidStat.split(" +");
+
+                    readerProcUptime.seek(0);
+                    loadProcUptime = readerProcUptime.readLine();
+                    readerProcUptime.close();
+                    toksProcUptime = loadProcUptime.split(" +");
+
+                    long utime2 = Long.parseLong(toksProcPidStat[13]);
+                    long stime2 = Long.parseLong(toksProcPidStat[14]);
+                    long process_cpu_time2 = utime2 + stime2;
+
+                    float system_uptime2 = Float.parseFloat(toksProcUptime[0]);
+
+                    float entryValue = (float) 100 * (process_cpu_time2 - process_cpu_time1) / (system_uptime2 - system_uptime1);
+
+                    String entryName = "CPU Usage" + DELIMITER + "pid " + process.pid + DELIMITER + process.name;
+                    boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                            entryName,
+                            entryValue + "", "%", timestamp);
+                    if (!success) {
+                        Log.e("CPUUsage", "CPUUsage service failed to add row for [" + entryName + "].");
+                    }
+
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
     private void handleActionRAMUsage() {
-        Log.d( "RAMUsage", "RAMUsage service called.");
+        Log.d("RAMUsage", "RAMUsage service called.");
 
         Context context = getApplicationContext();
 
@@ -215,12 +331,12 @@ public class PeriodicIntentService extends IntentService {
 
                 for (android.os.Debug.MemoryInfo pidMemoryInfo : memoryInfoArray) {
 
-                    String entryName = "available memory in pid " + pids[0] + " - " + pidMap.get(pids[0]);
+                    String entryName = "RAM Usage" + DELIMITER + "pid " + pids[0] + DELIMITER + pidMap.get(pids[0]);
                     boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                             entryName,
                             pidMemoryInfo.getTotalPss() + "", "Kilobytes", timestamp);
                     if( !success){
-                        Log.e( "RAMUsage", "RAMUsage service failed to add row for [" + entryName + "].");
+                        Log.e("RAMUsage", "RAMUsage service failed to add row for [" + entryName + "].");
                     }
                 }
             }
@@ -229,15 +345,15 @@ public class PeriodicIntentService extends IntentService {
     }
     private void handleActionBattery() {
         // TODO: Handle action Battery
-        Log.d( "Battery", "Battery service called.");
+        Log.d("Battery", "Battery service called.");
     }
     private void handleActionOpenPorts() {
         // TODO: Handle action OpenPorts
-        Log.d( "OpenPorts", "OpenPorts service called.");
+        Log.d("OpenPorts", "OpenPorts service called.");
     }
     private void handleActionDataTraffic() {
         // TODO: Handle action DataTraffic
-        Log.d( "DataTraffic", "DataTraffic service called.");
+        Log.d("DataTraffic", "DataTraffic service called.");
     }
 
 }

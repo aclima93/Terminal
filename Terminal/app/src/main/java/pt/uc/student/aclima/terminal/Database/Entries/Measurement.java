@@ -6,6 +6,8 @@ package pt.uc.student.aclima.terminal.Database.Entries;
 
 public class Measurement {
 
+    public static final String DELIMITER = " - ";
+
     private Integer id;
     private String name;
 
