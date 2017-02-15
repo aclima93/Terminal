@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="pt.uc.student.aclima.terminal"
+<manifest package="pt.uc.student.aclima.device_agent"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -15,7 +15,7 @@
         <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
         <!-- Activities -->
-        <activity android:name=".TerminalActivity">
+        <activity android:name="pt.uc.student.aclima.device_agent.DeviceAgentActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,22 +25,22 @@
 
         <!-- Periodic Data Collector -->
         <service
-            android:name=".Collectors.PeriodicDataCollector.PeriodicIntentService"
+            android:name="pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicIntentService"
             android:exported="false">
         </service>
         <receiver
-            android:name=".Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver"
+            android:name="pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>
 
         <!-- Eventful Data Collector -->
         <service
-            android:name=".Collectors.EventfulDataCollector.EventfulIntentService"
+            android:name="pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulIntentService"
             android:exported="false">
         </service>
         <receiver
-            android:name=".Collectors.EventfulDataCollector.EventfulBroadcastReceiver"
+            android:name="pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -53,11 +53,11 @@
 
         <!-- One-Time Data Collector -->
         <service
-            android:name=".Collectors.OneTimeDataCollector.OneTimeIntentService"
+            android:name="pt.uc.student.aclima.device_agent.Collectors.OneTimeDataCollector.OneTimeIntentService"
             android:exported="false">
         </service>
         <receiver
-            android:name=".Collectors.OneTimeDataCollector.OneTimeBroadcastReceiver"
+            android:name="pt.uc.student.aclima.device_agent.Collectors.OneTimeDataCollector.OneTimeBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -74,22 +74,22 @@
 
         <!-- Periodic Data Aggregator -->
         <service
-            android:name=".Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService"
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService"
             android:exported="false">
         </service>
         <receiver
-            android:name=".Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver"
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>
 
         <!-- Eventful Data Aggregator -->
         <service
-            android:name=".Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService"
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService"
             android:exported="false">
         </service>
         <receiver
-            android:name=".Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver"
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>
