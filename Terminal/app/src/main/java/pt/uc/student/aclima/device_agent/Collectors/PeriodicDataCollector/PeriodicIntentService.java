@@ -8,7 +8,9 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.util.Collection;
 import java.util.Date;
@@ -374,8 +376,39 @@ public class PeriodicIntentService extends IntentService {
 
     }
     private void handleActionOpenPorts() {
-        // TODO: Handle action OpenPorts
         Log.d("OpenPorts", "OpenPorts service called.");
+
+
+        Context context = getApplicationContext();
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            Process process = null;
+            try {
+                process = Runtime.getRuntime().exec("netstat -a");
+                process.getOutputStream().close();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                String allLines = "";
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    allLines += line + "\n";
+                }
+
+                boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                        "Open Ports", allLines, "", timestamp);
+                if (!success) {
+                    Log.e("OpenPorts", "OpenPorts service failed to add row.");
+                }
+
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
     private void handleActionDataTraffic() {
         // TODO: Handle action DataTraffic
