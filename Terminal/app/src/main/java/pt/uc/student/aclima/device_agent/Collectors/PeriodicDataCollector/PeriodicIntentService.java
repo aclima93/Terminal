@@ -232,8 +232,31 @@ public class PeriodicIntentService extends IntentService {
 
     }
     private void handleActionGPS() {
-        // TODO: Handle action GPS
         Log.d("GPS", "GPS service called.");
+
+        final Context context = getApplicationContext();
+
+        final Date timestamp = new Date();
+
+        if(context != null) {
+            SingleShotLocationProvider.requestSingleUpdate(context,
+                    new SingleShotLocationProvider.LocationCallback() {
+                        @Override
+                        public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
+                            String entryValue = location.toString();
+
+                            String entryName = "GPS";
+                            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                                    entryName,
+                                    entryValue, SingleShotLocationProvider.GPSCoordinates.unitsOfMeasurement, timestamp);
+                            if (!success) {
+                                Log.e("GPS", "GPS service failed to add row for [" + entryName + "].");
+                            }
+
+                        }
+                    });
+        }
+
     }
     private void handleActionCPUUsage() {
         Log.d("CPUUsage", "CPUUsage service called.");

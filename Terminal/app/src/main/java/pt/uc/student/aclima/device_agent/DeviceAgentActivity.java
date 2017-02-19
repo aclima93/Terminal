@@ -100,6 +100,10 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Handle Alarms
+     */
+
     // Setup a recurring alarm
     private void scheduleAlarm(Class receiverClass, int requestCode, String action, long intervalMillis) {
 
