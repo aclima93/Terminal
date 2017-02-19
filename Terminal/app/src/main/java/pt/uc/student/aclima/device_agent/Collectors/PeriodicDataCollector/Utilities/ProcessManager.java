@@ -1,7 +1,6 @@
-package pt.uc.student.aclima.device_agent.Utilities;
+package pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities;
 
 /**
- * Created by aclima on 13/02/2017.
  * Source: <a>https://stackoverflow.com/questions/30619349/android-5-1-1-and-above-getrunningappprocesses-returns-my-application-packag</a>
  */
 

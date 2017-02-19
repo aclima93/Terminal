@@ -18,8 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.SingleShotLocationProvider;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
-import pt.uc.student.aclima.device_agent.Utilities.ProcessManager;
+import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.ProcessManager;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 

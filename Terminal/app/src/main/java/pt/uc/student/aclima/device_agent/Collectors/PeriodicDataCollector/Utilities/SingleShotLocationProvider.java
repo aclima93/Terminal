@@ -1,4 +1,4 @@
-package pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector;
+package pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,16 +18,16 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  * Based on Source: <a>https://stackoverflow.com/questions/29657948/get-the-current-location-fast-and-once-in-android</a>
  */
 
-class SingleShotLocationProvider {
+public class SingleShotLocationProvider {
 
-    static interface LocationCallback {
+    public static interface LocationCallback {
         public void onNewLocationAvailable(GPSCoordinates location);
     }
 
     // calls back to calling thread, note this is for low grain: if you want higher precision, swap the
     // contents of the else and if. Also be sure to check gps permission/settings are allowed.
     // call usually takes <10ms
-    static void requestSingleUpdate(final Context context, final LocationCallback callback) {
+    public static void requestSingleUpdate(final Context context, final LocationCallback callback) {
 
         final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -93,9 +93,9 @@ class SingleShotLocationProvider {
 
 
     // consider returning Location instead of this dummy wrapper class
-    static class GPSCoordinates {
+    public static class GPSCoordinates {
 
-        static String unitsOfMeasurement = "lat" + DELIMITER + "long";
+        public static String unitsOfMeasurement = "lat" + DELIMITER + "long";
 
         float longitude = -1;
         float latitude = -1;
