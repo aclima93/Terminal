@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.SingleShotLocationProvider;
+import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.traffic.TrafficMonitor;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.ProcessManager;
 
@@ -402,7 +404,6 @@ public class PeriodicIntentService extends IntentService {
     private void handleActionOpenPorts() {
         Log.d("OpenPorts", "OpenPorts service called.");
 
-
         Context context = getApplicationContext();
 
         Date timestamp = new Date();
@@ -435,8 +436,25 @@ public class PeriodicIntentService extends IntentService {
 
     }
     private void handleActionDataTraffic() {
-        // TODO: Handle action DataTraffic
         Log.d("DataTraffic", "DataTraffic service called.");
+
+        Context context = getApplicationContext();
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+            ArrayList<String> lines = new TrafficMonitor().takeSnapshot(context);
+            String allLines = "";
+            for (String line : lines) {
+                allLines += line + "\n";
+            }
+
+            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                    "Data Traffic", allLines, "", timestamp);
+            if (!success) {
+                Log.e("DataTraffic", "DataTraffic service failed to add row.");
+            }
+        }
     }
 
 }
