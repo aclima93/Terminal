@@ -30,12 +30,9 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
  * <p>
- * TODO: Customize class - update intent actions, extra parameters and static helper methods.
- * 
  * Collected Data:
  * - GPS
  * - CPU usage
- * - Battery
  * - Open Ports
  * - Data Traffic
  */
@@ -165,7 +162,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("RAM", "RAM service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {
@@ -185,7 +181,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("CPU", "CPU service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {
@@ -238,7 +233,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("GPS", "GPS service called.");
 
         final Context context = getApplicationContext();
-
         final Date timestamp = new Date();
 
         if(context != null) {
@@ -265,7 +259,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("CPUUsage", "CPUUsage service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {
@@ -315,6 +308,8 @@ public class PeriodicIntentService extends IntentService {
 
                     float entryValue = (float) 100 * (process_cpu_time2 - process_cpu_time1) / (system_uptime2 - system_uptime1);
 
+                    // FIXME: ? almost always at 0
+
                     String entryName = "CPU Usage" + DELIMITER + "pid " + process.pid + DELIMITER + process.name;
                     boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                             entryName,
@@ -334,7 +329,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("RAMUsage", "RAMUsage service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {
@@ -377,7 +371,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("Battery", "Battery service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {
@@ -405,7 +398,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("OpenPorts", "OpenPorts service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {
@@ -439,7 +431,6 @@ public class PeriodicIntentService extends IntentService {
         Log.d("DataTraffic", "DataTraffic service called.");
 
         Context context = getApplicationContext();
-
         Date timestamp = new Date();
 
         if(context != null) {

@@ -21,7 +21,7 @@ public class EventfulBroadcastReceiver extends BroadcastReceiver {
                 || action.equals(Intent.ACTION_DATE_CHANGED)
                 || action.equals(Intent.ACTION_TIMEZONE_CHANGED)) {
 
-            EventfulIntentService.startActionTimeChanged(context, new Date(System.currentTimeMillis()).toString());
+            EventfulIntentService.startActionTimeChange(context, new Date(System.currentTimeMillis()).toString());
         }
     }
 }
