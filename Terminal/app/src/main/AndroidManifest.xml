@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="pt.uc.student.aclima.device_agent"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <uses-permission android:name="android.permission.GET_TASKS"/>
+
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+        <!-- Activities -->
+        <activity android:name="pt.uc.student.aclima.device_agent.DeviceAgentActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Periodic Data Collector -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+        <!-- Eventful Data Collector -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <!-- Time -->
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- One-Time Data Collector -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Collectors.OneTimeDataCollector.OneTimeIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Collectors.OneTimeDataCollector.OneTimeBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- Application Actions -->
+                <action android:name="android.intent.action.PACKAGE_ADDED"  />
+                <action android:name="android.intent.action.PACKAGE_CHANGED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+
+            </intent-filter>
+        </receiver>
+
+        <!-- Periodic Data Aggregator -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+        <!-- Eventful Data Aggregator -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+    </application>
+
+</manifest>
