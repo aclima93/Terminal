@@ -3,6 +3,8 @@ package pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.BatteryManager;
 
 import java.util.Date;
@@ -46,7 +48,50 @@ public class EventfulBroadcastReceiver extends BroadcastReceiver {
                 chargingWireless = chargePlug == BatteryManager.BATTERY_PLUGGED_WIRELESS;
             }
 
-            EventfulIntentService.startActionPowerChange(context, action, isCharging, chargingUSB, chargingAC, chargingWireless);
+            String chargingMethod;
+            if(chargingUSB) {
+                chargingMethod = "USB";
+            }
+            else if(chargingAC) {
+                chargingMethod = "AC";
+            }
+            else if(chargingWireless) {
+                chargingMethod = "Wireless";
+            }
+            else{
+                chargingMethod = "None";
+            }
+
+            EventfulIntentService.startActionPowerChange(context, action, isCharging, chargingMethod);
+        }
+        else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+
+            boolean isConnected;
+            String connectedMethod;
+
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (activeNetwork != null) {
+                // connected to the internet
+                isConnected = true;
+
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                    // connected to wifi
+                    connectedMethod = "WiFi";
+                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    // connected to the mobile provider's data plan
+                    connectedMethod = "Mobile";
+                }
+                else{
+                    connectedMethod = "Unknown";
+                }
+            } else {
+                // not connected to the internet
+                isConnected = false;
+                connectedMethod = "None";
+            }
+
+            EventfulIntentService.startActionConnectionChange(context, action, isConnected, connectedMethod);
         }
     }
 }

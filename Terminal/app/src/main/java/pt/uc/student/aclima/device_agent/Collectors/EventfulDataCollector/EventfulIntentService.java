@@ -3,6 +3,7 @@ package pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import java.util.Date;
@@ -35,8 +36,9 @@ public class EventfulIntentService extends IntentService {
 
     private static final String EXTRA_POWER_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.POWER_CHANGE_PARAM1";
     private static final String EXTRA_POWER_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.POWER_CHANGE_PARAM2";
-    private static final String EXTRA_POWER_CHANGE_PARAM3 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.POWER_CHANGE_PARAM3";
-    private static final String EXTRA_POWER_CHANGE_PARAM4 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.POWER_CHANGE_PARAM4";
+
+    private static final String EXTRA_CONNECTION_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM1";
+    private static final String EXTRA_CONNECTION_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM2";
 
     public EventfulIntentService() {
         super("EventfulIntentService");
@@ -56,13 +58,19 @@ public class EventfulIntentService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startActionPowerChange(Context context, String action, boolean isCharging, boolean chargingUSB, boolean chargingAC, boolean chargingWireless) {
+    public static void startActionPowerChange(Context context, String action, boolean isCharging, String chargingMethod) {
         Intent intent = new Intent(context, EventfulIntentService.class);
         intent.setAction(action);
         intent.putExtra(EXTRA_POWER_CHANGE_PARAM1, isCharging);
-        intent.putExtra(EXTRA_POWER_CHANGE_PARAM2, chargingUSB);
-        intent.putExtra(EXTRA_POWER_CHANGE_PARAM3, chargingAC);
-        intent.putExtra(EXTRA_POWER_CHANGE_PARAM4, chargingWireless);
+        intent.putExtra(EXTRA_POWER_CHANGE_PARAM2, chargingMethod);
+        context.startService(intent);
+    }
+
+    public static void startActionConnectionChange(Context context, String action, boolean isConnected, String connectedMethod) {
+        Intent intent = new Intent(context, EventfulIntentService.class);
+        intent.setAction(action);
+        intent.putExtra(EXTRA_CONNECTION_CHANGE_PARAM1, isConnected);
+        intent.putExtra(EXTRA_CONNECTION_CHANGE_PARAM2, connectedMethod);
         context.startService(intent);
     }
 
@@ -84,31 +92,28 @@ public class EventfulIntentService extends IntentService {
             }
             else if(ACTION_POWER_CONNECTED.equals(action)){
                 boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                boolean chargingUSB = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM2, false);
-                boolean chargingAC = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM3, false);
-                boolean chargingWireless = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM4, false);
-                handleActionPowerChange("POWER_CONNECTED", isCharging, chargingUSB, chargingAC, chargingWireless);
+                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
+                handleActionPowerChange("POWER_CONNECTED", isCharging, chargingMethod);
             }
             else if(ACTION_POWER_DISCONNECTED.equals(action)){
                 boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                boolean chargingUSB = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM2, false);
-                boolean chargingAC = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM3, false);
-                boolean chargingWireless = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM4, false);
-                handleActionPowerChange("POWER_DISCONNECTED", isCharging, chargingUSB, chargingAC, chargingWireless);
+                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
+                handleActionPowerChange("POWER_DISCONNECTED", isCharging, chargingMethod);
             }
             else if(ACTION_BATTERY_LOW.equals(action)){
                 boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                boolean chargingUSB = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM2, false);
-                boolean chargingAC = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM3, false);
-                boolean chargingWireless = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM4, false);
-                handleActionPowerChange("BATTERY_LOW", isCharging, chargingUSB, chargingAC, chargingWireless);
+                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
+                handleActionPowerChange("BATTERY_LOW", isCharging, chargingMethod);
             }
             else if(ACTION_BATTERY_OKAY.equals(action)){
                 boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                boolean chargingUSB = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM2, false);
-                boolean chargingAC = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM3, false);
-                boolean chargingWireless = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM4, false);
-                handleActionPowerChange("BATTERY_OKAY", isCharging, chargingUSB, chargingAC, chargingWireless);
+                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
+                handleActionPowerChange("BATTERY_OKAY", isCharging, chargingMethod);
+            }
+            else if(ConnectivityManager.CONNECTIVITY_ACTION.equals(action)){
+                boolean isConnected = intent.getBooleanExtra(EXTRA_CONNECTION_CHANGE_PARAM1, false);
+                String connectedMethod = intent.getStringExtra(EXTRA_CONNECTION_CHANGE_PARAM2);
+                handleActionConnectionChange(isConnected, connectedMethod);
             }
 
         }
@@ -120,7 +125,7 @@ public class EventfulIntentService extends IntentService {
         Date timestamp = new Date();
 
         if(context != null) {
-            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
                     "TimeChange" + DELIMITER + event, newTime, "time", timestamp);
             if (!success) {
                 Log.e("TimeChange", "TimeChange" + DELIMITER + event + "service failed to add row.");
@@ -128,7 +133,7 @@ public class EventfulIntentService extends IntentService {
         }
     }
 
-    private void handleActionPowerChange(String event, boolean isCharging, boolean chargingUSB, boolean chargingAC, boolean chargingWireless) {
+    private void handleActionPowerChange(String event, boolean isCharging, String chargingMethod) {
         Log.d("PowerChange", "PowerChange service called for event " + event);
 
         Context context = getApplicationContext();
@@ -137,14 +142,32 @@ public class EventfulIntentService extends IntentService {
         if(context != null) {
 
             String entryValue = "isCharging" + DELIMITER + isCharging + "\n"+
-                    "chargingUSB" + DELIMITER + chargingUSB + "\n"+
-                    "chargingAC" + DELIMITER + chargingAC + "\n"+
-                    "chargingWireless" + DELIMITER + chargingWireless;
+                    "chargingMethod" + DELIMITER + chargingMethod;
 
-            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
-                    "PowerChange" + DELIMITER + event, entryValue, "booleans", timestamp);
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                    "PowerChange" + DELIMITER + event, entryValue, "", timestamp);
             if (!success) {
                 Log.e("PowerChange", "PowerChange" + DELIMITER + event + "service failed to add row.");
+            }
+        }
+    }
+
+
+    private void handleActionConnectionChange(boolean isConnected, String connectedMethod) {
+        Log.d("ConnectionChange", "ConnectionChange service called");
+
+        Context context = getApplicationContext();
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            String entryValue = "isConnected" + DELIMITER + isConnected + "\n"+
+                    "connectedMethod" + DELIMITER + connectedMethod;
+
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                    "ConnectionChange", entryValue, "", timestamp);
+            if (!success) {
+                Log.e("ConnectionChange", "ConnectionChange service failed to add row.");
             }
         }
     }
