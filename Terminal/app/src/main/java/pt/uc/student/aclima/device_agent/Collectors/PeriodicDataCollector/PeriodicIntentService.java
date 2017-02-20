@@ -32,6 +32,7 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  * <p>
  * Collected Data:
  * - GPS
+ * - Battery
  * - CPU usage
  * - Open Ports
  * - Data Traffic
