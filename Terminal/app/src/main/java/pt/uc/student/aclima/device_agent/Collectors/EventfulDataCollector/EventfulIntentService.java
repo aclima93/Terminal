@@ -34,8 +34,8 @@ public class EventfulIntentService extends IntentService {
 
     private static final String EXTRA_TIME_CHANGE_PARAM = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.TIME_CHANGE_PARAM";
 
-    private static final String EXTRA_POWER_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.POWER_CHANGE_PARAM1";
-    private static final String EXTRA_POWER_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.POWER_CHANGE_PARAM2";
+    private static final String EXTRA_CHARGING_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CHARGING_CHANGE_PARAM1";
+    private static final String EXTRA_CHARGING_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CHARGING_CHANGE_PARAM2";
 
     private static final String EXTRA_CONNECTION_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM1";
     private static final String EXTRA_CONNECTION_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM2";
@@ -58,11 +58,11 @@ public class EventfulIntentService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startActionPowerChange(Context context, String action, boolean isCharging, String chargingMethod) {
+    public static void startActionChargingChange(Context context, String action, boolean isCharging, String chargingMethod) {
         Intent intent = new Intent(context, EventfulIntentService.class);
         intent.setAction(action);
-        intent.putExtra(EXTRA_POWER_CHANGE_PARAM1, isCharging);
-        intent.putExtra(EXTRA_POWER_CHANGE_PARAM2, chargingMethod);
+        intent.putExtra(EXTRA_CHARGING_CHANGE_PARAM1, isCharging);
+        intent.putExtra(EXTRA_CHARGING_CHANGE_PARAM2, chargingMethod);
         context.startService(intent);
     }
 
@@ -74,10 +74,23 @@ public class EventfulIntentService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startActionScreenChange(Context context, String action) {
+        Intent intent = new Intent(context, EventfulIntentService.class);
+        intent.setAction(action);
+        context.startService(intent);
+    }
+
+    public static void startActionPowerChange(Context context, String action) {
+        Intent intent = new Intent(context, EventfulIntentService.class);
+        intent.setAction(action);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+
             if (ACTION_TIME_CHANGED.equals(action)) {
                 String time = intent.getStringExtra(EXTRA_TIME_CHANGE_PARAM);
                 handleActionTimeChange("TIME_CHANGED", time);
@@ -91,33 +104,41 @@ public class EventfulIntentService extends IntentService {
                 handleActionTimeChange("TIMEZONE_CHANGED", time);
             }
             else if(ACTION_POWER_CONNECTED.equals(action)){
-                boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
-                handleActionPowerChange("POWER_CONNECTED", isCharging, chargingMethod);
+                boolean isCharging = intent.getBooleanExtra(EXTRA_CHARGING_CHANGE_PARAM1, false);
+                String chargingMethod = intent.getStringExtra(EXTRA_CHARGING_CHANGE_PARAM2);
+                handleActionChargingChange("POWER_CONNECTED", isCharging, chargingMethod);
             }
             else if(ACTION_POWER_DISCONNECTED.equals(action)){
-                boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
-                handleActionPowerChange("POWER_DISCONNECTED", isCharging, chargingMethod);
+                boolean isCharging = intent.getBooleanExtra(EXTRA_CHARGING_CHANGE_PARAM1, false);
+                String chargingMethod = intent.getStringExtra(EXTRA_CHARGING_CHANGE_PARAM2);
+                handleActionChargingChange("POWER_DISCONNECTED", isCharging, chargingMethod);
             }
             else if(ACTION_BATTERY_LOW.equals(action)){
-                boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
-                handleActionPowerChange("BATTERY_LOW", isCharging, chargingMethod);
+                boolean isCharging = intent.getBooleanExtra(EXTRA_CHARGING_CHANGE_PARAM1, false);
+                String chargingMethod = intent.getStringExtra(EXTRA_CHARGING_CHANGE_PARAM2);
+                handleActionChargingChange("BATTERY_LOW", isCharging, chargingMethod);
             }
             else if(ACTION_BATTERY_OKAY.equals(action)){
-                boolean isCharging = intent.getBooleanExtra(EXTRA_POWER_CHANGE_PARAM1, false);
-                String chargingMethod = intent.getStringExtra(EXTRA_POWER_CHANGE_PARAM2);
-                handleActionPowerChange("BATTERY_OKAY", isCharging, chargingMethod);
+                boolean isCharging = intent.getBooleanExtra(EXTRA_CHARGING_CHANGE_PARAM1, false);
+                String chargingMethod = intent.getStringExtra(EXTRA_CHARGING_CHANGE_PARAM2);
+                handleActionChargingChange("BATTERY_OKAY", isCharging, chargingMethod);
             }
             else if(ConnectivityManager.CONNECTIVITY_ACTION.equals(action)){
                 boolean isConnected = intent.getBooleanExtra(EXTRA_CONNECTION_CHANGE_PARAM1, false);
                 String connectedMethod = intent.getStringExtra(EXTRA_CONNECTION_CHANGE_PARAM2);
                 handleActionConnectionChange(isConnected, connectedMethod);
             }
+            else if(Intent.ACTION_SCREEN_ON.equals(action)
+                    || Intent.ACTION_SCREEN_OFF.equals(action)){
+                handleActionScreenChange(action);
+            }
+            else if(Intent.ACTION_SHUTDOWN.equals(action)){
+                handleActionPowerChange(action);
+            }
 
         }
     }
+
     private void handleActionTimeChange(String event, String newTime) {
         Log.d("TimeChange", "TimeChange service called for event " + event);
 
@@ -133,8 +154,8 @@ public class EventfulIntentService extends IntentService {
         }
     }
 
-    private void handleActionPowerChange(String event, boolean isCharging, String chargingMethod) {
-        Log.d("PowerChange", "PowerChange service called for event " + event);
+    private void handleActionChargingChange(String event, boolean isCharging, String chargingMethod) {
+        Log.d("ChargingChange", "ChargingChange service called for event " + event);
 
         Context context = getApplicationContext();
         Date timestamp = new Date();
@@ -145,9 +166,9 @@ public class EventfulIntentService extends IntentService {
                     "chargingMethod" + DELIMITER + chargingMethod;
 
             boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
-                    "PowerChange" + DELIMITER + event, entryValue, "", timestamp);
+                    "ChargingChange" + DELIMITER + event, entryValue, "", timestamp);
             if (!success) {
-                Log.e("PowerChange", "PowerChange" + DELIMITER + event + "service failed to add row.");
+                Log.e("ChargingChange", "ChargingChange" + DELIMITER + event + "service failed to add row.");
             }
         }
     }
@@ -171,4 +192,37 @@ public class EventfulIntentService extends IntentService {
             }
         }
     }
+
+    private void handleActionScreenChange(String action) {
+        Log.d("ScreenChange", "ScreenChange service called");
+
+        Context context = getApplicationContext();
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                    "ScreenChange", action, "", timestamp);
+            if (!success) {
+                Log.e("ScreenChange", "ScreenChange service failed to add row.");
+            }
+        }
+    }
+
+    private void handleActionPowerChange(String action) {
+        Log.d("PowerChange", "PowerChange service called");
+
+        Context context = getApplicationContext();
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                    "PowerChange", action, "", timestamp);
+            if (!success) {
+                Log.e("PowerChange", "PowerChange service failed to add row.");
+            }
+        }
+    }
+
 }

@@ -2,8 +2,10 @@ package pt.uc.student.aclima.device_agent;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -11,6 +13,7 @@ import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.Even
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService;
 import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService;
+import pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicIntentService;
 
@@ -22,6 +25,16 @@ public class DeviceAgentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collectors);
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
+
+        /*
+         * for some reason, ACTION_SCREEN_ON and OFF will not work if configured through the Manifest
+         * so we have to add these actions to the BroadcastReceiver here
+         */
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        BroadcastReceiver mReceiver = new EventfulBroadcastReceiver();
+        registerReceiver(mReceiver, intentFilter);
 
         schedulePeriodicAlarms();
 

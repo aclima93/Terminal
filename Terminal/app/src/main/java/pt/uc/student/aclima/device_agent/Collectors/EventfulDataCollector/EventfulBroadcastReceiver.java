@@ -62,7 +62,7 @@ public class EventfulBroadcastReceiver extends BroadcastReceiver {
                 chargingMethod = "None";
             }
 
-            EventfulIntentService.startActionPowerChange(context, action, isCharging, chargingMethod);
+            EventfulIntentService.startActionChargingChange(context, action, isCharging, chargingMethod);
         }
         else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
 
@@ -92,6 +92,13 @@ public class EventfulBroadcastReceiver extends BroadcastReceiver {
             }
 
             EventfulIntentService.startActionConnectionChange(context, action, isConnected, connectedMethod);
+        }
+        else if(Intent.ACTION_SCREEN_ON.equals(action)
+                || Intent.ACTION_SCREEN_OFF.equals(action)){
+            EventfulIntentService.startActionScreenChange(context, action);
+        }
+        else if(Intent.ACTION_SHUTDOWN.equals(action)){
+            EventfulIntentService.startActionPowerChange(context, action);
         }
     }
 }
