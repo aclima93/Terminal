@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
+import android.telephony.CellLocation;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
 
 import java.util.Date;
 
@@ -100,5 +103,38 @@ public class EventfulBroadcastReceiver extends BroadcastReceiver {
         else if(Intent.ACTION_SHUTDOWN.equals(action)){
             EventfulIntentService.startActionPowerChange(context, action);
         }
+    }
+
+    public PhoneStateListener setupPhoneStateListener(final Context context) {
+
+        return new PhoneStateListener() {
+
+            @Override
+            public void onCellLocationChanged(CellLocation location) {
+                super.onCellLocationChanged(location);
+
+                EventfulIntentService.handleCurrentBaseStationChange(context, location);
+
+                EventfulIntentService.handleNeighbourBaseStationChange(context);
+            }
+
+            /*
+            // TODO: this method requires API 17, which is not good for this project
+            @Override
+            public void onCellInfoChanged(List<CellInfo> cellInfo) {
+                super.onCellInfoChanged(cellInfo);
+
+                EventfulIntentService.handleNeighbourBaseStationChange(context, cellInfo);
+            }
+            */
+
+            @Override
+            public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+                super.onSignalStrengthsChanged(signalStrength);
+
+                EventfulIntentService.handleCurrentBaseStationSignalStrengthChange(context, signalStrength);
+            }
+
+        };
     }
 }

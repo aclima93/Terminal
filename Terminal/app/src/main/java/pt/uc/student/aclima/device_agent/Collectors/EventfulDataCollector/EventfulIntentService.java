@@ -4,6 +4,18 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.Build;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellLocation;
+import android.telephony.NeighboringCellInfo;
+import android.telephony.SignalStrength;
+import android.telephony.TelephonyManager;
+import android.telephony.cdma.CdmaCellLocation;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 import java.util.Date;
@@ -221,6 +233,204 @@ public class EventfulIntentService extends IntentService {
                     "PowerChange", action, "", timestamp);
             if (!success) {
                 Log.e("PowerChange", "PowerChange service failed to add row.");
+            }
+        }
+    }
+
+    public static void handleCurrentBaseStationChange(Context context, CellLocation location){
+        Log.d("BaseStationChange", "BaseStationChange" + DELIMITER + "Current service called");
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            String unitsOfMeasurement = "";
+            String measurement = "";
+
+            if (location instanceof CdmaCellLocation) {
+
+                CdmaCellLocation cdmaCellLocation = (CdmaCellLocation) location;
+
+                unitsOfMeasurement = "BaseStationId" + DELIMITER + "NetworkId" + DELIMITER + "SystemId" +
+                        DELIMITER + "Latitude" + DELIMITER + "Longitude" + DELIMITER + "NetworkType";
+
+                measurement += cdmaCellLocation.getBaseStationId() + DELIMITER;
+                measurement += cdmaCellLocation.getNetworkId() + DELIMITER;
+                measurement += cdmaCellLocation.getSystemId() + DELIMITER;
+                measurement += cdmaCellLocation.getBaseStationLatitude() + DELIMITER;
+                measurement += cdmaCellLocation.getBaseStationLongitude() + DELIMITER;
+                measurement += "CDMA" + DELIMITER + "\n";
+
+            } else if (location instanceof GsmCellLocation) {
+
+                unitsOfMeasurement = "CID" + DELIMITER + "LAC" + DELIMITER + "PSC" +
+                        DELIMITER + "NetworkType";
+
+                GsmCellLocation gsmCellLocation = (GsmCellLocation) location;
+
+                measurement += gsmCellLocation.getCid() + DELIMITER;
+                measurement += gsmCellLocation.getLac() + DELIMITER;
+                measurement += gsmCellLocation.getPsc() + DELIMITER;
+                measurement += "GSM" + DELIMITER + "\n";
+
+            }
+
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                    "BaseStationChange" + DELIMITER + "Current", measurement, unitsOfMeasurement, timestamp);
+            if (!success) {
+                Log.e("BaseStationChange", "BaseStationChange" + DELIMITER + "Current service failed to add row.");
+            }
+
+        }
+
+    }
+
+    public static void handleNeighbourBaseStationChange(Context context){
+        Log.d("BaseStationChange", "BaseStationChange" + DELIMITER + "Neighbours service called");
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+            // also listen for properties of the neighboring cell towers
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
+                for(CellInfo cellInfo : telephonyManager.getAllCellInfo()) {
+
+                    String unitsOfMeasurement = "";
+                    String measurement = "";
+
+                    /*
+                     * CellInfo is a superclass for the various types of cell tower technologies
+                     *
+                     * <b>CDMA</b> (Code Division Multiple Access) is a "spread spectrum" for cellular networks
+                     * enabling many more wireless users to share airwaves than alternative technologies.
+                     *
+                     * <b>GSM</b> (Global System for Mobile Communications) is a wireless technology to
+                     * describe protocols for cellular networks used by mobile phones with over 80%
+                     * market share globally.
+                     *
+                     * <b>LTE</b> (Long Term Evolution) is a wireless broadband technology for
+                     * communication of high speed data for mobile phones.
+                     */
+
+                    if( cellInfo instanceof CellInfoGsm){
+
+                        unitsOfMeasurement = "CID" + DELIMITER +"LAC" + DELIMITER +"PSC" +
+                                DELIMITER + "Latitude" + DELIMITER + "Longitude" +
+                                DELIMITER + "NetworkType" + DELIMITER +"RSSI dBm";
+
+                        CellInfoGsm cellInfoGsm = (CellInfoGsm) cellInfo;
+                        measurement += cellInfoGsm.getCellIdentity().getCid() + DELIMITER;
+                        measurement += cellInfoGsm.getCellIdentity().getLac() + DELIMITER;
+                        measurement += cellInfoGsm.getCellIdentity().getPsc() + DELIMITER;
+                        measurement += "GSM" + DELIMITER;
+                        measurement += cellInfoGsm.getCellSignalStrength().getDbm() + "\n";
+                    }
+                    else if( cellInfo instanceof CellInfoCdma){
+
+                        unitsOfMeasurement = "BasestationId" + DELIMITER +"NetworkId" + DELIMITER +"SystemId" +
+                                DELIMITER + "NetworkType" + DELIMITER +"RSSI dBm";
+
+                        CellInfoCdma cellInfoCdma = (CellInfoCdma) cellInfo;
+                        measurement += cellInfoCdma.getCellIdentity().getBasestationId() + DELIMITER;
+                        measurement += cellInfoCdma.getCellIdentity().getNetworkId() + DELIMITER;
+                        measurement += cellInfoCdma.getCellIdentity().getSystemId() + DELIMITER;
+                        measurement += cellInfoCdma.getCellIdentity().getLatitude() + DELIMITER;
+                        measurement += cellInfoCdma.getCellIdentity().getLongitude() + DELIMITER;
+                        measurement += "CDMA" + DELIMITER;
+                        measurement += cellInfoCdma.getCellSignalStrength().getDbm() + "\n";
+
+                    }
+                    else if( cellInfo instanceof CellInfoLte){
+
+                        unitsOfMeasurement = "CI" + DELIMITER +"PCI" + DELIMITER +"TAC" +
+                                DELIMITER + "NetworkType" + DELIMITER +"RSSI dBm";
+
+                        CellInfoLte cellInfoLte = (CellInfoLte) cellInfo;
+                        measurement += cellInfoLte.getCellIdentity().getCi() + DELIMITER;
+                        measurement += cellInfoLte.getCellIdentity().getPci() + DELIMITER;
+                        measurement += cellInfoLte.getCellIdentity().getTac() + DELIMITER;
+                        measurement += "LTE" + DELIMITER;
+                        measurement += cellInfoLte.getCellSignalStrength().getDbm() + "\n";
+                    }
+                    else if( cellInfo instanceof CellInfoWcdma){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+
+                            unitsOfMeasurement = "CID" + DELIMITER +"LAC" + DELIMITER +"PSC" +
+                                    DELIMITER + "NetworkType" + DELIMITER +"RSSI dBm";
+
+                            CellInfoWcdma cellInfoWcdma = (CellInfoWcdma) cellInfo;
+                            measurement += cellInfoWcdma.getCellIdentity().getCid() + DELIMITER;
+                            measurement += cellInfoWcdma.getCellIdentity().getLac() + DELIMITER;
+                            measurement += cellInfoWcdma.getCellIdentity().getPsc() + DELIMITER;
+                            measurement += "WCDMA" + DELIMITER;
+                            measurement += cellInfoWcdma.getCellSignalStrength().getDbm() + "\n";
+
+                        }
+                    }
+
+                    boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                            "BaseStationChange" + DELIMITER + "Neighbours", measurement, unitsOfMeasurement, timestamp);
+                    if (!success) {
+                        Log.e("BaseStationChange", "BaseStationChange" + DELIMITER + "Neighbours service failed to add row.");
+                    }
+
+                }
+            }
+            else {
+                // older devices will use this older method of obtaining neighboring information
+
+                String unitsOfMeasurement = "CID" + DELIMITER +"LAC" + DELIMITER +"PSC" +
+                        DELIMITER + "NetworkType" + DELIMITER +"RSSI";
+
+                for (NeighboringCellInfo neighboringCellInfo : telephonyManager.getNeighboringCellInfo()) {
+
+                    String measurement = "";
+                    measurement += neighboringCellInfo.getCid() + DELIMITER;
+                    measurement += neighboringCellInfo.getLac() + DELIMITER;
+                    measurement += neighboringCellInfo.getPsc() + DELIMITER;
+                    measurement += neighboringCellInfo.getNetworkType() + DELIMITER;
+                    measurement += neighboringCellInfo.getRssi() + "\n";
+
+                    boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                            "BaseStationChange" + DELIMITER + "Neighbours", measurement, unitsOfMeasurement, timestamp);
+                    if (!success) {
+                        Log.e("BaseStationChange", "BaseStationChange" + DELIMITER + "Neighbours service failed to add row.");
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public static void handleCurrentBaseStationSignalStrengthChange(Context context, SignalStrength signalStrength) {
+        Log.d("BaseStationChange", "BaseStationChange" + DELIMITER + "Current Signal Strength service called");
+
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            String measurement = "";
+            String unitsOfMeasurement = "";
+
+            if (signalStrength.isGsm()) {
+                measurement = signalStrength.getGsmSignalStrength() + "";
+                unitsOfMeasurement = "GSM SignalStrength";
+            } else {
+                measurement = signalStrength.getCdmaDbm() + "";
+                unitsOfMeasurement = "CDMA Dbm";
+            }
+
+            boolean success = new DatabaseManager(context).getEventfulMeasurementsTable().addRow(
+                    "BaseStationChange" + DELIMITER + "Current", measurement, unitsOfMeasurement, timestamp);
+            if (!success) {
+                Log.e("BaseStationChange", "BaseStationChange service failed to add row.");
             }
         }
     }

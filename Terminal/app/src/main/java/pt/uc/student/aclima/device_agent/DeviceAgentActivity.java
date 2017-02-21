@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService;
@@ -26,6 +28,17 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
 
+        schedulePeriodicAlarms();
+
+        setupSpecialEventfulBroadcastReceivers();
+
+        schedulePeriodicAggregatorAlarms();
+
+        scheduleEventfulAggregatorAlarms();
+    }
+
+    private void setupSpecialEventfulBroadcastReceivers() {
+
         /*
          * for some reason, ACTION_SCREEN_ON and OFF will not work if configured through the Manifest
          * so we have to add these actions to the BroadcastReceiver here
@@ -36,11 +49,13 @@ public class DeviceAgentActivity extends AppCompatActivity {
         BroadcastReceiver mReceiver = new EventfulBroadcastReceiver();
         registerReceiver(mReceiver, intentFilter);
 
-        schedulePeriodicAlarms();
+        // Base station
+        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        PhoneStateListener phoneStateListener = new EventfulBroadcastReceiver().setupPhoneStateListener(getApplicationContext());
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CELL_LOCATION);
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
-        schedulePeriodicAggregatorAlarms();
-
-        scheduleEventfulAggregatorAlarms();
     }
 
     private void scheduleEventfulAggregatorAlarms() {
