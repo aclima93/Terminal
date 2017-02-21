@@ -2,7 +2,24 @@
 <manifest package="pt.uc.student.aclima.device_agent"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!-- Internet permission for network comunication -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!-- Boot Loading Completion -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!-- Device location services -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- Cellular network information -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,19 +27,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <uses-permission android:name="android.permission.GET_TASKS"/>
-
-        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
         <!-- Activities -->
         <activity android:name="pt.uc.student.aclima.device_agent.DeviceAgentActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <receiver android:enabled="true" android:name="pt.uc.student.aclima.device_agent.BootUpReceiver"
+                  android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
         <!-- Periodic Data Collector -->
         <service
@@ -45,10 +65,25 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <!-- Time -->
+                <!-- Time Changes -->
                 <action android:name="android.intent.action.TIME_SET"/>
                 <action android:name="android.intent.action.DATE_CHANGED"/>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+
+                <!-- Battery - Charging -->
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+
+                <!-- Battery - Power -->
+                <action android:name="android.intent.action.BATTERY_LOW"/>
+                <action android:name="android.intent.action.BATTERY_OKAY"/>
+
+                <!-- Connectivity -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <!-- Power On/Off -->
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+
             </intent-filter>
         </receiver>
 

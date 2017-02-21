@@ -2,15 +2,20 @@ package pt.uc.student.aclima.device_agent;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService;
 import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService;
+import pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicIntentService;
 
@@ -25,9 +30,32 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         schedulePeriodicAlarms();
 
+        setupSpecialEventfulBroadcastReceivers();
+
         schedulePeriodicAggregatorAlarms();
 
         scheduleEventfulAggregatorAlarms();
+    }
+
+    private void setupSpecialEventfulBroadcastReceivers() {
+
+        /*
+         * for some reason, ACTION_SCREEN_ON and OFF will not work if configured through the Manifest
+         * so we have to add these actions to the BroadcastReceiver here
+         */
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        BroadcastReceiver mReceiver = new EventfulBroadcastReceiver();
+        registerReceiver(mReceiver, intentFilter);
+
+        // Base station
+        TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        PhoneStateListener phoneStateListener = new EventfulBroadcastReceiver().setupPhoneStateListener(getApplicationContext());
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CELL_LOCATION);
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+
     }
 
     private void scheduleEventfulAggregatorAlarms() {
