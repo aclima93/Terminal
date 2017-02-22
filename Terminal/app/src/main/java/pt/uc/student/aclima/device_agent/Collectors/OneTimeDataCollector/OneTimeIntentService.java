@@ -5,6 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.Date;
+
+import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
+
+import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -13,55 +19,68 @@ import android.util.Log;
  * 
  * Collected Data:
  * - RAM
- * - CPU
- * - GPS
- * - CPU usage
- * - RAM usage
- * - Battery
- * - Open Ports
- * - Data Traffic
  */
 public class OneTimeIntentService extends IntentService {
 
-    public static final String ACTION_PACKAGE_ADDED = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.action.PACKAGE_ADDED";
-    public static final String ACTION_PACKAGE_CHANGED = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.action.PACKAGE_CHANGED";
-    public static final String ACTION_PACKAGE_REMOVED = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.action.PACKAGE_REMOVED";
-    public static final String ACTION_PACKAGE_REPLACED = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.action.PACKAGE_REPLACED";
-
     private static final String EXTRA_PACKAGE_UID = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.PACKAGE_UID";
     private static final String EXTRA_PACKAGE_NAME = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.PACKAGE_NAME";
+    private static final String EXTRA_PACKAGE_DATA_REMOVED = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.PACKAGE_DATA_REMOVED";
+    private static final String EXTRA_REPLACING_OTHER_PACKAGE = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.REPLACING_OTHER_PACKAGE";
 
     public OneTimeIntentService() {
         super("PeriodicIntentService");
     }
 
-    public static void startActionPackageAdded(Context context, int packageUID, String packageName) {
+    public static void startActionPackageChange(Context context, String action, int packageUID,
+                                                String packageName, boolean isExtraDataRemoved,
+                                                boolean isReplacingOtherPackage) {
 
         Intent intent = new Intent(context, OneTimeIntentService.class);
-        intent.setAction(ACTION_PACKAGE_ADDED);
+        intent.setAction(action);
         intent.putExtra(EXTRA_PACKAGE_UID, packageUID);
         intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(EXTRA_PACKAGE_DATA_REMOVED, isExtraDataRemoved);
+        intent.putExtra(EXTRA_REPLACING_OTHER_PACKAGE, isReplacingOtherPackage);
         context.startService(intent);
     }
-
 
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
 
-            if (action.equals(ACTION_PACKAGE_ADDED)) {
-                handleActionRAM();
+            if (Intent.ACTION_PACKAGE_ADDED.equals(action)
+                || Intent.ACTION_PACKAGE_CHANGED.equals(action) ) {
+
+                int packageUID = intent.getIntExtra(EXTRA_PACKAGE_UID, -1);
+                String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
+                boolean isExtraDataRemoved = intent.getBooleanExtra(EXTRA_PACKAGE_DATA_REMOVED, false);
+                boolean isReplacingOtherPackage = intent.getBooleanExtra(EXTRA_REPLACING_OTHER_PACKAGE, false);
+
+                handleActionPackageChange(action, packageUID, packageName, isExtraDataRemoved, isReplacingOtherPackage);
             }
         }
     }
 
-    /**
-     * Handle action RAM in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionRAM() {
-        Log.d( "RAM", "RAM service called");
+    private void handleActionPackageChange(String action, int packageUID, String packageName, boolean isExtraDataRemoved, boolean isReplacingOtherPackage) {
+        Log.d( "PackageChange", "PackageChange" + DELIMITER + action + " service called");
+
+        Context context = getApplicationContext();
+        Date timestamp = new Date();
+
+        if(context != null) {
+
+            String unitsOfMeasurement = "packageUID" + DELIMITER + "packageName"
+                    + DELIMITER + "isExtraDataRemoved" + DELIMITER + "isReplacingOtherPackage";
+            String measurement = packageUID + DELIMITER + packageName
+                    + DELIMITER + isExtraDataRemoved + DELIMITER + isReplacingOtherPackage;
+
+            boolean success = new DatabaseManager(context).getOneTimeMeasurementsTable().addRow(
+                    "PackageChange" + DELIMITER + action, measurement, unitsOfMeasurement, timestamp);
+            if (!success) {
+                Log.e("PackageChange", "PackageChange" + DELIMITER + action + " service failed to add row.");
+            }
+        }
     }
 
 

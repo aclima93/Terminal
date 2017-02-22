@@ -16,23 +16,25 @@ public class OneTimeBroadcastReceiver extends BroadcastReceiver {
 
         final String action = intent.getAction();
 
-        if( action.equals(Intent.ACTION_PACKAGE_ADDED) ){
+        if( action.equals(Intent.ACTION_PACKAGE_INSTALL)
+                || action.equals(Intent.ACTION_PACKAGE_ADDED)
+                || action.equals(Intent.ACTION_PACKAGE_CHANGED)
+                || action.equals(Intent.ACTION_PACKAGE_REMOVED)
+                || action.equals(Intent.ACTION_PACKAGE_REPLACED)
+                || action.equals(Intent.ACTION_PACKAGE_FULLY_REMOVED) ){
 
             Bundle bundle = intent.getExtras();
 
             int packageUID = bundle.getInt(Intent.EXTRA_UID);
-            String packageName = bundle.getString(Intent.EXTRA_PACKAGE_NAME);
+            String packageName = context.getPackageManager().getNameForUid(packageUID);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                packageName = bundle.getString(Intent.EXTRA_PACKAGE_NAME);
+            }
 
-            OneTimeIntentService.startActionPackageAdded(context, packageUID, packageName);
+            boolean isExtraDataRemoved = bundle.getBoolean(Intent.EXTRA_DATA_REMOVED);
+            boolean isReplacingOtherPackage = bundle.getBoolean(Intent.EXTRA_REPLACING);
 
-        }
-        else if( action.equals(Intent.ACTION_PACKAGE_CHANGED) ){
-
-        }
-        else if( action.equals(Intent.ACTION_PACKAGE_REMOVED) ){
-
-        }
-        else if( action.equals(Intent.ACTION_PACKAGE_REPLACED) ){
+            OneTimeIntentService.startActionPackageChange(context, action, packageUID, packageName, isExtraDataRemoved, isReplacingOtherPackage);
 
         }
 
