@@ -6,10 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import pt.uc.student.aclima.device_agent.Database.Tables.EventfulAggregatedMeasurementsTable;
-import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicAggregatedMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.EventfulMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.OneTimeMeasurementsTable;
+import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicAggregatedMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicMeasurementsTable;
+import pt.uc.student.aclima.device_agent.Database.Tables.SchedulingTable;
 
 /**
  * Created by aclima on 06/10/16.
@@ -73,6 +74,21 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
             Log.d("createDatabase", "Creating tables...");
 
+            /*
+             * Scheduling Table
+             */
+
+            // SchedulingTable
+            database.execSQL("CREATE TABLE " + SchedulingTable.TABLE_NAME + " ( "
+                    + SchedulingTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + SchedulingTable.NAME + " TEXT, "
+                    + SchedulingTable.VALUE + " INTEGER, "
+                    + SchedulingTable.TIMESTAMP + " TEXT)");
+
+            /*
+             * Measurement Tables
+             */
+
             // PeriodicMeasurementsTable
             database.execSQL("CREATE TABLE " + PeriodicMeasurementsTable.TABLE_NAME + " ( "
                     + PeriodicMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -97,6 +113,10 @@ public final class DatabaseManager extends SQLiteOpenHelper {
                     + OneTimeMeasurementsTable.UNITS_OF_MEASUREMENT + " TEXT, "
                     + OneTimeMeasurementsTable.TIMESTAMP + " TEXT)");
 
+            /*
+             * Aggregated Measurement Tables
+             */
+
             // PeriodicAggregatedMeasurementsTable
             database.execSQL("CREATE TABLE " + PeriodicAggregatedMeasurementsTable.TABLE_NAME + " ( "
                     + PeriodicAggregatedMeasurementsTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -113,7 +133,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
                     + EventfulAggregatedMeasurementsTable.NAME + " TEXT, "
                     + EventfulAggregatedMeasurementsTable.SAMPLE_START_TIME + " TEXT, "
                     + EventfulAggregatedMeasurementsTable.SAMPLE_END_TIME + " TEXT, "
-                    + EventfulAggregatedMeasurementsTable.NUMBER_OF_EVENTS + " TEXT)");
+                    + EventfulAggregatedMeasurementsTable.NUMBER_OF_EVENTS + " INTEGER)");
 
             Log.d("createDatabase", "Created tables.");
 

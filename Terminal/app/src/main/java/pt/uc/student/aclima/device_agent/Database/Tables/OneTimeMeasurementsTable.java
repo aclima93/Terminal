@@ -114,7 +114,7 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
 
         ArrayList<OneTimeMeasurement> rows = new ArrayList<>();
 
-        String query = "SELECT * FROM " + TABLE_NAME + " where " + TIMESTAMP + " between \'" + startDateString + "\' and \'" + endDateString + "\'" ;
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TIMESTAMP + " BETWEEN \'" + startDateString + "\' AND \'" + endDateString + "\'" ;
 
         SQLiteDatabase database = databaseManager.getWritableDatabase();
         Cursor cursor = database.rawQuery(query, null);
