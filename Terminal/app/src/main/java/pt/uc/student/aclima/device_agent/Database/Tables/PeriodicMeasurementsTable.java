@@ -33,10 +33,10 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
-                "name: " + name + "\n" +
-                "value: " + value + "\n" +
-                "unitsOfMeasurement: " + unitsOfMeasurement + "\n" +
-                "timestamp: " + timestamp.toString() + "\n"
+                NAME + ": " + name + "\n" +
+                VALUE + ": " + value + "\n" +
+                UNITS_OF_MEASUREMENT + ": " + unitsOfMeasurement + "\n" +
+                TIMESTAMP + ": " + timestamp.toString() + "\n"
         );
 
         boolean success;

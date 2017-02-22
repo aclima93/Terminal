@@ -10,32 +10,34 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
-import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
+import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 
 /**
  * Created by aclima on 13/12/2016.
  */
 
-public class EventfulMeasurementsTable extends MeasurementsTable {
+public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsTable {
 
-    public static final String TABLE_NAME = "EventfulMeasurementsTable";
+    public static final String TABLE_NAME = "PeriodicAggregatedMeasurementsTable";
 
-    public static final String VALUE = "value";
+    public static final String HARMONIC_VALUE = "harmonic_value";
+    public static final String MEDIAN_VALUE = "median_value";
     public static final String UNITS_OF_MEASUREMENT = "units_of_measurement";
-    public static final String TIMESTAMP = "timestamp";
 
-    public EventfulMeasurementsTable(DatabaseManager databaseManager) {
+    public PeriodicAggregatedMeasurementsTable(DatabaseManager databaseManager) {
         super(databaseManager);
     }
 
-    public boolean addRow(String name, String value, String unitsOfMeasurement, Date timestamp){
+    public boolean addRow(String name, Date sampleStartTime, Date sampleEndTime, String harmonicValue, String medianValue, String unitsOfMeasurement){
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
                         NAME + ": " + name + "\n" +
-                        VALUE + ": " + value + "\n" +
-                        UNITS_OF_MEASUREMENT + ": " + unitsOfMeasurement + "\n" +
-                        TIMESTAMP + ": " + timestamp.toString() + "\n"
+                        SAMPLE_START_TIME + ": " + sampleStartTime.toString() + "\n" +
+                        SAMPLE_END_TIME + ": " + sampleEndTime.toString() + "\n" +
+                        HARMONIC_VALUE + ": " + harmonicValue + "\n" +
+                        MEDIAN_VALUE + ": " + medianValue + "\n" +
+                        UNITS_OF_MEASUREMENT + ": " + unitsOfMeasurement + "\n"
         );
 
         boolean success;
@@ -44,14 +46,15 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         try {
             database.beginTransaction();
 
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+
             ContentValues contentValues = new ContentValues();
             contentValues.put(NAME, name);
-            contentValues.put(VALUE, value);
+            contentValues.put(SAMPLE_START_TIME, simpleDateFormat.format(sampleStartTime));
+            contentValues.put(SAMPLE_END_TIME, simpleDateFormat.format(sampleEndTime));
+            contentValues.put(HARMONIC_VALUE, harmonicValue);
+            contentValues.put(MEDIAN_VALUE, medianValue);
             contentValues.put(UNITS_OF_MEASUREMENT, unitsOfMeasurement);
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
-            String timestampString = simpleDateFormat.format(timestamp);
-            contentValues.put(TIMESTAMP, timestampString);
 
             database.insertOrThrow(TABLE_NAME, NAME, contentValues);
 
@@ -74,11 +77,11 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<EventfulMeasurement> getAllRows() {
+    public ArrayList<PeriodicAggregatedMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<EventfulMeasurement> rows = new ArrayList<>();
+        ArrayList<PeriodicAggregatedMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
@@ -89,21 +92,22 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
 
             database.beginTransaction();
 
-            EventfulMeasurement eventfulMeasurement;
+            PeriodicAggregatedMeasurement periodicAggregatedMeasurement;
             if (cursor.moveToFirst()) {
                 do {
 
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
-                    Date timestamp = simpleDateFormat.parse(cursor.getString(4));
 
-                    eventfulMeasurement = new EventfulMeasurement(
+                    periodicAggregatedMeasurement = new PeriodicAggregatedMeasurement(
                             cursor.getInt(0), // ID
                             cursor.getString(1), // NAME
-                            cursor.getString(2), // VALUE
-                            cursor.getString(3), // UNITS_OF_MEASUREMENT
-                            timestamp); // TIMESTAMP
+                            simpleDateFormat.parse(cursor.getString(2)), // SAMPLE_START_TIME
+                            simpleDateFormat.parse(cursor.getString(3)), // SAMPLE_END_TIME
+                            cursor.getString(4), // HARMONIC_VALUE
+                            cursor.getString(5), // MEDIAN_VALUE
+                            cursor.getString(6)); // UNITS_OF_MEASUREMENT
 
-                    rows.add(eventfulMeasurement);
+                    rows.add(periodicAggregatedMeasurement);
 
                 } while (cursor.moveToNext());
             }

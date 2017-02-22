@@ -10,32 +10,30 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
-import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
+import pt.uc.student.aclima.device_agent.Database.Entries.EventfulAggregatedMeasurement;
 
 /**
  * Created by aclima on 13/12/2016.
  */
 
-public class EventfulMeasurementsTable extends MeasurementsTable {
+public class EventfulAggregatedMeasurementsTable extends AggregatedMeasurementsTable {
 
-    public static final String TABLE_NAME = "EventfulMeasurementsTable";
+    public static final String TABLE_NAME = "EventfulAggregatedMeasurementsTable";
 
-    public static final String VALUE = "value";
-    public static final String UNITS_OF_MEASUREMENT = "units_of_measurement";
-    public static final String TIMESTAMP = "timestamp";
+    public static final String NUMBER_OF_EVENTS = "number_of_events";
 
-    public EventfulMeasurementsTable(DatabaseManager databaseManager) {
+    public EventfulAggregatedMeasurementsTable(DatabaseManager databaseManager) {
         super(databaseManager);
     }
 
-    public boolean addRow(String name, String value, String unitsOfMeasurement, Date timestamp){
+    public boolean addRow(String name, Date sampleStartTime, Date sampleEndTime, int numberOfEvents){
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
                         NAME + ": " + name + "\n" +
-                        VALUE + ": " + value + "\n" +
-                        UNITS_OF_MEASUREMENT + ": " + unitsOfMeasurement + "\n" +
-                        TIMESTAMP + ": " + timestamp.toString() + "\n"
+                        SAMPLE_START_TIME + ": " + sampleStartTime.toString() + "\n" +
+                        SAMPLE_END_TIME + ": " + sampleEndTime.toString() + "\n" +
+                        NUMBER_OF_EVENTS + ": " + numberOfEvents + "\n"
         );
 
         boolean success;
@@ -44,14 +42,13 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         try {
             database.beginTransaction();
 
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+
             ContentValues contentValues = new ContentValues();
             contentValues.put(NAME, name);
-            contentValues.put(VALUE, value);
-            contentValues.put(UNITS_OF_MEASUREMENT, unitsOfMeasurement);
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
-            String timestampString = simpleDateFormat.format(timestamp);
-            contentValues.put(TIMESTAMP, timestampString);
+            contentValues.put(SAMPLE_START_TIME, simpleDateFormat.format(sampleStartTime));
+            contentValues.put(SAMPLE_END_TIME, simpleDateFormat.format(sampleEndTime));
+            contentValues.put(NUMBER_OF_EVENTS, numberOfEvents);
 
             database.insertOrThrow(TABLE_NAME, NAME, contentValues);
 
@@ -74,11 +71,11 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<EventfulMeasurement> getAllRows() {
+    public ArrayList<EventfulAggregatedMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<EventfulMeasurement> rows = new ArrayList<>();
+        ArrayList<EventfulAggregatedMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
@@ -89,21 +86,20 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
 
             database.beginTransaction();
 
-            EventfulMeasurement eventfulMeasurement;
+            EventfulAggregatedMeasurement eventfulAggregatedMeasurement;
             if (cursor.moveToFirst()) {
                 do {
 
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
-                    Date timestamp = simpleDateFormat.parse(cursor.getString(4));
 
-                    eventfulMeasurement = new EventfulMeasurement(
+                    eventfulAggregatedMeasurement = new EventfulAggregatedMeasurement(
                             cursor.getInt(0), // ID
                             cursor.getString(1), // NAME
-                            cursor.getString(2), // VALUE
-                            cursor.getString(3), // UNITS_OF_MEASUREMENT
-                            timestamp); // TIMESTAMP
+                            simpleDateFormat.parse(cursor.getString(2)), // SAMPLE_START_TIME
+                            simpleDateFormat.parse(cursor.getString(3)), // SAMPLE_END_TIME
+                            cursor.getInt(4)); // NUMBER_OF_EVENTS
 
-                    rows.add(eventfulMeasurement);
+                    rows.add(eventfulAggregatedMeasurement);
 
                 } while (cursor.moveToNext());
             }
