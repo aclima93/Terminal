@@ -59,13 +59,13 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
             database.setTransactionSuccessful();
             success = true;
 
-            Log.d("addPeriodicMeasurement", "Added to table.");
+            Log.d("addRow", "Added to table.");
         }
         catch (Exception e){
             e.printStackTrace();
             success = false;
 
-            Log.d("addPeriodicMeasurement", "Failed to add to table.");
+            Log.d("addRow", "Failed to add to table.");
         }
         finally {
             database.endTransaction();

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
-import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
+import pt.uc.student.aclima.device_agent.Database.Entries.OneTimeMeasurement;
 
 /**
  * Created by aclima on 13/12/2016.
@@ -58,13 +58,13 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
             database.setTransactionSuccessful();
             success = true;
 
-            Log.d("addPeriodicMeasurement", "Added to table.");
+            Log.d("addRow", "Added to table.");
         }
         catch (Exception e){
             e.printStackTrace();
             success = false;
 
-            Log.d("addPeriodicMeasurement", "Failed to add to table.");
+            Log.d("addRow", "Failed to add to table.");
         }
         finally {
             database.endTransaction();
@@ -74,11 +74,11 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<PeriodicMeasurement> getAllRows() {
+    public ArrayList<OneTimeMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<PeriodicMeasurement> rows = new ArrayList<>();
+        ArrayList<OneTimeMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
@@ -89,21 +89,21 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
 
             database.beginTransaction();
 
-            PeriodicMeasurement periodicMeasurement;
+            OneTimeMeasurement oneTimeMeasurement;
             if (cursor.moveToFirst()) {
                 do {
 
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
                     Date timestamp = simpleDateFormat.parse(cursor.getString(4));
 
-                    periodicMeasurement = new PeriodicMeasurement(
+                    oneTimeMeasurement = new OneTimeMeasurement(
                             cursor.getInt(0), // ID
                             cursor.getString(1), // NAME
                             cursor.getString(2), // VALUE
                             cursor.getString(3), // UNITS_OF_MEASUREMENT
                             timestamp); // TIMESTAMP
 
-                    rows.add(periodicMeasurement);
+                    rows.add(oneTimeMeasurement);
 
                 } while (cursor.moveToNext());
             }
