@@ -3,8 +3,11 @@ package pt.uc.student.aclima.device_agent.Collectors.OneTimeDataCollector;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
@@ -22,25 +25,16 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  */
 public class OneTimeIntentService extends IntentService {
 
-    private static final String EXTRA_PACKAGE_UID = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.PACKAGE_UID";
-    private static final String EXTRA_PACKAGE_NAME = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.PACKAGE_NAME";
-    private static final String EXTRA_PACKAGE_DATA_REMOVED = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.PACKAGE_DATA_REMOVED";
-    private static final String EXTRA_REPLACING_OTHER_PACKAGE = "pt.uc.student.aclima.terminal.Collectors.OneTimeIntentService.extra.REPLACING_OTHER_PACKAGE";
-
     public OneTimeIntentService() {
         super("PeriodicIntentService");
     }
 
-    public static void startActionPackageChange(Context context, String action, int packageUID,
-                                                String packageName, boolean isExtraDataRemoved,
-                                                boolean isReplacingOtherPackage) {
+    public static void startActionPackageChange(Context context, String action, Bundle bundle) {
 
         Intent intent = new Intent(context, OneTimeIntentService.class);
         intent.setAction(action);
-        intent.putExtra(EXTRA_PACKAGE_UID, packageUID);
-        intent.putExtra(EXTRA_PACKAGE_NAME, packageName);
-        intent.putExtra(EXTRA_PACKAGE_DATA_REMOVED, isExtraDataRemoved);
-        intent.putExtra(EXTRA_REPLACING_OTHER_PACKAGE, isReplacingOtherPackage);
+        intent.putExtras(bundle);
+
         context.startService(intent);
     }
 
@@ -48,32 +42,94 @@ public class OneTimeIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+            Bundle bundle = intent.getExtras();
 
-            if (Intent.ACTION_PACKAGE_ADDED.equals(action)
-                || Intent.ACTION_PACKAGE_CHANGED.equals(action) ) {
+            if (Intent.ACTION_PACKAGE_INSTALL.equals(action)) {
 
-                int packageUID = intent.getIntExtra(EXTRA_PACKAGE_UID, -1);
-                String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
-                boolean isExtraDataRemoved = intent.getBooleanExtra(EXTRA_PACKAGE_DATA_REMOVED, false);
-                boolean isReplacingOtherPackage = intent.getBooleanExtra(EXTRA_REPLACING_OTHER_PACKAGE, false);
+                Uri uri = intent.getData();
 
-                handleActionPackageChange(action, packageUID, packageName, isExtraDataRemoved, isReplacingOtherPackage);
+                String unitsOfMeasurement = "URI";
+                String measurement = uri.toString();
+
+                handleActionPackageChange(action, measurement, unitsOfMeasurement);
+            }
+            else if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
+
+                int packageUID = bundle.getInt(Intent.EXTRA_UID);
+                String packageName = getApplicationContext().getPackageManager().getNameForUid(packageUID);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    packageName = bundle.getString(Intent.EXTRA_PACKAGE_NAME);
+                }
+
+                boolean isReplacingOtherPackage = bundle.getBoolean(Intent.EXTRA_REPLACING);
+
+                String unitsOfMeasurement = "packageUID" + DELIMITER + "packageName" + DELIMITER + "isReplacingOtherPackage";
+                String measurement = packageUID + DELIMITER + packageName + DELIMITER + isReplacingOtherPackage;
+
+                handleActionPackageChange(action, measurement, unitsOfMeasurement);
+            }
+            else if (Intent.ACTION_PACKAGE_CHANGED.equals(action) ) {
+
+                String[] components = bundle.getStringArray(Intent.EXTRA_CHANGED_COMPONENT_NAME_LIST);
+                boolean dontKillApp = bundle.getBoolean(Intent.EXTRA_DONT_KILL_APP);
+
+                String unitsOfMeasurement = "components" + DELIMITER + "dontKillApp";
+                String measurement = Arrays.toString(components) + DELIMITER + dontKillApp;
+
+                handleActionPackageChange(action, measurement, unitsOfMeasurement);
+            }
+            else if (Intent.ACTION_PACKAGE_REMOVED.equals(action) ) {
+
+                int packageUID = bundle.getInt(Intent.EXTRA_UID);
+                String packageName = getApplicationContext().getPackageManager().getNameForUid(packageUID);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    packageName = bundle.getString(Intent.EXTRA_PACKAGE_NAME);
+                }
+
+                boolean isExtraDataRemoved = bundle.getBoolean(Intent.EXTRA_DATA_REMOVED);
+                boolean isReplacingOtherPackage = bundle.getBoolean(Intent.EXTRA_REPLACING);
+
+                String unitsOfMeasurement = "packageUID" + DELIMITER + "packageName" + DELIMITER + "isExtraDataRemoved" + DELIMITER + "isReplacingOtherPackage";
+                String measurement = packageUID + DELIMITER + packageName + DELIMITER + isExtraDataRemoved + DELIMITER + isReplacingOtherPackage;
+
+                handleActionPackageChange(action, measurement, unitsOfMeasurement);
+            }
+            else if (Intent.ACTION_PACKAGE_REPLACED.equals(action) ) {
+
+                int packageUID = bundle.getInt(Intent.EXTRA_UID);
+                String packageName = getApplicationContext().getPackageManager().getNameForUid(packageUID);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    packageName = bundle.getString(Intent.EXTRA_PACKAGE_NAME);
+                }
+
+                String unitsOfMeasurement = "packageUID" + DELIMITER + "packageName";
+                String measurement = packageUID + DELIMITER + packageName;
+
+                handleActionPackageChange(action, measurement, unitsOfMeasurement);
+            }
+            else if (Intent.ACTION_PACKAGE_FULLY_REMOVED.equals(action) ) {
+
+                int packageUID = bundle.getInt(Intent.EXTRA_UID);
+                String packageName = getApplicationContext().getPackageManager().getNameForUid(packageUID);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    packageName = bundle.getString(Intent.EXTRA_PACKAGE_NAME);
+                }
+
+                String unitsOfMeasurement = "packageUID" + DELIMITER + "packageName";
+                String measurement = packageUID + DELIMITER + packageName;
+
+                handleActionPackageChange(action, measurement, unitsOfMeasurement);
             }
         }
     }
 
-    private void handleActionPackageChange(String action, int packageUID, String packageName, boolean isExtraDataRemoved, boolean isReplacingOtherPackage) {
+    private void handleActionPackageChange(String action, String measurement, String unitsOfMeasurement) {
         Log.d( "PackageChange", "PackageChange" + DELIMITER + action + " service called");
 
         Context context = getApplicationContext();
         Date timestamp = new Date();
 
         if(context != null) {
-
-            String unitsOfMeasurement = "packageUID" + DELIMITER + "packageName"
-                    + DELIMITER + "isExtraDataRemoved" + DELIMITER + "isReplacingOtherPackage";
-            String measurement = packageUID + DELIMITER + packageName
-                    + DELIMITER + isExtraDataRemoved + DELIMITER + isReplacingOtherPackage;
 
             boolean success = new DatabaseManager(context).getOneTimeMeasurementsTable().addRow(
                     "PackageChange" + DELIMITER + action, measurement, unitsOfMeasurement, timestamp);
