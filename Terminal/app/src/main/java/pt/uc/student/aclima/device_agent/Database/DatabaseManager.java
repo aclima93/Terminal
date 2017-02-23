@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -107,7 +108,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         Log.d("createTables", "Creating Configurations table...");
         database.execSQL("CREATE TABLE " + ConfigurationsTable.TABLE_NAME + " ( "
                 + ConfigurationsTable.NAME + " TEXT PRIMARY KEY, " // the NAME will act as a unique identifier
-                + ConfigurationsTable.VALUE + " INTEGER, "
+                + ConfigurationsTable.VALUE + " TEXT, "
                 + ConfigurationsTable.TIMESTAMP + " TEXT)");
 
         /*
@@ -172,28 +173,33 @@ public final class DatabaseManager extends SQLiteOpenHelper {
     private void populateConfigurationsTable() {
         Log.d("ConfigurationsTable", "Populating table...");
 
-        ArrayList<Pair<String, Integer>> namesValuePairs = new ArrayList<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+        String sampleStartTime = simpleDateFormat.format(new Date());
+
+        ArrayList<Pair<String, String>> namesValuePairs = new ArrayList<>();
 
         // Periodic Collection Actions
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, 10 * 1000)); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, 10 * 1000)); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, 10 * 1000)); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, 1 * 1000)); // every second
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, 1 * 1000)); // every second
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_BATTERY, 5 * 60 * 1000)); // every 5 minutes
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_OPEN_PORTS, 60 * 1000)); // every minute
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, 5 * 60 * 1000)); // every 5 minutes
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (10 * 1000) + "")); // every 10 seconds
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, (10 * 1000) + "")); // every 10 seconds
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, (10 * 1000) + "")); // every 10 seconds
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (1 * 1000) + "")); // every second
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (1 * 1000) + "")); // every second
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_BATTERY, (5 * 60 * 1000) + "")); // every 5 minutes
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_OPEN_PORTS, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, (5 * 60 * 1000) + "")); // every 5 minutes
 
         // Periodic Aggregation Action
-        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, 30 * 60 * 1000)); // every 30 minutes
+        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
+        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Eventful Aggregation Action
-        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, 30 * 60 * 1000)); // every 30 minutes
+        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
+        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
-        for( Pair<String, Integer> namesValuePair : namesValuePairs ) {
+        for( Pair<String, String> namesValuePair : namesValuePairs ) {
 
             String name = namesValuePair.first;
-            Integer value = namesValuePair.second;
+            String value = namesValuePair.second;
 
             boolean success = configurationsTable.addRow(name, value, new Date());
             if (!success) {

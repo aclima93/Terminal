@@ -32,7 +32,7 @@ public class ConfigurationsTable {
     }
 
 
-    public boolean addRow(String name, Integer value, Date timestamp){
+    public boolean addRow(String name, String value, Date timestamp){
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
@@ -76,7 +76,7 @@ public class ConfigurationsTable {
         return success;
     }
 
-    public boolean editRowForName(String name, Integer value){
+    public boolean editRowForName(String name, String value){
 
         boolean success = false;
 
@@ -130,7 +130,7 @@ public class ConfigurationsTable {
 
                 configuration = new Configuration(
                         cursor.getString(0), // NAME
-                        cursor.getInt(1), // VALUE
+                        cursor.getString(1), // VALUE
                         simpleDateFormat.parse(cursor.getString(2)) // TIMESTAMP
                 );
                 rows.add(configuration);

@@ -9,10 +9,10 @@ import java.util.Date;
 public class Configuration {
 
     private String name;
-    private Integer value;
+    private String value;
     private Date timestamp;
 
-    public Configuration(String name, Integer value, Date timestamp) {
+    public Configuration(String name, String value, Date timestamp) {
         this.name = name;
         this.value = value;
         this.timestamp = timestamp;
@@ -26,11 +26,11 @@ public class Configuration {
         this.name = name;
     }
 
-    public Integer getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(String value) {
         this.value = value;
     }
 

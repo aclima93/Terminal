@@ -68,13 +68,13 @@ public class DeviceAgentActivity extends AppCompatActivity {
     private void scheduleEventfulAggregatorAlarms(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA);
-        scheduleAlarm(EventfulAggregatorBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(EventfulAggregatorBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
     }
 
     private void schedulePeriodicAggregatorAlarms(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA);
-        scheduleAlarm(PeriodicAggregatorBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicAggregatorBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
     }
 
     private void schedulePeriodicAlarms(ConfigurationsTable configurationsTable) {
@@ -83,35 +83,35 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         // RAM
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_RAM);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // CPU
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_CPU);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // GPS
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_GPS);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // CPU Usage
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_CPU_USAGE);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // RAM Usage
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_RAM_USAGE);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // Battery
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_BATTERY);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // Open Ports
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_OPEN_PORTS);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
         // Data Traffic
         configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_DATA_TRAFFIC);
-        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), configuration.getValue());
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.getLong(configuration.getValue()));
 
     }
 

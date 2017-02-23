@@ -14,6 +14,7 @@ import android.util.Log;
 public class PeriodicAggregatorIntentService extends IntentService {
 
     public static final String ACTION_AGGREGATE_PERIODIC_DATA = "pt.uc.student.aclima.terminal.Aggregators.PeriodicAggregatorIntentService.action.AGGREGATE_PERIODIC_DATA";
+    public static final String EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.terminal.Aggregators.PeriodicAggregatorIntentService.extra.AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME";
 
     public PeriodicAggregatorIntentService() {
         super("PeriodicAggregatorIntentService");
