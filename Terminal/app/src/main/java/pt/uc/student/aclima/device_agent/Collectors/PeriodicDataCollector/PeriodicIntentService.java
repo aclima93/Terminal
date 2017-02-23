@@ -160,7 +160,8 @@ public class PeriodicIntentService extends IntentService {
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
 
-            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow("Available System RAM", memoryInfo.availMem + "", "bytes", timestamp);
+            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                    "Available System RAM", memoryInfo.availMem + "", "bytes", timestamp);
             if( !success){
                 Log.e("RAM", "RAM service failed to add row.");
             }
@@ -277,6 +278,7 @@ public class PeriodicIntentService extends IntentService {
                     try {
                         Thread.sleep(1000);
                     } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     readerProcPidStat.seek(0);
@@ -406,6 +408,9 @@ public class PeriodicIntentService extends IntentService {
                     allLines += line + "\n";
                 }
 
+                // TODO: add units of measurement
+                // FIXME: add one column at a time?
+
                 boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                         "Open Ports", allLines, "", timestamp);
                 if (!success) {
@@ -431,6 +436,9 @@ public class PeriodicIntentService extends IntentService {
             for (String line : lines) {
                 allLines += line + "\n";
             }
+
+            // TODO: add units of measurement
+            // FIXME: add one column at a time?
 
             boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                     "Data Traffic", allLines, "", timestamp);
