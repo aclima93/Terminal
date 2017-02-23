@@ -6,15 +6,24 @@ import java.util.Date;
  * Created by aclima on 13/12/2016.
  */
 
-public class SchedulingEntry extends Measurement {
+public class Configuration {
 
+    private String name;
     private Integer value;
     private Date timestamp;
 
-    public SchedulingEntry(Integer id, String name, Integer value, Date timestamp) {
-        super(id, name);
+    public Configuration(String name, Integer value, Date timestamp) {
+        this.name = name;
         this.value = value;
         this.timestamp = timestamp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getValue() {

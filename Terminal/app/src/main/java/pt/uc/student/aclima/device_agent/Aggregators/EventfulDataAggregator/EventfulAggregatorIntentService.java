@@ -13,7 +13,6 @@ import android.util.Log;
  */
 public class EventfulAggregatorIntentService extends IntentService {
 
-    public static final int ACTION_AGGREGATE_EVENTFUL_DATA_REQUEST_CODE = 1;
     public static final String ACTION_AGGREGATE_EVENTFUL_DATA = "pt.uc.student.aclima.terminal.Aggregators.EventfulAggregatorIntentService.action.AGGREGATE_EVENTFUL_DATA";
 
     public EventfulAggregatorIntentService() {

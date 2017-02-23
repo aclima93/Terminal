@@ -11,29 +11,28 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
-import pt.uc.student.aclima.device_agent.Database.Entries.SchedulingEntry;
+import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 
 /**
  * Created by aclima on 13/12/2016.
  */
 
-public class SchedulingTable {
+public class ConfigurationsTable {
 
-    public static final String TABLE_NAME = "SchedulingTable";
+    public static final String TABLE_NAME = "ConfigurationsTable";
 
     protected DatabaseManager databaseManager;
 
-    public static final String ID = "id";
     public static final String NAME = "name";
     public static final String VALUE = "value";
     public static final String TIMESTAMP = "timestamp";
 
-    public SchedulingTable(DatabaseManager databaseManager) {
+    public ConfigurationsTable(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
 
-    public boolean addRow(String name, String value, Date timestamp){
+    public boolean addRow(String name, Integer value, Date timestamp){
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
@@ -77,7 +76,7 @@ public class SchedulingTable {
         return success;
     }
 
-    public boolean editRowsForEntryName(String name, Integer value){
+    public boolean editRowForName(String name, Integer value){
 
         boolean success = false;
 
@@ -86,11 +85,11 @@ public class SchedulingTable {
         return success;
     }
 
-    public ArrayList<SchedulingEntry> getRowsForEntryName(String name) {
+    public Configuration getRowForName(String name) {
 
-        Log.d("getRowsForEntryName", "Getting rows from table named " + TABLE_NAME + " where " + NAME + " like " + name);
+        Log.d("getRowForName", "Getting rows from table named " + TABLE_NAME + " where " + NAME + " like " + name);
 
-        ArrayList<SchedulingEntry> rows = new ArrayList<>();
+        Configuration row = null;
 
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + NAME + " LIKE " + name ;
 
@@ -101,15 +100,15 @@ public class SchedulingTable {
 
             database.beginTransaction();
 
-            rows = parseRowObjects(cursor);
+            row = parseRowObjects(cursor).get(0); // entries are unique
 
-            Log.d("getRowsForEntryName", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
+            Log.d("getRowForName", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + row.toString());
 
         }
         catch (Exception e){
             e.printStackTrace();
 
-            Log.d("getRowsForEntryName", "Failed to get rows from table named " + TABLE_NAME + ".");
+            Log.d("getRowForName", "Failed to get rows from table named " + TABLE_NAME + ".");
         }
         finally {
             cursor.close();
@@ -117,25 +116,24 @@ public class SchedulingTable {
             database.close();
         }
 
-        return rows;
+        return row;
     }
 
-    private ArrayList<SchedulingEntry> parseRowObjects(Cursor cursor) throws ParseException {
+    private ArrayList<Configuration> parseRowObjects(Cursor cursor) throws ParseException {
 
-        ArrayList<SchedulingEntry> rows = new ArrayList<>();
-        SchedulingEntry schedulingEntry;
+        ArrayList<Configuration> rows = new ArrayList<>();
+        Configuration configuration;
         if (cursor.moveToFirst()) {
             do {
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
 
-                schedulingEntry = new SchedulingEntry(
-                        cursor.getInt(0), // ID
-                        cursor.getString(1), // NAME
-                        cursor.getInt(2), // VALUE
-                        simpleDateFormat.parse(cursor.getString(3)) // TIMESTAMP
+                configuration = new Configuration(
+                        cursor.getString(0), // NAME
+                        cursor.getInt(1), // VALUE
+                        simpleDateFormat.parse(cursor.getString(2)) // TIMESTAMP
                 );
-                rows.add(schedulingEntry);
+                rows.add(configuration);
 
             } while (cursor.moveToNext());
         }

@@ -13,7 +13,6 @@ import android.util.Log;
  */
 public class PeriodicAggregatorIntentService extends IntentService {
 
-    public static final int ACTION_AGGREGATE_PERIODIC_DATA_REQUEST_CODE = 1;
     public static final String ACTION_AGGREGATE_PERIODIC_DATA = "pt.uc.student.aclima.terminal.Aggregators.PeriodicAggregatorIntentService.action.AGGREGATE_PERIODIC_DATA";
 
     public PeriodicAggregatorIntentService() {
