@@ -8,10 +8,10 @@ import java.util.List;
  * Source: <a>https://stackoverflow.com/questions/4191687/how-to-calculate-mean-median-mode-and-range-from-a-set-of-numbers</a>
  */
 
-public class Math {
+public class MathUtils {
 
     // Mean
-    public Double mean(List<Double> items) {
+    public static Double mean(List<Double> items) {
         Double sum = 0.0;
         for (Double item : items) {
             sum += item;
@@ -20,7 +20,7 @@ public class Math {
     }
 
     // Median
-    public Double median(List<Double> items) {
+    public static Double median(List<Double> items) {
         Collections.sort(items);
         int middle = (items.size() / 2);
         if (items.size() % 2 == 1) {
@@ -31,7 +31,7 @@ public class Math {
     }
 
     // Mode
-    public Double mode(List<Double> items) {
+    public static Double mode(List<Double> items) {
         Double maxValue = -1.0;
         int maxCount = -1;
 
@@ -51,7 +51,7 @@ public class Math {
     }
 
     // Harmonic Mean
-    public Double harmonicMean(List<Double> items) {
+    public static Double harmonicMean(List<Double> items) {
         Double sum = 0.0;
 
         for (Double item : items) {

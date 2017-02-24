@@ -184,8 +184,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (10 * 1000) + "")); // every 10 seconds
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, (10 * 1000) + "")); // every 10 seconds
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (1 * 1000) + "")); // every second
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (1 * 1000) + "")); // every second
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (1000) + "")); // every second
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (1000) + "")); // every second
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_BATTERY, (5 * 60 * 1000) + "")); // every 5 minutes
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_OPEN_PORTS, (60 * 1000) + "")); // every minute
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, (5 * 60 * 1000) + "")); // every 5 minutes

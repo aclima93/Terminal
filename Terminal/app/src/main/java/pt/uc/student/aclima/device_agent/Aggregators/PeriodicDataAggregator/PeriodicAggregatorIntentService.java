@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pt.uc.student.aclima.device_agent.Aggregators.Utilities.MathUtils;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
@@ -22,8 +23,6 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static helper methods.
  */
 public class PeriodicAggregatorIntentService extends IntentService {
 
@@ -88,22 +87,43 @@ public class PeriodicAggregatorIntentService extends IntentService {
                     }
 
                     rowsForMeasurementType.add(periodicMeasurement);
+                    aggregationHashMap.put(periodicMeasurement.getName(), rowsForMeasurementType);
                 }
 
                 // perform the central tendency calculations
                 for(Map.Entry<String, List<PeriodicMeasurement>> aggregationHashMapEntry : aggregationHashMap.entrySet()){
 
-                    // TODO: calculate them
-                    Double harmonicValue = 0.0;
-                    Double medianValue = 0.0;
+                    Double harmonicValue;
+                    Double medianValue;
                     List<PeriodicMeasurement> measurements = aggregationHashMapEntry.getValue();
                     String unitsOfMeasurement = measurements.get(0).getUnitsOfMeasurement();
 
-                    boolean success = databaseManager.getPeriodicAggregatedMeasurementsTable().addRow(
-                            aggregationHashMapEntry.getKey(), sampleStartDate, sampleEndDate, harmonicValue, medianValue, unitsOfMeasurement);
-                    if (!success) {
-                        Log.e("PeriodicAggregator", "PeriodicAggregator" + DELIMITER + aggregationHashMapEntry.getKey() + " service failed to add row.");
+                    List<Double> values = new ArrayList<>();
+                    for(PeriodicMeasurement periodicMeasurement : measurements){
+                        values.add( Double.parseDouble(periodicMeasurement.getValue()) );
                     }
+
+                    if(values.size() > 0) {
+                        medianValue = MathUtils.median(values);
+                        harmonicValue = MathUtils.harmonicMean(values);
+
+                        boolean addSuccess = databaseManager.getPeriodicAggregatedMeasurementsTable().addRow(
+                                aggregationHashMapEntry.getKey(), sampleStartDate, sampleEndDate, harmonicValue, medianValue, unitsOfMeasurement);
+                        if (!addSuccess) {
+                            Log.e("PeriodicAggregator", "PeriodicAggregator" + DELIMITER + aggregationHashMapEntry.getKey() + " service failed to add row.");
+                        }
+                        else{
+
+                            boolean editSuccess = databaseManager.getConfigurationsTable().editRowForName(EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
+                            if (!editSuccess) {
+                                Log.e("PeriodicAggregator", "PeriodicAggregator service failed to edit configuration \'"+ EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME +"\' row.");
+                            }
+                        }
+                    }
+                    else{
+                        Log.d( "PeriodicAggregator", "No Periodic Data to Aggregate.");
+                    }
+
                 }
 
             } catch (ParseException e) {

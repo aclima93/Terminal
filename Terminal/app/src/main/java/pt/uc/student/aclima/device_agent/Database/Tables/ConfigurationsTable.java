@@ -85,9 +85,38 @@ public class ConfigurationsTable {
 
     public boolean editRowForName(String name, String value){
 
-        boolean success = false;
+        Log.d("editRowForName",
+                "Editing row to table named " + TABLE_NAME + "\n" +
+                        NAME + ": " + name + "\n" +
+                        VALUE + ": " + value + "\n"
+        );
 
-        // TODO: edit row value
+        boolean success;
+        SQLiteDatabase database = databaseManager.getWritableDatabase();
+
+        try {
+            database.beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(VALUE, value);
+
+            database.update(TABLE_NAME, contentValues, NAME + " = \'" + name + "\'", null);
+
+            database.setTransactionSuccessful();
+            success = true;
+
+            Log.d("editRowForName", "Edited row.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            success = false;
+
+            Log.d("editRowForName", "Failed to edit row.");
+        }
+        finally {
+            database.endTransaction();
+            database.close();
+        }
 
         return success;
     }

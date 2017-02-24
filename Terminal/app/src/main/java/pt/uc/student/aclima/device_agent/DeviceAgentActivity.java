@@ -2,7 +2,6 @@ package pt.uc.student.aclima.device_agent;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -53,8 +52,7 @@ public class DeviceAgentActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        BroadcastReceiver mReceiver = new EventfulBroadcastReceiver();
-        registerReceiver(mReceiver, intentFilter);
+        registerReceiver(new EventfulBroadcastReceiver(), intentFilter);
 
         // Base station
         TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
