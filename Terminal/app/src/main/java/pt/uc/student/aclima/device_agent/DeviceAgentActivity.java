@@ -2,7 +2,6 @@ package pt.uc.student.aclima.device_agent;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,6 +17,9 @@ import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.Peri
 import pt.uc.student.aclima.device_agent.Collectors.EventfulDataCollector.EventfulBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.PeriodicIntentService;
+import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
+import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
+import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
 
 public class DeviceAgentActivity extends AppCompatActivity {
 
@@ -28,16 +30,20 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
 
-        schedulePeriodicAlarms();
+        Context context = getApplicationContext();
 
-        setupSpecialEventfulBroadcastReceivers();
+        setupSpecialEventfulBroadcastReceivers(context);
 
-        schedulePeriodicAggregatorAlarms();
+        ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
 
-        scheduleEventfulAggregatorAlarms();
+        schedulePeriodicAlarms(configurationsTable);
+
+        schedulePeriodicAggregatorAlarms(configurationsTable);
+
+        scheduleEventfulAggregatorAlarms(configurationsTable);
     }
 
-    private void setupSpecialEventfulBroadcastReceivers() {
+    private void setupSpecialEventfulBroadcastReceivers(Context context) {
 
         /*
          * for some reason, ACTION_SCREEN_ON and OFF will not work if configured through the Manifest
@@ -46,85 +52,64 @@ public class DeviceAgentActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        BroadcastReceiver mReceiver = new EventfulBroadcastReceiver();
-        registerReceiver(mReceiver, intentFilter);
+        registerReceiver(new EventfulBroadcastReceiver(), intentFilter);
 
         // Base station
         TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        PhoneStateListener phoneStateListener = new EventfulBroadcastReceiver().setupPhoneStateListener(getApplicationContext());
+        PhoneStateListener phoneStateListener = new EventfulBroadcastReceiver().setupPhoneStateListener(context);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CELL_LOCATION);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
     }
 
-    private void scheduleEventfulAggregatorAlarms() {
+    private void scheduleEventfulAggregatorAlarms(ConfigurationsTable configurationsTable) {
 
-        scheduleAlarm(EventfulAggregatorBroadcastReceiver.class,
-                EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA_REQUEST_CODE,
-                EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA,
-                60 * 1000); // every minute
+        Configuration configuration = configurationsTable.getRowForName(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA);
+        scheduleAlarm(EventfulAggregatorBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
     }
 
-    private void schedulePeriodicAggregatorAlarms() {
-        scheduleAlarm(PeriodicAggregatorBroadcastReceiver.class,
-                PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA_REQUEST_CODE,
-                PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA,
-                60 * 1000); // every minute
+    private void schedulePeriodicAggregatorAlarms(ConfigurationsTable configurationsTable) {
+
+        Configuration configuration = configurationsTable.getRowForName(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA);
+        scheduleAlarm(PeriodicAggregatorBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
     }
 
-    /**
-     * Schedule the Periodic Data Collector Alarms
-     * */
-    private void schedulePeriodicAlarms() {
+    private void schedulePeriodicAlarms(ConfigurationsTable configurationsTable) {
+
+        Configuration configuration;
 
         // RAM
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_RAM_REQUEST_CODE,
-                PeriodicIntentService.ACTION_RAM,
-                5 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_RAM);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // CPU
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_CPU_REQUEST_CODE,
-                PeriodicIntentService.ACTION_CPU,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_CPU);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // GPS
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_GPS_REQUEST_CODE,
-                PeriodicIntentService.ACTION_GPS,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_GPS);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // CPU Usage
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_CPU_USAGE_REQUEST_CODE,
-                PeriodicIntentService.ACTION_CPU_USAGE,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_CPU_USAGE);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // RAM Usage
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_RAM_USAGE_REQUEST_CODE,
-                PeriodicIntentService.ACTION_RAM_USAGE,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_RAM_USAGE);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // Battery
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_BATTERY_REQUEST_CODE,
-                PeriodicIntentService.ACTION_BATTERY,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_BATTERY);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // Open Ports
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_OPEN_PORTS_REQUEST_CODE,
-                PeriodicIntentService.ACTION_OPEN_PORTS,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_OPEN_PORTS);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
         // Data Traffic
-        scheduleAlarm(PeriodicBroadcastReceiver.class,
-                PeriodicIntentService.ACTION_DATA_TRAFFIC_REQUEST_CODE,
-                PeriodicIntentService.ACTION_DATA_TRAFFIC,
-                15 * 1000);
+        configuration = configurationsTable.getRowForName(PeriodicIntentService.ACTION_DATA_TRAFFIC);
+        scheduleAlarm(PeriodicBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
 
     }
 
@@ -133,14 +118,14 @@ public class DeviceAgentActivity extends AppCompatActivity {
      */
 
     // Setup a recurring alarm
-    private void scheduleAlarm(Class receiverClass, int requestCode, String action, long intervalMillis) {
+    private void scheduleAlarm(Class receiverClass, String action, long intervalMillis) {
 
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(getApplicationContext(), receiverClass);
         intent.setAction(action);
 
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode,
+        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, action.hashCode(),
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Setup periodic alarm every intervalMillis milliseconds

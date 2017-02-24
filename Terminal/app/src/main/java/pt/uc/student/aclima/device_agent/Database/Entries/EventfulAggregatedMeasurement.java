@@ -8,8 +8,18 @@ import java.util.Date;
 
 public class EventfulAggregatedMeasurement extends AggregatedMeasurement{
 
-    public EventfulAggregatedMeasurement(Integer id, String name, Integer numberOfEvents, Date sampleStartTime, Date sampleEndTime) {
-        super(id, name, numberOfEvents, sampleStartTime, sampleEndTime);
+    private Integer numberOfEvents;
+
+    public EventfulAggregatedMeasurement(Integer id, String name, Date sampleStartTime, Date sampleEndTime, Integer numberOfEvents) {
+        super(id, name, sampleStartTime, sampleEndTime);
+        this.numberOfEvents = numberOfEvents;
     }
 
+    public Integer getNumberOfEvents() {
+        return numberOfEvents;
+    }
+
+    public void setNumberOfEvents(Integer numberOfEvents) {
+        this.numberOfEvents = numberOfEvents;
+    }
 }

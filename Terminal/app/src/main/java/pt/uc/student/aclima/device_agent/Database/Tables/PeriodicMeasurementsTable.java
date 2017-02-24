@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
@@ -33,10 +35,10 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
-                "name: " + name + "\n" +
-                "value: " + value + "\n" +
-                "unitsOfMeasurement: " + unitsOfMeasurement + "\n" +
-                "timestamp: " + timestamp.toString() + "\n"
+                NAME + ": " + name + "\n" +
+                VALUE + ": " + value + "\n" +
+                UNITS_OF_MEASUREMENT + ": " + unitsOfMeasurement + "\n" +
+                TIMESTAMP + ": " + timestamp.toString() + "\n"
         );
 
         boolean success;
@@ -59,13 +61,13 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
             database.setTransactionSuccessful();
             success = true;
 
-            Log.d("addPeriodicMeasurement", "Added to table.");
+            Log.d("addRow", "Added to table.");
         }
         catch (Exception e){
             e.printStackTrace();
             success = false;
 
-            Log.d("addPeriodicMeasurement", "Failed to add to table.");
+            Log.d("addRow", "Failed to add to table.");
         }
         finally {
             database.endTransaction();
@@ -75,39 +77,22 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<PeriodicMeasurement> getAllRows() {
+    public List<PeriodicMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<PeriodicMeasurement> rows = new ArrayList<>();
+        List<PeriodicMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
 
             database.beginTransaction();
 
-            PeriodicMeasurement periodicMeasurement;
-            if (cursor.moveToFirst()) {
-                do {
-
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
-                    Date timestamp = simpleDateFormat.parse(cursor.getString(4));
-
-                    periodicMeasurement = new PeriodicMeasurement(
-                            cursor.getInt(0), // ID
-                            cursor.getString(1), // NAME
-                            cursor.getString(2), // VALUE
-                            cursor.getString(3), // UNITS_OF_MEASUREMENT
-                            timestamp); // TIMESTAMP
-
-                    rows.add(periodicMeasurement);
-
-                } while (cursor.moveToNext());
-            }
+            rows = parseRowObjects(cursor);
 
             Log.d("getAllRows", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
 
@@ -121,6 +106,63 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
             cursor.close();
             database.endTransaction();
             database.close();
+        }
+
+        return rows;
+    }
+
+    public List<PeriodicMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+        String startDateString = simpleDateFormat.format(startDate);
+        String endDateString = simpleDateFormat.format(endDate);
+
+        Log.d("getAllRowsBetween", "Getting rows from table named " + TABLE_NAME + " between " + startDateString + " and " + endDateString);
+
+        List<PeriodicMeasurement> rows = new ArrayList<>();
+
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TIMESTAMP + " BETWEEN \'" + startDateString + "\' AND \'" + endDateString + "\'" ;
+
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+
+        try {
+            database.beginTransaction();
+            rows = parseRowObjects(cursor);
+            Log.d("getAllRowsBetween", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.d("getAllRowsBetween", "Failed to get rows from table named " + TABLE_NAME + ".");
+        }
+        finally {
+            cursor.close();
+            database.endTransaction();
+            database.close();
+        }
+
+        return rows;
+    }
+
+    private List<PeriodicMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
+
+        List<PeriodicMeasurement> rows = new ArrayList<>();
+        PeriodicMeasurement periodicMeasurement;
+        if (cursor.moveToFirst()) {
+            do {
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+
+                periodicMeasurement = new PeriodicMeasurement(
+                        cursor.getInt(0), // ID
+                        cursor.getString(1), // NAME
+                        cursor.getString(2), // VALUE
+                        cursor.getString(3), // UNITS_OF_MEASUREMENT
+                        simpleDateFormat.parse(cursor.getString(4)) // TIMESTAMP
+                );
+                rows.add(periodicMeasurement);
+
+            } while (cursor.moveToNext());
         }
 
         return rows;

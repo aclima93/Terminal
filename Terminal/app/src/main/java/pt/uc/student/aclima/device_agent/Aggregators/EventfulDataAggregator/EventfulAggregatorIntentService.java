@@ -5,6 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
+import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
+import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
+
+import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -13,8 +27,8 @@ import android.util.Log;
  */
 public class EventfulAggregatorIntentService extends IntentService {
 
-    public static final int ACTION_AGGREGATE_EVENTFUL_DATA_REQUEST_CODE = 1;
     public static final String ACTION_AGGREGATE_EVENTFUL_DATA = "pt.uc.student.aclima.terminal.Aggregators.EventfulAggregatorIntentService.action.AGGREGATE_EVENTFUL_DATA";
+    public static final String EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.terminal.Aggregators.EventfulAggregatorIntentService.extra.AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME";
 
     public EventfulAggregatorIntentService() {
         super("EventfulAggregatorIntentService");
@@ -49,9 +63,59 @@ public class EventfulAggregatorIntentService extends IntentService {
      * parameters.
      */
     private void handleActionAggregateEventfulData() {
-        // TODO: get all data from the database
         Log.d( "EventfulAggregator", "Eventful Data Aggregator service called");
 
-        //int numTopics = new DatabaseManager(this).getTopicsTableManager().countTopicsForSubjectId(subject.getId());
+        Context context = getApplicationContext();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+
+        if(context != null) {
+
+            try {
+                Configuration configuration = new DatabaseManager(context).getConfigurationsTable().getRowForName(EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME);
+                Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
+                Date sampleEndDate = new Date(); // current time
+
+                HashMap<String, List<EventfulMeasurement>> aggregationHashMap = new HashMap<>();
+                List<EventfulMeasurement> allRows = new DatabaseManager(context).getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+
+                // search each unique type of row name, aggregate them in a hashmap
+                for(EventfulMeasurement eventfulMeasurement : allRows){
+                    List<EventfulMeasurement> rowsForMeasurementType = aggregationHashMap.get(eventfulMeasurement.getName());
+
+                    if(rowsForMeasurementType == null || rowsForMeasurementType.isEmpty()){
+                        rowsForMeasurementType = new ArrayList<>();
+                    }
+
+                    rowsForMeasurementType.add(eventfulMeasurement);
+                    aggregationHashMap.put(eventfulMeasurement.getName(), rowsForMeasurementType);
+                }
+
+                // count the number of measurements
+                for(Map.Entry<String, List<EventfulMeasurement>> aggregationHashMapEntry : aggregationHashMap.entrySet()){
+
+                    List<EventfulMeasurement> measurements = aggregationHashMapEntry.getValue();
+                    int numberOfEvents = measurements.size();
+
+                    boolean addSuccess = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().addRow(
+                            aggregationHashMapEntry.getKey(), sampleStartDate, sampleEndDate, numberOfEvents);
+                    if (!addSuccess) {
+                        Log.e("EventfulAggregator", "EventfulAggregator" + DELIMITER + aggregationHashMapEntry.getKey() + " service failed to add row.");
+                    }
+                    else{
+
+                        boolean editSuccess = new DatabaseManager(context).getConfigurationsTable().editRowForName(EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
+                        if (!editSuccess) {
+                            Log.e("EventfulAggregator", "EventfulAggregator service failed to edit configuration \'"+ EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME +"\' row.");
+                        }
+                    }
+
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.e("EventfulAggregator", "EventfulAggregator service failed to add row.");
+            }
+
+        }
     }
 }
