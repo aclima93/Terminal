@@ -66,17 +66,16 @@ public class PeriodicAggregatorIntentService extends IntentService {
 
         Context context = getApplicationContext();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
-        DatabaseManager databaseManager = new DatabaseManager(context);
 
         if(context != null) {
 
             try {
-                Configuration configuration = databaseManager.getConfigurationsTable().getRowForName(EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME);
+                Configuration configuration = new DatabaseManager(context).getConfigurationsTable().getRowForName(EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME);
                 Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
                 Date sampleEndDate = new Date(); // current time
 
                 HashMap<String, List<PeriodicMeasurement>> aggregationHashMap = new HashMap<>();
-                List<PeriodicMeasurement> allRows = databaseManager.getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+                List<PeriodicMeasurement> allRows = new DatabaseManager(context).getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
 
                 // search each unique type of row name, aggregate them in a hashmap
                 for(PeriodicMeasurement periodicMeasurement : allRows){
@@ -107,14 +106,14 @@ public class PeriodicAggregatorIntentService extends IntentService {
                         medianValue = MathUtils.median(values);
                         harmonicValue = MathUtils.harmonicMean(values);
 
-                        boolean addSuccess = databaseManager.getPeriodicAggregatedMeasurementsTable().addRow(
+                        boolean addSuccess = new DatabaseManager(context).getPeriodicAggregatedMeasurementsTable().addRow(
                                 aggregationHashMapEntry.getKey(), sampleStartDate, sampleEndDate, harmonicValue, medianValue, unitsOfMeasurement);
                         if (!addSuccess) {
                             Log.e("PeriodicAggregator", "PeriodicAggregator" + DELIMITER + aggregationHashMapEntry.getKey() + " service failed to add row.");
                         }
                         else{
 
-                            boolean editSuccess = databaseManager.getConfigurationsTable().editRowForName(EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
+                            boolean editSuccess = new DatabaseManager(context).getConfigurationsTable().editRowForName(EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
                             if (!editSuccess) {
                                 Log.e("PeriodicAggregator", "PeriodicAggregator service failed to edit configuration \'"+ EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME +"\' row.");
                             }
@@ -133,6 +132,5 @@ public class PeriodicAggregatorIntentService extends IntentService {
 
         }
 
-        //int numTopics = new DatabaseManager(this).getTopicsTableManager().countTopicsForSubjectId(subject.getId());
     }
 }

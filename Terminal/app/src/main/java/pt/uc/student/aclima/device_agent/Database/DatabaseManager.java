@@ -212,7 +212,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         Log.d("ConfigurationsTable", "Populated table.");
     }
 
-    public boolean addConfigurationRow(SQLiteDatabase database, String name, String value, Date timestamp){
+    private boolean addConfigurationRow(SQLiteDatabase database, String name, String value, Date timestamp){
 
         Log.d("addConfigurationRow",
                 "Adding row to table named " + ConfigurationsTable.TABLE_NAME + "\n" +
