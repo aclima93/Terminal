@@ -93,8 +93,9 @@ public class PeriodicAggregatorIntentService extends IntentService {
                 // perform the central tendency calculations
                 for(Map.Entry<String, List<PeriodicMeasurement>> aggregationHashMapEntry : aggregationHashMap.entrySet()){
 
-                    String harmonicValue;
-                    String medianValue;
+                    // TODO: calculate them
+                    Double harmonicValue = 0.0;
+                    Double medianValue = 0.0;
                     List<PeriodicMeasurement> measurements = aggregationHashMapEntry.getValue();
                     String unitsOfMeasurement = measurements.get(0).getUnitsOfMeasurement();
 
