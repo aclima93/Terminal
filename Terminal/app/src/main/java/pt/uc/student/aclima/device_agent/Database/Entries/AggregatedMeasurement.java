@@ -8,23 +8,13 @@ import java.util.Date;
 
 public class AggregatedMeasurement extends Measurement {
 
-    private Integer numberOfEvents;
     private Date sampleStartTime;
     private Date sampleEndTime;
 
-    public AggregatedMeasurement(Integer id, String name, Integer numberOfEvents, Date sampleStartTime, Date sampleEndTime) {
+    public AggregatedMeasurement(Integer id, String name, Date sampleStartTime, Date sampleEndTime) {
         super(id, name);
-        this.numberOfEvents = numberOfEvents;
         this.sampleStartTime = sampleStartTime;
         this.sampleEndTime = sampleEndTime;
-    }
-
-    public Integer getNumberOfEvents() {
-        return numberOfEvents;
-    }
-
-    public void setNumberOfEvents(Integer numberOfEvents) {
-        this.numberOfEvents = numberOfEvents;
     }
 
     public Date getSampleStartTime() {

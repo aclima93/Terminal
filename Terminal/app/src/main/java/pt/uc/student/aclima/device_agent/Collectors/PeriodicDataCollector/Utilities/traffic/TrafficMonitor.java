@@ -19,20 +19,21 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 public class TrafficMonitor{
 
     private TrafficSnapshot latest=null;
     private TrafficSnapshot previous=null;
 
-    public ArrayList<String> takeSnapshot(Context context) {
+    public List<String> takeSnapshot(Context context) {
 
         previous = latest;
 
         latest=new TrafficSnapshot(context);
 
-        ArrayList<String> rows=new ArrayList<String>();
-        HashSet<Integer> intersection=new HashSet<Integer>(latest.apps.keySet());
+        List<String> rows= new ArrayList<>();
+        HashSet<Integer> intersection= new HashSet<>(latest.apps.keySet());
 
         if (previous!=null) {
             intersection.retainAll(previous.apps.keySet());
@@ -50,7 +51,7 @@ public class TrafficMonitor{
         return rows;
     }
 
-    private void emitLog(TrafficRecord latest_rec, TrafficRecord previous_rec, ArrayList<String> rows) {
+    private void emitLog(TrafficRecord latest_rec, TrafficRecord previous_rec, List<String> rows) {
 
         if (latest_rec.rx>-1 || latest_rec.tx>-1) {
             StringBuilder buf = new StringBuilder(latest_rec.tag);
