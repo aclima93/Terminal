@@ -8,30 +8,30 @@ import java.util.Date;
 
 public class PeriodicAggregatedMeasurement extends AggregatedMeasurement{
 
-    private String harmonicValue;
-    private String medianValue;
+    private Double harmonicValue;
+    private Double medianValue;
     private String unitsOfMeasurement;
 
-    public PeriodicAggregatedMeasurement(Integer id, String name, Date sampleStartTime, Date sampleEndTime, String harmonicValue, String medianValue, String unitsOfMeasurement) {
+    public PeriodicAggregatedMeasurement(Integer id, String name, Date sampleStartTime, Date sampleEndTime, Double harmonicValue, Double medianValue, String unitsOfMeasurement) {
         super(id, name, sampleStartTime, sampleEndTime);
         this.harmonicValue = harmonicValue;
         this.medianValue = medianValue;
         this.unitsOfMeasurement = unitsOfMeasurement;
     }
 
-    public String getHarmonicValue() {
+    public Double getHarmonicValue() {
         return harmonicValue;
     }
 
-    public void setHarmonicValue(String harmonicValue) {
+    public void setHarmonicValue(Double harmonicValue) {
         this.harmonicValue = harmonicValue;
     }
 
-    public String getMedianValue() {
+    public Double getMedianValue() {
         return medianValue;
     }
 
-    public void setMedianValue(String medianValue) {
+    public void setMedianValue(Double medianValue) {
         this.medianValue = medianValue;
     }
 

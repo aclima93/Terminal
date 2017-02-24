@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
@@ -75,12 +76,12 @@ public class PeriodicAggregatorIntentService extends IntentService {
                 Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
                 Date sampleEndDate = new Date(); // current time
 
-                HashMap<String, ArrayList<PeriodicMeasurement>> aggregationHashMap = new HashMap<>();
-                ArrayList<PeriodicMeasurement> allRows = databaseManager.getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+                HashMap<String, List<PeriodicMeasurement>> aggregationHashMap = new HashMap<>();
+                List<PeriodicMeasurement> allRows = databaseManager.getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
 
                 // search each unique type of row name, aggregate them in a hashmap
                 for(PeriodicMeasurement periodicMeasurement : allRows){
-                    ArrayList<PeriodicMeasurement> rowsForMeasurementType = aggregationHashMap.get(periodicMeasurement.getName());
+                    List<PeriodicMeasurement> rowsForMeasurementType = aggregationHashMap.get(periodicMeasurement.getName());
 
                     if(rowsForMeasurementType == null || rowsForMeasurementType.isEmpty()){
                         rowsForMeasurementType = new ArrayList<>();
@@ -90,11 +91,11 @@ public class PeriodicAggregatorIntentService extends IntentService {
                 }
 
                 // perform the central tendency calculations
-                for(Map.Entry<String, ArrayList<PeriodicMeasurement>> aggregationHashMapEntry : aggregationHashMap.entrySet()){
+                for(Map.Entry<String, List<PeriodicMeasurement>> aggregationHashMapEntry : aggregationHashMap.entrySet()){
 
-                    ArrayList<PeriodicMeasurement> measurements = aggregationHashMapEntry.getValue();
                     String harmonicValue;
                     String medianValue;
+                    List<PeriodicMeasurement> measurements = aggregationHashMapEntry.getValue();
                     String unitsOfMeasurement = measurements.get(0).getUnitsOfMeasurement();
 
                     boolean success = databaseManager.getPeriodicAggregatedMeasurementsTable().addRow(

@@ -9,6 +9,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService;
 import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorIntentService;
@@ -176,7 +177,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
         String sampleStartTime = simpleDateFormat.format(new Date());
 
-        ArrayList<Pair<String, String>> namesValuePairs = new ArrayList<>();
+        List<Pair<String, String>> namesValuePairs = new ArrayList<>();
 
         // Periodic Collection Actions
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (10 * 1000) + "")); // every 10 seconds

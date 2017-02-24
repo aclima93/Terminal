@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.OneTimeMeasurement;
@@ -75,15 +76,15 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<OneTimeMeasurement> getAllRows() {
+    public List<OneTimeMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<OneTimeMeasurement> rows = new ArrayList<>();
+        List<OneTimeMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -104,7 +105,7 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
-    public ArrayList<OneTimeMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
+    public List<OneTimeMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
         String startDateString = simpleDateFormat.format(startDate);
@@ -112,11 +113,11 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
 
         Log.d("getAllRowsBetween", "Getting rows from table named " + TABLE_NAME + " between " + startDateString + " and " + endDateString);
 
-        ArrayList<OneTimeMeasurement> rows = new ArrayList<>();
+        List<OneTimeMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TIMESTAMP + " BETWEEN \'" + startDateString + "\' AND \'" + endDateString + "\'" ;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -137,9 +138,9 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
-    private ArrayList<OneTimeMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
+    private List<OneTimeMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
 
-        ArrayList<OneTimeMeasurement> rows = new ArrayList<>();
+        List<OneTimeMeasurement> rows = new ArrayList<>();
         OneTimeMeasurement oneTimeMeasurement;
         if (cursor.moveToFirst()) {
             do {

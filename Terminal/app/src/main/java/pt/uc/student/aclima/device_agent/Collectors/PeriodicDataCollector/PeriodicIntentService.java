@@ -12,17 +12,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.ProcessManager;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.SingleShotLocationProvider;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.traffic.TrafficMonitor;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
-import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.ProcessManager;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
@@ -431,7 +430,7 @@ public class PeriodicIntentService extends IntentService {
         Date timestamp = new Date();
 
         if(context != null) {
-            ArrayList<String> lines = new TrafficMonitor().takeSnapshot(context);
+            List<String> lines = new TrafficMonitor().takeSnapshot(context);
             String allLines = "";
             for (String line : lines) {
                 allLines += line + "\n";

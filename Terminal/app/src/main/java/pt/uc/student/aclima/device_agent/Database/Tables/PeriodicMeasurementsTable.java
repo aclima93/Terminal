@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
@@ -76,15 +77,15 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<PeriodicMeasurement> getAllRows() {
+    public List<PeriodicMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<PeriodicMeasurement> rows = new ArrayList<>();
+        List<PeriodicMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -110,7 +111,7 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
-    public ArrayList<PeriodicMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
+    public List<PeriodicMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
         String startDateString = simpleDateFormat.format(startDate);
@@ -118,11 +119,11 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
 
         Log.d("getAllRowsBetween", "Getting rows from table named " + TABLE_NAME + " between " + startDateString + " and " + endDateString);
 
-        ArrayList<PeriodicMeasurement> rows = new ArrayList<>();
+        List<PeriodicMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TIMESTAMP + " BETWEEN \'" + startDateString + "\' AND \'" + endDateString + "\'" ;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -143,9 +144,9 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
-    private ArrayList<PeriodicMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
+    private List<PeriodicMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
 
-        ArrayList<PeriodicMeasurement> rows = new ArrayList<>();
+        List<PeriodicMeasurement> rows = new ArrayList<>();
         PeriodicMeasurement periodicMeasurement;
         if (cursor.moveToFirst()) {
             do {

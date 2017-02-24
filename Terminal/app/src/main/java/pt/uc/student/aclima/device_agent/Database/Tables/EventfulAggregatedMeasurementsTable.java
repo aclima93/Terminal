@@ -8,6 +8,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulAggregatedMeasurement;
@@ -71,15 +72,15 @@ public class EventfulAggregatedMeasurementsTable extends AggregatedMeasurementsT
         return success;
     }
 
-    public ArrayList<EventfulAggregatedMeasurement> getAllRows() {
+    public List<EventfulAggregatedMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<EventfulAggregatedMeasurement> rows = new ArrayList<>();
+        List<EventfulAggregatedMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {

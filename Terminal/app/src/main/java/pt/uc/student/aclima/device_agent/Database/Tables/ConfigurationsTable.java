@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
@@ -91,7 +92,7 @@ public class ConfigurationsTable {
 
         Configuration row = null;
 
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + NAME + " LIKE " + name ;
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + NAME + " LIKE \'" + name + "\'" ;
 
         SQLiteDatabase database = databaseManager.getWritableDatabase();
         Cursor cursor = database.rawQuery(query, null);
@@ -119,9 +120,9 @@ public class ConfigurationsTable {
         return row;
     }
 
-    private ArrayList<Configuration> parseRowObjects(Cursor cursor) throws ParseException {
+    private List<Configuration> parseRowObjects(Cursor cursor) throws ParseException {
 
-        ArrayList<Configuration> rows = new ArrayList<>();
+        List<Configuration> rows = new ArrayList<>();
         Configuration configuration;
         if (cursor.moveToFirst()) {
             do {

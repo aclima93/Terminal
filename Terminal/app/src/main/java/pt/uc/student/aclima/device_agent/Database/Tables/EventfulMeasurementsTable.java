@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
@@ -75,15 +76,15 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         return success;
     }
 
-    public ArrayList<EventfulMeasurement> getAllRows() {
+    public List<EventfulMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<EventfulMeasurement> rows = new ArrayList<>();
+        List<EventfulMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -104,7 +105,7 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
-    public ArrayList<EventfulMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
+    public List<EventfulMeasurement> getAllRowsBetween(Date startDate, Date endDate) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
         String startDateString = simpleDateFormat.format(startDate);
@@ -112,11 +113,11 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
 
         Log.d("getAllRowsBetween", "Getting rows from table named " + TABLE_NAME + " between " + startDateString + " and " + endDateString);
 
-        ArrayList<EventfulMeasurement> rows = new ArrayList<>();
+        List<EventfulMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + TIMESTAMP + " BETWEEN \'" + startDateString + "\' AND \'" + endDateString + "\'" ;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -137,9 +138,9 @@ public class EventfulMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
-    private ArrayList<EventfulMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
+    private List<EventfulMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
 
-        ArrayList<EventfulMeasurement> rows = new ArrayList<>();
+        List<EventfulMeasurement> rows = new ArrayList<>();
         EventfulMeasurement eventfulMeasurement;
         if (cursor.moveToFirst()) {
             do {

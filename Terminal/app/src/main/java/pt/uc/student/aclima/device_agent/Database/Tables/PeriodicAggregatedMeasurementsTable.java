@@ -8,6 +8,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
@@ -28,7 +29,7 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         super(databaseManager);
     }
 
-    public boolean addRow(String name, Date sampleStartTime, Date sampleEndTime, String harmonicValue, String medianValue, String unitsOfMeasurement){
+    public boolean addRow(String name, Date sampleStartTime, Date sampleEndTime, Double harmonicValue, Double medianValue, String unitsOfMeasurement){
 
         Log.d("addRow",
                 "Adding row to table named " + TABLE_NAME + "\n" +
@@ -77,15 +78,15 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         return success;
     }
 
-    public ArrayList<PeriodicAggregatedMeasurement> getAllRows() {
+    public List<PeriodicAggregatedMeasurement> getAllRows() {
 
         Log.d("getAllRows", "Getting rows from table named " + TABLE_NAME);
 
-        ArrayList<PeriodicAggregatedMeasurement> rows = new ArrayList<>();
+        List<PeriodicAggregatedMeasurement> rows = new ArrayList<>();
 
         String query = "SELECT * FROM " + TABLE_NAME;
 
-        SQLiteDatabase database = databaseManager.getWritableDatabase();
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
 
         try {
@@ -103,8 +104,8 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
                             cursor.getString(1), // NAME
                             simpleDateFormat.parse(cursor.getString(2)), // SAMPLE_START_TIME
                             simpleDateFormat.parse(cursor.getString(3)), // SAMPLE_END_TIME
-                            cursor.getString(4), // HARMONIC_VALUE
-                            cursor.getString(5), // MEDIAN_VALUE
+                            cursor.getDouble(4), // HARMONIC_VALUE
+                            cursor.getDouble(5), // MEDIAN_VALUE
                             cursor.getString(6)); // UNITS_OF_MEASUREMENT
 
                     rows.add(periodicAggregatedMeasurement);
