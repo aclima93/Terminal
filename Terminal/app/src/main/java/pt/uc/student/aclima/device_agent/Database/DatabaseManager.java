@@ -1,5 +1,6 @@
 package pt.uc.student.aclima.device_agent.Database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -93,7 +94,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
             // if an exception occurs it is best to just re-create the tables and re-populate them from scratch
             // TODO: is there a better way?
             createTables(database);
-            populateConfigurationsTable();
+            populateConfigurationsTable(database);
         }
     }
 
@@ -171,7 +172,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    private void populateConfigurationsTable() {
+    private void populateConfigurationsTable(SQLiteDatabase database) {
         Log.d("ConfigurationsTable", "Populating table...");
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
@@ -190,11 +191,11 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, (5 * 60 * 1000) + "")); // every 5 minutes
 
         // Periodic Aggregation Action
-        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
+        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Eventful Aggregation Action
-        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
+        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         for( Pair<String, String> namesValuePair : namesValuePairs ) {
@@ -202,13 +203,55 @@ public final class DatabaseManager extends SQLiteOpenHelper {
             String name = namesValuePair.first;
             String value = namesValuePair.second;
 
-            boolean success = configurationsTable.addRow(name, value, new Date());
+            boolean success = addConfigurationRow(database, name, value, new Date());
             if (!success) {
                 Log.e("Configuration", "Configuration" + DELIMITER + name + " service failed to add row.");
             }
         }
 
         Log.d("ConfigurationsTable", "Populated table.");
+    }
+
+    public boolean addConfigurationRow(SQLiteDatabase database, String name, String value, Date timestamp){
+
+        Log.d("addConfigurationRow",
+                "Adding row to table named " + ConfigurationsTable.TABLE_NAME + "\n" +
+                        ConfigurationsTable.NAME + ": " + name + "\n" +
+                        ConfigurationsTable.VALUE + ": " + value + "\n" +
+                        ConfigurationsTable.TIMESTAMP + ": " + timestamp.toString() + "\n"
+        );
+
+        boolean success;
+
+        try {
+            database.beginTransaction();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ConfigurationsTable.NAME, name);
+            contentValues.put(ConfigurationsTable.VALUE, value);
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+            String timestampString = simpleDateFormat.format(timestamp);
+            contentValues.put(ConfigurationsTable.TIMESTAMP, timestampString);
+
+            database.insertOrThrow(ConfigurationsTable.TABLE_NAME, ConfigurationsTable.NAME, contentValues);
+
+            database.setTransactionSuccessful();
+            success = true;
+
+            Log.d("addConfigurationRow", "Added to table.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            success = false;
+
+            Log.d("addConfigurationRow", "Failed to add to table.");
+        }
+        finally {
+            database.endTransaction();
+        }
+
+        return success;
     }
 
 

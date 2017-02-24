@@ -22,7 +22,7 @@ public class ConfigurationsTable {
 
     public static final String TABLE_NAME = "ConfigurationsTable";
 
-    protected DatabaseManager databaseManager;
+    private DatabaseManager databaseManager;
 
     public static final String NAME = "name";
     public static final String VALUE = "value";
@@ -32,6 +32,12 @@ public class ConfigurationsTable {
         this.databaseManager = databaseManager;
     }
 
+    public boolean shouldAddRowForName(String name){
+        if( getRowForName(name) == null ){
+            return true;
+        }
+        return false;
+    }
 
     public boolean addRow(String name, String value, Date timestamp){
 
