@@ -41,14 +41,14 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  */
 public class PeriodicIntentService extends IntentService {
 
-    public static final String ACTION_RAM = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.RAM";
-    public static final String ACTION_CPU = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.CPU";
-    public static final String ACTION_GPS = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.GPS";
-    public static final String ACTION_CPU_USAGE = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.CPU_USAGE";
-    public static final String ACTION_RAM_USAGE = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.RAM_USAGE";
-    public static final String ACTION_BATTERY = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.BATTERY";
-    public static final String ACTION_OPEN_PORTS = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.OPEN_PORTS";
-    public static final String ACTION_DATA_TRAFFIC = "pt.uc.student.aclima.terminal.Collectors.PeriodicIntentService.action.DATA_TRAFFIC";
+    public static final String ACTION_RAM = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.RAM";
+    public static final String ACTION_CPU = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.CPU";
+    public static final String ACTION_GPS = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.GPS";
+    public static final String ACTION_CPU_USAGE = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.CPU_USAGE";
+    public static final String ACTION_RAM_USAGE = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.RAM_USAGE";
+    public static final String ACTION_BATTERY = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.BATTERY";
+    public static final String ACTION_OPEN_PORTS = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.OPEN_PORTS";
+    public static final String ACTION_DATA_TRAFFIC = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.DATA_TRAFFIC";
 
     public PeriodicIntentService() {
         super("PeriodicIntentService");

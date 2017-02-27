@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("pt.uc.student.aclima.terminal", appContext.getPackageName());
+        assertEquals("pt.uc.student.aclima.device_agent", appContext.getPackageName());
     }
 }
