@@ -31,7 +31,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
     public static final String TimestampFormat = "yyyy-MM-dd HH:mm:ss.SSS zzz";
 
-    private static final String DATABASE_NAME = "pt.uc.student.aclima.terminal.db";
+    private static final String DATABASE_NAME = "pt.uc.student.aclima.device_agent.db";
 
     private static ConfigurationsTable configurationsTable;
 

@@ -26,7 +26,7 @@ public class DeviceAgentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collectors);
+        setContentView(R.layout.activity_device_agent);
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
 
