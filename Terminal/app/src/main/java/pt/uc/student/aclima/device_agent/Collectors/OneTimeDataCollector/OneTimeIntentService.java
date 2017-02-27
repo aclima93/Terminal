@@ -26,7 +26,7 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
 public class OneTimeIntentService extends IntentService {
 
     public OneTimeIntentService() {
-        super("PeriodicIntentService");
+        super("OneTimeIntentService");
     }
 
     public static void startActionPackageChange(Context context, String action, Bundle bundle) {
