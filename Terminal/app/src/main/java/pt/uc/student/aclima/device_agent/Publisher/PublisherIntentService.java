@@ -5,8 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +25,10 @@ import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
+import pt.uc.student.aclima.device_agent.Database.Entries.Measurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
+import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -27,6 +40,11 @@ public class PublisherIntentService extends IntentService {
 
     public static final String ACTION_PUBLISH_DATA = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.action.PUBLISH_DATA";
     public static final String EXTRA_PUBLISH_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.PUBLISH_DATA_SAMPLE_START_TIME";
+
+    public static final String PUBLISH_DEVICE_ID = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID";
+
+    public static final String TOPIC = "/COLLECTED_DATA";
+    private static final String SERVER_URI = "tcp://test.mosquitto.org:1883";
 
     public PublisherIntentService() {
         super("PublisherIntentService");
@@ -69,21 +87,29 @@ public class PublisherIntentService extends IntentService {
         if(context != null) {
 
             try {
+
+                final Gson gson = new Gson();
                 Configuration configuration = new DatabaseManager(context).getConfigurationsTable().getRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME);
                 Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
                 Date sampleEndDate = new Date(); // current time
+                String stringSampleEndDate = simpleDateFormat.format(simpleDateFormat); // current time
+
+                List<Measurement> measurements = new ArrayList<>();
 
                 List<PeriodicMeasurement> periodicMeasurementRows = new DatabaseManager(context).getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+                measurements.addAll(periodicMeasurementRows);
+
                 List<EventfulMeasurement> eventfulMeasurementRows = new DatabaseManager(context).getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+                measurements.addAll(eventfulMeasurementRows);
 
                 List<PeriodicAggregatedMeasurement> periodicAggregatedMeasurementRows = new DatabaseManager(context).getPeriodicAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
+                measurements.addAll(periodicAggregatedMeasurementRows);
+
                 List<EventfulAggregatedMeasurement> eventfulAggregatedMeasurementRows = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
+                measurements.addAll(eventfulAggregatedMeasurementRows);
 
-
-                boolean editSuccess = new DatabaseManager(context).getConfigurationsTable().editRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
-                if (!editSuccess) {
-                    Log.e("Publisher", "Publisher service failed to edit configuration \'"+ EXTRA_PUBLISH_DATA_SAMPLE_START_TIME +"\' row.");
-                }
+                String jsonMeasurements = gson.toJson(measurements);
+                publishData(context, jsonMeasurements, stringSampleEndDate);
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -92,4 +118,69 @@ public class PublisherIntentService extends IntentService {
 
         }
     }
+
+    private void publishData(Context context, final String dataContent, final String stringSampleEndDate) {
+
+        final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
+
+        Configuration configuration = configurationsTable.getRowForName(PUBLISH_DEVICE_ID);
+
+        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context, SERVER_URI, configuration.getValue());
+
+        mqttAndroidClient.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+                Log.d("MQTT", "Connection was lost");
+                cause.printStackTrace();
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                Log.d("MQTT", "Message Arrived: " + topic + ": " + new String(message.getPayload()));
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+                Log.d("MQTT", "Delivery Complete");
+
+                // update the record of the last successful data publish
+                boolean editSuccess = configurationsTable.editRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, stringSampleEndDate);
+                if (!editSuccess) {
+                    Log.e("Publisher", "Publisher service failed to edit configuration \'"+ EXTRA_PUBLISH_DATA_SAMPLE_START_TIME +"\' row.");
+                }else {
+                    // TODO: delete sent data from database
+                }
+            }
+        });
+
+        try {
+            mqttAndroidClient.connect(null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d("MQTT", "Connection Success");
+                    try {
+                        Log.d("MQTT", "Subscribing to " + TOPIC);
+                        mqttAndroidClient.subscribe(TOPIC, 0);
+                        Log.d("MQTT", "Subscribed to " + TOPIC);
+
+                        Log.d("MQTT", "Publishing message...");
+                        mqttAndroidClient.publish(TOPIC, new MqttMessage(dataContent.getBytes()));
+
+                    } catch (MqttException ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.d("MQTT", "Connection Failure");
+                    exception.printStackTrace();
+                }
+            });
+        } catch (MqttException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

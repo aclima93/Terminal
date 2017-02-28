@@ -10,14 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService;
 import pt.uc.student.aclima.device_agent.Aggregators.PeriodicDataAggregator.PeriodicAggregatorBroadcastReceiver;
@@ -28,6 +20,8 @@ import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Period
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+import pt.uc.student.aclima.device_agent.Publisher.PublisherBroadcastReceiver;
+import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
 
 public class DeviceAgentActivity extends AppCompatActivity {
 
@@ -35,54 +29,6 @@ public class DeviceAgentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_agent);
-
-        //final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://iot.eclipse.org:1883", "DeviceAgent");
-        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://test.mosquitto.org:1883", "DeviceAgent");
-        mqttAndroidClient.setCallback(new MqttCallback() {
-            @Override
-            public void connectionLost(Throwable cause) {
-                System.out.println("Connection was lost!");
-                cause.printStackTrace();
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                System.out.println("Message Arrived!: " + topic + ": " + new String(message.getPayload()));
-
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-                System.out.println("Delivery Complete!");
-            }
-        });
-
-        try {
-            mqttAndroidClient.connect(null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    System.out.println("Connection Success!");
-                    try {
-                        System.out.println("Subscribing to /test");
-                        mqttAndroidClient.subscribe("/test", 0);
-                        System.out.println("Subscribed to /test");
-                        System.out.println("Publishing message..");
-                        mqttAndroidClient.publish("/test", new MqttMessage("Hello world!".getBytes()));
-                    } catch (MqttException ex) {
-                        ex.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    System.out.println("Connection Failure!");
-                    exception.printStackTrace();
-                }
-            });
-        } catch (MqttException ex) {
-            ex.printStackTrace();
-        }
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
 
@@ -94,9 +40,11 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         schedulePeriodicAlarms(configurationsTable);
 
-        schedulePeriodicAggregatorAlarms(configurationsTable);
+        schedulePeriodicAggregatorAlarm(configurationsTable);
 
-        scheduleEventfulAggregatorAlarms(configurationsTable);
+        scheduleEventfulAggregatorAlarm(configurationsTable);
+
+        schedulePublishAlarm(configurationsTable);
     }
 
     private void setupSpecialEventfulBroadcastReceivers(Context context) {
@@ -119,13 +67,19 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
     }
 
-    private void scheduleEventfulAggregatorAlarms(ConfigurationsTable configurationsTable) {
+    private void schedulePublishAlarm(ConfigurationsTable configurationsTable) {
+
+        Configuration configuration = configurationsTable.getRowForName(PublisherIntentService.ACTION_PUBLISH_DATA);
+        scheduleAlarm(PublisherBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
+    }
+
+    private void scheduleEventfulAggregatorAlarm(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA);
         scheduleAlarm(EventfulAggregatorBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
     }
 
-    private void schedulePeriodicAggregatorAlarms(ConfigurationsTable configurationsTable) {
+    private void schedulePeriodicAggregatorAlarm(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA);
         scheduleAlarm(PeriodicAggregatorBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
