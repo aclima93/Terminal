@@ -12,7 +12,9 @@ import java.util.List;
 
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
+import pt.uc.student.aclima.device_agent.Database.Entries.EventfulAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
+import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
 
 /**
@@ -73,6 +75,9 @@ public class PublisherIntentService extends IntentService {
 
                 List<PeriodicMeasurement> periodicMeasurementRows = new DatabaseManager(context).getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
                 List<EventfulMeasurement> eventfulMeasurementRows = new DatabaseManager(context).getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+
+                List<PeriodicAggregatedMeasurement> periodicAggregatedMeasurementRows = new DatabaseManager(context).getPeriodicAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
+                List<EventfulAggregatedMeasurement> eventfulAggregatedMeasurementRows = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
 
 
                 boolean editSuccess = new DatabaseManager(context).getConfigurationsTable().editRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
