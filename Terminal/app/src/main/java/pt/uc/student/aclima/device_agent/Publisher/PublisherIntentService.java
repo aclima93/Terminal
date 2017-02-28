@@ -3,6 +3,7 @@ package pt.uc.student.aclima.device_agent.Publisher;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -29,6 +30,8 @@ import pt.uc.student.aclima.device_agent.Database.Entries.Measurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+
+import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -92,7 +95,7 @@ public class PublisherIntentService extends IntentService {
                 Configuration configuration = new DatabaseManager(context).getConfigurationsTable().getRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME);
                 Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
                 Date sampleEndDate = new Date(); // current time
-                String stringSampleEndDate = simpleDateFormat.format(simpleDateFormat); // current time
+                String stringSampleEndDate = simpleDateFormat.format(sampleEndDate); // current time
 
                 List<Measurement> measurements = new ArrayList<>();
 
@@ -122,10 +125,20 @@ public class PublisherIntentService extends IntentService {
     private void publishData(Context context, final String dataContent, final String stringSampleEndDate) {
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
-
         Configuration configuration = configurationsTable.getRowForName(PUBLISH_DEVICE_ID);
 
-        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context, SERVER_URI, configuration.getValue());
+        String deviceId = "";
+        if( configuration == null ) {
+            updateDeviceId(context, configurationsTable);
+        }
+        else{
+            deviceId = configuration.getValue();
+            if (deviceId == null || deviceId.isEmpty()) {
+                deviceId = updateDeviceId(context, configurationsTable);
+            }
+        }
+
+        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context, SERVER_URI, deviceId);
 
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
@@ -181,6 +194,23 @@ public class PublisherIntentService extends IntentService {
         } catch (MqttException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String updateDeviceId(Context context, ConfigurationsTable configurationsTable){
+
+        String deviceId = "";
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        deviceId += DELIMITER + tm.getDeviceId();
+        deviceId += DELIMITER + tm.getSimSerialNumber();
+        deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        boolean success = configurationsTable.addRow(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId, new Date());
+        if (!success) {
+            Log.e("Configuration", "Configuration" + DELIMITER + PublisherIntentService.PUBLISH_DEVICE_ID + " service failed to add row.");
+        }
+
+        return deviceId;
     }
 
 }

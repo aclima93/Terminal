@@ -203,13 +203,18 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Device ID
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId = "";
-        deviceId += DELIMITER + tm.getDeviceId();
-        deviceId += DELIMITER + tm.getSimSerialNumber();
-        deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId));
-        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (/* 60 * */ 60 * 1000) + "")); // FIXME: every 60 minutes
+        if(context != null) {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String deviceId = "";
+            deviceId += DELIMITER + tm.getDeviceId();
+            deviceId += DELIMITER + tm.getSimSerialNumber();
+            deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+            namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId));
+        }
+
+        // Data Publishing Action
+        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (/* 60 * */ 60 * 1000) + "")); // FIXME: every 60 minutes
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
 
         // add them to the Configurations Table
         for( Pair<String, String> namesValuePair : namesValuePairs ) {
