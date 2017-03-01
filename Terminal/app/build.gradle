@@ -42,5 +42,8 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.2.4'
 
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk16
+    compile group: 'org.bouncycastle', name: 'bcprov-jdk16', version: '1.46'
+
     testCompile 'junit:junit:4.12'
 }
