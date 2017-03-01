@@ -5,6 +5,8 @@ package pt.uc.student.aclima.device_agent.Publisher;
  * Source: <a>https://gist.github.com/sharonbn/4104301</a>
  */
 
+import android.net.Uri;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMReader;
 import org.bouncycastle.openssl.PasswordFinder;
@@ -13,7 +15,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.KeyPair;
@@ -28,24 +29,28 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class SslUtil {
 
-    static SSLSocketFactory getSocketFactory (final String caCrtFile, final String crtFile, final String keyFile,
+    static SSLSocketFactory getSocketFactory (final String caCrtRelativePath, final String crtRelativePath, final String keyRelativePath,
                                               final String password) throws Exception {
+
+        final String caCrtFilePath = getFilePath(caCrtRelativePath);
+        final String crtFilePath = getFilePath(crtRelativePath);
+        final String keyFilePath = getFilePath(keyRelativePath);
 
         Security.addProvider(new BouncyCastleProvider());
 
         // load CA certificate
-        PEMReader reader = new PEMReader(new InputStreamReader(new ByteArrayInputStream(readAllBytes(caCrtFile))));
+        PEMReader reader = new PEMReader(new InputStreamReader(new ByteArrayInputStream(readAllBytes(caCrtFilePath))));
         X509Certificate caCert = (X509Certificate)reader.readObject();
         reader.close();
 
         // load client certificate
-        reader = new PEMReader(new InputStreamReader(new ByteArrayInputStream(readAllBytes(crtFile))));
+        reader = new PEMReader(new InputStreamReader(new ByteArrayInputStream(readAllBytes(crtFilePath))));
         X509Certificate cert = (X509Certificate)reader.readObject();
         reader.close();
 
         // load client private key
         reader = new PEMReader(
-                new InputStreamReader(new ByteArrayInputStream(readAllBytes(keyFile))),
+                new InputStreamReader(new ByteArrayInputStream(readAllBytes(keyFilePath))),
                 new PasswordFinder() {
                     @Override
                     public char[] getPassword() {
@@ -84,20 +89,30 @@ public class SslUtil {
         int size = (int) file.length();
         byte[] bytes = new byte[size];
         int numBytesRead = 0;
+        BufferedInputStream buf = null;
 
         try {
-            BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+            buf = new BufferedInputStream(new FileInputStream(file));
             numBytesRead = buf.read(bytes, 0, bytes.length);
-            buf.close();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (buf != null) {
+                    buf.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return bytes;
+    }
+
+    private static String getFilePath(String relativePath){
+        Uri uri = Uri.parse("android.resource://" + "pt.uc.student.aclima" + "/" + relativePath);
+        return uri.getPath();
     }
 
 }

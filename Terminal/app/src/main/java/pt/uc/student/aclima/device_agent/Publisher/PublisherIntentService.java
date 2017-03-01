@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -47,7 +48,9 @@ public class PublisherIntentService extends IntentService {
     public static final String PUBLISH_DEVICE_ID = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID";
 
     public static final String TOPIC = "/COLLECTED_DATA";
-    private static final String SERVER_URI = "tcp://test.mosquitto.org:1883";
+    private static final String SERVER_PROTOCOL = "ssl";
+    private static final String SERVER_URI = "test.mosquitto.org";
+    private static final String SERVER_PORT = "8884";
 
     public PublisherIntentService() {
         super("PublisherIntentService");
@@ -138,7 +141,8 @@ public class PublisherIntentService extends IntentService {
             }
         }
 
-        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context, SERVER_URI, deviceId);
+        final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context,
+                SERVER_PROTOCOL + "://" + SERVER_URI + ":" + SERVER_PORT, deviceId);
 
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
@@ -166,34 +170,50 @@ public class PublisherIntentService extends IntentService {
             }
         });
 
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setConnectionTimeout(60);
+        options.setKeepAliveInterval(60);
+
         try {
-            mqttAndroidClient.connect(null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.d("MQTT", "Connection Success");
-                    try {
-                        Log.d("MQTT", "Subscribing to " + TOPIC);
-                        mqttAndroidClient.subscribe(TOPIC, 0);
-                        Log.d("MQTT", "Subscribed to " + TOPIC);
+            options.setSocketFactory(SslUtil.getSocketFactory("res/raw/mosquittoorg.crt",
+                    "res/raw/client_crt.crt",
+                    "res/raw/client_key.key",
+                    "mosquitto"));
 
-                        Log.d("MQTT", "Publishing message...");
-                        mqttAndroidClient.publish(TOPIC, new MqttMessage(dataContent.getBytes()));
+            try {
+                mqttAndroidClient.connect(options, null, new IMqttActionListener() {
 
-                    } catch (MqttException ex) {
-                        ex.printStackTrace();
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        Log.d("MQTT", "Connection Success");
+                        try {
+                            Log.d("MQTT", "Subscribing to " + TOPIC);
+                            mqttAndroidClient.subscribe(TOPIC, 0);
+                            Log.d("MQTT", "Subscribed to " + TOPIC);
+
+                            Log.d("MQTT", "Publishing message...");
+                            mqttAndroidClient.publish(TOPIC, new MqttMessage(dataContent.getBytes()));
+
+                        } catch (MqttException ex) {
+                            ex.printStackTrace();
+                        }
+
                     }
 
-                }
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        Log.d("MQTT", "Connection Failure");
+                        exception.printStackTrace();
+                    }
+                });
+            } catch (MqttException ex) {
+                ex.printStackTrace();
+            }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.d("MQTT", "Connection Failure");
-                    exception.printStackTrace();
-                }
-            });
-        } catch (MqttException ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private String updateDeviceId(Context context, ConfigurationsTable configurationsTable){
