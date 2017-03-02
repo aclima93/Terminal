@@ -31,6 +31,7 @@ import pt.uc.student.aclima.device_agent.Database.Entries.Measurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+import pt.uc.student.aclima.device_agent.R;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
@@ -44,6 +45,9 @@ public class PublisherIntentService extends IntentService {
 
     public static final String ACTION_PUBLISH_DATA = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.action.PUBLISH_DATA";
     public static final String EXTRA_PUBLISH_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.PUBLISH_DATA_SAMPLE_START_TIME";
+
+    public static final String EXTRA_MQTT_TIMEOUT = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_TIMEOUT";
+    public static final String EXTRA_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_KEEP_ALIVE";
 
     public static final String PUBLISH_DEVICE_ID = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID";
 
@@ -170,14 +174,24 @@ public class PublisherIntentService extends IntentService {
             }
         });
 
+        // setup configuration options for MQTT connection
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setConnectionTimeout(60);
-        options.setKeepAliveInterval(60);
+
+        Configuration timeoutConfiguration = configurationsTable.getRowForName(EXTRA_MQTT_TIMEOUT);
+        if(timeoutConfiguration != null && timeoutConfiguration.getValue() != null ) {
+            options.setConnectionTimeout(Integer.valueOf(timeoutConfiguration.getValue()));
+        }
+
+        Configuration keepAliveConfiguration = configurationsTable.getRowForName(EXTRA_MQTT_KEEP_ALIVE);
+        if(keepAliveConfiguration != null && keepAliveConfiguration.getValue() != null ) {
+            options.setKeepAliveInterval(Integer.valueOf(keepAliveConfiguration.getValue()));
+        }
 
         try {
-            options.setSocketFactory(SslUtil.getSocketFactory("res/raw/mosquittoorg.crt",
-                    "res/raw/client_crt.crt",
-                    "res/raw/client_key.key",
+            options.setSocketFactory(SslUtil.getSocketFactory(
+                    getResources().openRawResource(R.raw.mosquittoorg),
+                    getResources().openRawResource(R.raw.client_crt),
+                    getResources().openRawResource(R.raw.client_key),
                     "mosquitto"));
 
             try {
