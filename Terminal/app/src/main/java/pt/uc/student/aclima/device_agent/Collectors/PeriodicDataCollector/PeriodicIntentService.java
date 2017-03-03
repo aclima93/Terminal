@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilit
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.SingleShotLocationProvider;
 import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Utilities.traffic.TrafficMonitor;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
+import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicMeasurementsTable;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
@@ -49,6 +51,15 @@ public class PeriodicIntentService extends IntentService {
     public static final String ACTION_BATTERY = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.BATTERY";
     public static final String ACTION_OPEN_PORTS = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.OPEN_PORTS";
     public static final String ACTION_DATA_TRAFFIC = "pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.DATA_TRAFFIC";
+
+    public static final String MEASUREMENT_NAME_RAM = "Available System RAM";
+    public static final String MEASUREMENT_NAME_CPU = "Used System CPU";
+    public static final String MEASUREMENT_NAME_GPS = "GPS";
+    public static final String MEASUREMENT_NAME_CPU_USAGE = "CPU Usage";
+    public static final String MEASUREMENT_NAME_RAM_USAGE = "RAM Usage";
+    public static final String MEASUREMENT_NAME_BATTERY = "Battery Level";
+    public static final String MEASUREMENT_NAME_OPEN_PORTS = "Open Ports";
+    public static final String MEASUREMENT_NAME_DATA_TRAFFIC = "Data Traffic";
 
     public PeriodicIntentService() {
         super("PeriodicIntentService");
@@ -160,7 +171,7 @@ public class PeriodicIntentService extends IntentService {
             activityManager.getMemoryInfo(memoryInfo);
 
             boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
-                    "Available System RAM", memoryInfo.availMem + "", "bytes", timestamp);
+                    MEASUREMENT_NAME_RAM, memoryInfo.availMem + "", "bytes", timestamp);
             if( !success){
                 Log.e("RAM", "RAM service failed to add row.");
             }
@@ -204,7 +215,7 @@ public class PeriodicIntentService extends IntentService {
 
                 float entryValue = (float) 100 * (cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1));
 
-                String entryName = "Used System CPU";
+                String entryName = MEASUREMENT_NAME_CPU;
                 boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                         entryName,
                         entryValue + "", "%", timestamp);
@@ -231,7 +242,7 @@ public class PeriodicIntentService extends IntentService {
                         public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
                             String entryValue = location.toString();
 
-                            String entryName = "GPS";
+                            String entryName = MEASUREMENT_NAME_GPS;
                             boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                                     entryName,
                                     entryValue, SingleShotLocationProvider.GPSCoordinates.unitsOfMeasurement, timestamp);
@@ -300,7 +311,7 @@ public class PeriodicIntentService extends IntentService {
 
                     // FIXME: ? almost always at 0
 
-                    String entryName = "CPU Usage" + DELIMITER + "pid " + process.pid + DELIMITER + process.name;
+                    String entryName = MEASUREMENT_NAME_CPU_USAGE + DELIMITER + "pid " + process.pid + DELIMITER + process.name;
                     boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                             entryName,
                             entryValue + "", "%", timestamp);
@@ -345,7 +356,7 @@ public class PeriodicIntentService extends IntentService {
 
                 for (android.os.Debug.MemoryInfo pidMemoryInfo : memoryInfoArray) {
 
-                    String entryName = "RAM Usage" + DELIMITER + "pid " + pids[0] + DELIMITER + pidMap.get(pids[0]);
+                    String entryName = MEASUREMENT_NAME_RAM_USAGE + DELIMITER + "pid " + pids[0] + DELIMITER + pidMap.get(pids[0]);
                     boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
                             entryName,
                             pidMemoryInfo.getTotalPss() + "", "Kilobytes", timestamp);
@@ -378,7 +389,7 @@ public class PeriodicIntentService extends IntentService {
                 float batteryPct = 100 * (level / (float) scale);
 
                 boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
-                        "Battery Level", batteryPct + "", "%", timestamp);
+                        MEASUREMENT_NAME_BATTERY, batteryPct + "", "%", timestamp);
                 if (!success) {
                     Log.e("Battery", "Battery service failed to add row.");
                 }
@@ -401,19 +412,22 @@ public class PeriodicIntentService extends IntentService {
                 process.getOutputStream().close();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                String allLines = "";
+                List<String> measurements = new ArrayList<>();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    allLines += line + "\n";
+                    //List<String> measurementItems = Arrays.asList(line.split("\\s*,\\s*")); // TODO: parse each entry?
+                    measurements.add(line);
                 }
 
-                // TODO: add units of measurement
-                // FIXME: add one column at a time?
+                String unitsOfMeasurement = measurements.remove(0);
+                PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
 
-                boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
-                        "Open Ports", allLines, "", timestamp);
-                if (!success) {
-                    Log.e("OpenPorts", "OpenPorts service failed to add row.");
+                for( String measurement : measurements ) {
+                    boolean success = periodicMeasurementsTable.addRow(
+                            MEASUREMENT_NAME_OPEN_PORTS, measurement, unitsOfMeasurement, timestamp);
+                    if (!success) {
+                        Log.e("OpenPorts", "OpenPorts service failed to add row.");
+                    }
                 }
 
                 reader.close();
@@ -430,19 +444,23 @@ public class PeriodicIntentService extends IntentService {
         Date timestamp = new Date();
 
         if(context != null) {
+
             List<String> lines = new TrafficMonitor().takeSnapshot(context);
-            String allLines = "";
-            for (String line : lines) {
-                allLines += line + "\n";
+
+            List<String> measurements = new ArrayList<>();
+            for (String measurement : lines) {
+                measurements.add(measurement);
             }
 
-            // TODO: add units of measurement
-            // FIXME: add one column at a time?
+            String unitsOfMeasurement = measurements.remove(0);
+            PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
 
-            boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
-                    "Data Traffic", allLines, "", timestamp);
-            if (!success) {
-                Log.e("DataTraffic", "DataTraffic service failed to add row.");
+            for( String measurement : measurements ) {
+                boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                        MEASUREMENT_NAME_DATA_TRAFFIC, measurement, unitsOfMeasurement, timestamp);
+                if (!success) {
+                    Log.e("DataTraffic", "DataTraffic service failed to add row.");
+                }
             }
         }
     }
