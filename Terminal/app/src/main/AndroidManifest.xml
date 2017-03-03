@@ -133,6 +133,21 @@
             android:exported="true">
         </receiver>
 
+        <!-- MQTT Service -->
+        <service android:name="org.eclipse.paho.android.service.MqttService">
+        </service>
+
+        <!-- Publisher -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Publisher.PublisherBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
     </application>
 
 </manifest>

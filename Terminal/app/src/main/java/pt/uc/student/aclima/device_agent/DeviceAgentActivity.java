@@ -20,13 +20,15 @@ import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Period
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+import pt.uc.student.aclima.device_agent.Publisher.PublisherBroadcastReceiver;
+import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
 
 public class DeviceAgentActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collectors);
+        setContentView(R.layout.activity_device_agent);
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
 
@@ -38,9 +40,11 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         schedulePeriodicAlarms(configurationsTable);
 
-        schedulePeriodicAggregatorAlarms(configurationsTable);
+        schedulePeriodicAggregatorAlarm(configurationsTable);
 
-        scheduleEventfulAggregatorAlarms(configurationsTable);
+        scheduleEventfulAggregatorAlarm(configurationsTable);
+
+        schedulePublishAlarm(configurationsTable);
     }
 
     private void setupSpecialEventfulBroadcastReceivers(Context context) {
@@ -63,13 +67,26 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
     }
 
-    private void scheduleEventfulAggregatorAlarms(ConfigurationsTable configurationsTable) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(new EventfulBroadcastReceiver());
+    }
+
+    private void schedulePublishAlarm(ConfigurationsTable configurationsTable) {
+
+        Configuration configuration = configurationsTable.getRowForName(PublisherIntentService.ACTION_PUBLISH_DATA);
+        scheduleAlarm(PublisherBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
+    }
+
+    private void scheduleEventfulAggregatorAlarm(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA);
         scheduleAlarm(EventfulAggregatorBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
     }
 
-    private void schedulePeriodicAggregatorAlarms(ConfigurationsTable configurationsTable) {
+    private void schedulePeriodicAggregatorAlarm(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA);
         scheduleAlarm(PeriodicAggregatorBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));

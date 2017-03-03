@@ -27,8 +27,8 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  */
 public class EventfulAggregatorIntentService extends IntentService {
 
-    public static final String ACTION_AGGREGATE_EVENTFUL_DATA = "pt.uc.student.aclima.terminal.Aggregators.EventfulAggregatorIntentService.action.AGGREGATE_EVENTFUL_DATA";
-    public static final String EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.terminal.Aggregators.EventfulAggregatorIntentService.extra.AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME";
+    public static final String ACTION_AGGREGATE_EVENTFUL_DATA = "pt.uc.student.aclima.device_agent.Aggregators.EventfulAggregatorIntentService.action.AGGREGATE_EVENTFUL_DATA";
+    public static final String EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.device_agent.Aggregators.EventfulAggregatorIntentService.extra.AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME";
 
     public EventfulAggregatorIntentService() {
         super("EventfulAggregatorIntentService");

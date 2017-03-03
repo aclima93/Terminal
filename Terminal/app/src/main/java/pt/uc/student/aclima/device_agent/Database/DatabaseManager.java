@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.util.Pair;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +22,7 @@ import pt.uc.student.aclima.device_agent.Database.Tables.EventfulMeasurementsTab
 import pt.uc.student.aclima.device_agent.Database.Tables.OneTimeMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicAggregatedMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicMeasurementsTable;
+import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
@@ -31,7 +33,9 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
     public static final String TimestampFormat = "yyyy-MM-dd HH:mm:ss.SSS zzz";
 
-    private static final String DATABASE_NAME = "pt.uc.student.aclima.terminal.db";
+    private static final String DATABASE_NAME = "pt.uc.student.aclima.device_agent.db";
+
+    private static Context context;
 
     private static ConfigurationsTable configurationsTable;
 
@@ -191,13 +195,30 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, (5 * 60 * 1000) + "")); // every 5 minutes
 
         // Periodic Aggregation Action
-        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (1000) + "")); // every 30 minutes
+        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (/* 30 * 60 * */ 1000) + "")); // FIXME: every 30 minutes
         namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Eventful Aggregation Action
-        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (1000) + "")); // every 30 minutes
+        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (/* 30 * 60 * */ 1000) + "")); // FIXME: every 30 minutes
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
+        // Device ID
+        if(context != null) {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String deviceId = "";
+            deviceId += DELIMITER + tm.getDeviceId();
+            deviceId += DELIMITER + tm.getSimSerialNumber();
+            deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+            namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId));
+        }
+
+        // Data Publishing Action
+        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (/* 60 * 60 */ 10 * 1000) + "")); // FIXME: every 60 minutes
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+
+        // add them to the Configurations Table
         for( Pair<String, String> namesValuePair : namesValuePairs ) {
 
             String name = namesValuePair.first;
