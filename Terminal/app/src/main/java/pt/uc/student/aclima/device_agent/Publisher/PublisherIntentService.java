@@ -52,9 +52,27 @@ public class PublisherIntentService extends IntentService {
     public static final String PUBLISH_DEVICE_ID = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID";
 
     public static final String TOPIC = "/COLLECTED_DATA";
+    /*
+    private static final String SERVER_PROTOCOL = "tcp";
+    private static final String SERVER_URI = "test.mosquitto.org";
+    private static final String SERVER_PORT = "1883";
+    */
+
+    private static final String SERVER_PROTOCOL = "ssl";
+    private static final String SERVER_URI = "test.mosquitto.org";
+    private static final String SERVER_PORT = "8883";
+
+    /*
     private static final String SERVER_PROTOCOL = "ssl";
     private static final String SERVER_URI = "test.mosquitto.org";
     private static final String SERVER_PORT = "8884";
+    */
+
+    /*
+    private static final String SERVER_PROTOCOL = "ssl";
+    private static final String SERVER_URI = "iot.eclipse.org";
+    private static final String SERVER_PORT = "8883";
+    */
 
     public PublisherIntentService() {
         super("PublisherIntentService");
@@ -132,17 +150,21 @@ public class PublisherIntentService extends IntentService {
     private void publishData(Context context, final String dataContent, final String stringSampleEndDate) {
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
-        Configuration configuration = configurationsTable.getRowForName(PUBLISH_DEVICE_ID);
 
-        String deviceId = "";
-        if( configuration == null ) {
-            updateDeviceId(context, configurationsTable);
+        Configuration deviceIdConfiguration = null;
+        try {
+            deviceIdConfiguration = configurationsTable.getRowForName(PUBLISH_DEVICE_ID);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        String deviceId;
+        if( deviceIdConfiguration == null || deviceIdConfiguration.getValue() == null || deviceIdConfiguration.getValue().isEmpty()) {
+            deviceId = updateDeviceId(context, configurationsTable);
         }
         else{
-            deviceId = configuration.getValue();
-            if (deviceId == null || deviceId.isEmpty()) {
-                deviceId = updateDeviceId(context, configurationsTable);
-            }
+            deviceId = deviceIdConfiguration.getValue();
         }
 
         final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context,

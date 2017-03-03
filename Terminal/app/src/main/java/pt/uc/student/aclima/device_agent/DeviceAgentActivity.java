@@ -67,6 +67,13 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(new EventfulBroadcastReceiver());
+    }
+
     private void schedulePublishAlarm(ConfigurationsTable configurationsTable) {
 
         Configuration configuration = configurationsTable.getRowForName(PublisherIntentService.ACTION_PUBLISH_DATA);

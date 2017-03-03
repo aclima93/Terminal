@@ -215,8 +215,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         // Data Publishing Action
         namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (/* 60 * 60 */ 10 * 1000) + "")); // FIXME: every 60 minutes
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10 * 1000) + "")); // 10 seconds
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10 * 1000) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
 
         // add them to the Configurations Table
         for( Pair<String, String> namesValuePair : namesValuePairs ) {
