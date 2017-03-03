@@ -44,13 +44,13 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
  */
 public class EventfulIntentService extends IntentService {
 
-    private static final String EXTRA_TIME_CHANGE_PARAM = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.TIME_CHANGE_PARAM";
+    private static final String EXTRA_TIME_CHANGE_PARAM = "pt.uc.student.aclima.device_agent.Collectors.EventfulIntentService.extra.TIME_CHANGE_PARAM";
 
-    private static final String EXTRA_CHARGING_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CHARGING_CHANGE_PARAM1";
-    private static final String EXTRA_CHARGING_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CHARGING_CHANGE_PARAM2";
+    private static final String EXTRA_CHARGING_CHANGE_PARAM1 = "pt.uc.student.aclima.device_agent.Collectors.EventfulIntentService.extra.CHARGING_CHANGE_PARAM1";
+    private static final String EXTRA_CHARGING_CHANGE_PARAM2 = "pt.uc.student.aclima.device_agent.Collectors.EventfulIntentService.extra.CHARGING_CHANGE_PARAM2";
 
-    private static final String EXTRA_CONNECTION_CHANGE_PARAM1 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM1";
-    private static final String EXTRA_CONNECTION_CHANGE_PARAM2 = "pt.uc.student.aclima.terminal.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM2";
+    private static final String EXTRA_CONNECTION_CHANGE_PARAM1 = "pt.uc.student.aclima.device_agent.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM1";
+    private static final String EXTRA_CONNECTION_CHANGE_PARAM2 = "pt.uc.student.aclima.device_agent.Collectors.EventfulIntentService.extra.CONNECTION_CHANGE_PARAM2";
 
     public EventfulIntentService() {
         super("EventfulIntentService");
