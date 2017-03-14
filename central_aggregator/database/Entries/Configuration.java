@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by aclima on 13/12/2016.
  */
 
-public class Configuration {
+public class Configuration implements Serializable {
 
     private String name;
     private String value;

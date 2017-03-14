@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by aclima on 13/12/2016.
  */
 
-public class PeriodicAggregatedMeasurement extends AggregatedMeasurement{
+public class PeriodicAggregatedMeasurement extends AggregatedMeasurement implements Serializable {
 
     private Double harmonicValue;
     private Double medianValue;

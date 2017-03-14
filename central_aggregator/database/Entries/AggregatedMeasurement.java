@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by aclima on 11/01/2017.
  */
 
-public class AggregatedMeasurement extends Measurement {
+public class AggregatedMeasurement extends Measurement implements Serializable {
 
     private Date sampleStartTime;
     private Date sampleEndTime;

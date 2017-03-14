@@ -4,7 +4,7 @@ package pt.uc.student.aclima.device_agent.Database.Entries;
  * Created by aclima on 13/12/2016.
  */
 
-public class Measurement {
+public class Measurement implements Serializable {
 
     public static final String DELIMITER = " - ";
 

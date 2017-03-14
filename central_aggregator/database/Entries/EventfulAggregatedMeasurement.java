@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by aclima on 13/12/2016.
  */
 
-public class EventfulAggregatedMeasurement extends AggregatedMeasurement {
+public class EventfulAggregatedMeasurement extends AggregatedMeasurement implements Serializable {
 
     private Integer numberOfEvents;
 

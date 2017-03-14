@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by aclima on 11/01/2017.
  */
 
-public class SingleMeasurement extends Measurement {
+public class SingleMeasurement extends Measurement implements Serializable {
 
     private String value;
     private String unitsOfMeasurement;

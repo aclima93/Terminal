@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by aclima on 13/12/2016.
  */
 
-public class EventfulMeasurement extends SingleMeasurement {
+public class EventfulMeasurement extends SingleMeasurement implements Serializable {
 
     public EventfulMeasurement(Integer id, String name, String value, String unitsOfMeasurement, Date timestamp) {
         super(id, name, value, unitsOfMeasurement, timestamp);
