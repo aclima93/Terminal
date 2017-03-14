@@ -1,6 +1,6 @@
 TODO List:
 
 No Java Spark:
- - copiar as classes dos objectos do device agent
+ √ copiar as classes dos objectos do device agent
  - transformar texto json em objectos com as classes anteriores
  - criar DataFrames para os objectos

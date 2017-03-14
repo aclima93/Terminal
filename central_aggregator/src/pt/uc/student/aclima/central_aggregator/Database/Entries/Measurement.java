@@ -1,4 +1,6 @@
-package pt.uc.student.aclima.device_agent.Database.Entries;
+package pt.uc.student.aclima.central_aggregator.Database.Entries;
+
+import java.io.Serializable;
 
 /**
  * Created by aclima on 13/12/2016.

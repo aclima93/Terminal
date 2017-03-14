@@ -1,5 +1,6 @@
-package pt.uc.student.aclima.device_agent.Database.Entries;
+package pt.uc.student.aclima.central_aggregator.Database.Entries;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
