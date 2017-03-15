@@ -229,25 +229,34 @@ public class PublisherIntentService extends IntentService {
         }
 
         try {
-            options.setSocketFactory(SslUtil.getSocketFactory(
-                    getResources().openRawResource(R.raw.mosquittoorg),
-                    getResources().openRawResource(R.raw.client_crt),
-                    getResources().openRawResource(R.raw.client_key),
-                    "mosquitto"));
+
+
+            if(protocol.equalsIgnoreCase("ssl")) {
+                // specific SSL configuration options
+                String password = configurationsTable.getRowForName(PUBLISH_SERVER_PASSWORD).getValue();
+
+                // TODO: also store the content of these files in the database? might be best...
+                options.setSocketFactory(SslUtil.getSocketFactory(
+                        getResources().openRawResource(R.raw.mosquittoorg),
+                        getResources().openRawResource(R.raw.client_crt),
+                        getResources().openRawResource(R.raw.client_key),
+                        password));
+            }
 
             try {
+                // detail the actions that should follow a connection & start SSL connection
                 mqttAndroidClient.connect(options, null, new IMqttActionListener() {
 
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
                         Log.d("MQTT", "Connection Success");
                         try {
-                            Log.d("MQTT", "Subscribing to " + TOPIC);
-                            mqttAndroidClient.subscribe(TOPIC, 0);
-                            Log.d("MQTT", "Subscribed to " + TOPIC);
+                            Log.d("MQTT", "Subscribing to " + topic);
+                            mqttAndroidClient.subscribe(topic, 0);
+                            Log.d("MQTT", "Subscribed to " + topic);
 
                             Log.d("MQTT", "Publishing message...");
-                            mqttAndroidClient.publish(TOPIC, new MqttMessage(dataContent.getBytes()));
+                            mqttAndroidClient.publish(topic, new MqttMessage(dataContent.getBytes()));
 
                         } catch (MqttException ex) {
                             ex.printStackTrace();
