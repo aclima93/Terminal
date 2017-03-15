@@ -217,6 +217,11 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_PROTOCOL, PublisherIntentService.DEFAULT_SERVER_PROTOCOL));
+        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_URI, PublisherIntentService.DEFAULT_SERVER_URI));
+        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_PORT, PublisherIntentService.DEFAULT_SERVER_PORT));
+        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_BASE_TOPIC, PublisherIntentService.DEFAULT_SERVER_BASE_TOPIC));
+        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_PASSWORD, PublisherIntentService.DEFAULT_SERVER_PASSWORD));
 
         // add them to the Configurations Table
         for( Pair<String, String> namesValuePair : namesValuePairs ) {

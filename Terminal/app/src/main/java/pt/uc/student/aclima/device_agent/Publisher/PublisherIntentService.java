@@ -19,7 +19,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.EventfulMeasurement;
-import pt.uc.student.aclima.device_agent.Database.Entries.Measurement;
+import pt.uc.student.aclima.device_agent.Database.Entries.OneTimeMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
@@ -50,28 +49,40 @@ public class PublisherIntentService extends IntentService {
     public static final String EXTRA_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_KEEP_ALIVE";
 
     public static final String PUBLISH_DEVICE_ID = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID";
+    public static final String PUBLISH_SERVER_PROTOCOL = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PROTOCOL";
+    public static final String PUBLISH_SERVER_URI = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_URI";
+    public static final String PUBLISH_SERVER_PORT = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PORT";
+    public static final String PUBLISH_SERVER_BASE_TOPIC = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_BASE_TOPIC";
+    public static final String PUBLISH_SERVER_PASSWORD = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PASSWORD";
 
-    public static final String TOPIC = "/COLLECTED_DATA";
+    public static final String DEFAULT_SERVER_BASE_TOPIC = "/COLLECTED_DATA";
+    public static final String DEFAULT_SERVER_PASSWORD = "mosquitto";
+
+
+    // MQTT + no encryption
+    public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
+    public static final String DEFAULT_SERVER_URI = "localhost";
+    public static final String DEFAULT_SERVER_PORT = "1883";
+
+
     /*
-    private static final String SERVER_PROTOCOL = "tcp";
-    private static final String SERVER_URI = "test.mosquitto.org";
-    private static final String SERVER_PORT = "1883";
+    // MQTT + no encryption
+    public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
+    public static final String DEFAULT_SERVER_URI = "test.mosquitto.org";
+    public static final String DEFAULT_SERVER_PORT = "1883";
     */
 
-    private static final String SERVER_PROTOCOL = "ssl";
-    private static final String SERVER_URI = "test.mosquitto.org";
-    private static final String SERVER_PORT = "8883";
-
     /*
-    private static final String SERVER_PROTOCOL = "ssl";
-    private static final String SERVER_URI = "test.mosquitto.org";
-    private static final String SERVER_PORT = "8884";
+    // MQTT + SSL
+    public static final String DEFAULT_SERVER_PROTOCOL = "ssl";
+    public static final String DEFAULT_SERVER_URI = "test.mosquitto.org";
+    public static final String DEFAULT_SERVER_PORT = "8883";
     */
 
     /*
-    private static final String SERVER_PROTOCOL = "ssl";
-    private static final String SERVER_URI = "iot.eclipse.org";
-    private static final String SERVER_PORT = "8883";
+    public static final String DEFAULT_SERVER_PROTOCOL = "ssl";
+    public static final String DEFAULT_SERVER_URI = "test.mosquitto.org";
+    public static final String DEFAULT_SERVER_PORT = "8884";
     */
 
     public PublisherIntentService() {
@@ -122,22 +133,20 @@ public class PublisherIntentService extends IntentService {
                 Date sampleEndDate = new Date(); // current time
                 String stringSampleEndDate = simpleDateFormat.format(sampleEndDate); // current time
 
-                List<Measurement> measurements = new ArrayList<>();
-
                 List<PeriodicMeasurement> periodicMeasurementRows = new DatabaseManager(context).getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
-                measurements.addAll(periodicMeasurementRows);
+                publishData(context, "PeriodicMeasurement", gson.toJson(periodicMeasurementRows), stringSampleEndDate);
 
                 List<EventfulMeasurement> eventfulMeasurementRows = new DatabaseManager(context).getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
-                measurements.addAll(eventfulMeasurementRows);
+                publishData(context, "EventfulMeasurement", gson.toJson(eventfulMeasurementRows), stringSampleEndDate);
+
+                List<OneTimeMeasurement> oneTimeMeasurementRows = new DatabaseManager(context).getOneTimeMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+                publishData(context, "OneTimeMeasurement", gson.toJson(oneTimeMeasurementRows), stringSampleEndDate);
 
                 List<PeriodicAggregatedMeasurement> periodicAggregatedMeasurementRows = new DatabaseManager(context).getPeriodicAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
-                measurements.addAll(periodicAggregatedMeasurementRows);
+                publishData(context, "PeriodicAggregatedMeasurement", gson.toJson(periodicAggregatedMeasurementRows), stringSampleEndDate);
 
                 List<EventfulAggregatedMeasurement> eventfulAggregatedMeasurementRows = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
-                measurements.addAll(eventfulAggregatedMeasurementRows);
-
-                String jsonMeasurements = gson.toJson(measurements);
-                publishData(context, jsonMeasurements, stringSampleEndDate);
+                publishData(context, "EventfulAggregatedMeasurement", gson.toJson(eventfulAggregatedMeasurementRows), stringSampleEndDate);
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -147,7 +156,7 @@ public class PublisherIntentService extends IntentService {
         }
     }
 
-    private void publishData(Context context, final String dataContent, final String stringSampleEndDate) {
+    private void publishData(Context context, final String subtopic, final String dataContent, final String stringSampleEndDate) {
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
 
@@ -167,8 +176,18 @@ public class PublisherIntentService extends IntentService {
             deviceId = deviceIdConfiguration.getValue();
         }
 
+        /*
+         * Messages are delivered to a subtopic corresponding to the ObjectType of the payload,
+         * this way we can still send data with little regard for the specifics of the
+         * deserialization process on the other end.
+         */
+        final String topic = configurationsTable.getRowForName(PUBLISH_SERVER_BASE_TOPIC).getValue() + "/" + subtopic + "/" + deviceId;
+        String protocol = configurationsTable.getRowForName(PUBLISH_SERVER_PROTOCOL).getValue();
+        String uri = configurationsTable.getRowForName(PUBLISH_SERVER_URI).getValue();
+        String port = configurationsTable.getRowForName(PUBLISH_SERVER_PORT).getValue();
+
         final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context,
-                SERVER_PROTOCOL + "://" + SERVER_URI + ":" + SERVER_PORT, deviceId);
+                protocol + "://" + uri + ":" + port, deviceId);
 
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
@@ -210,25 +229,34 @@ public class PublisherIntentService extends IntentService {
         }
 
         try {
-            options.setSocketFactory(SslUtil.getSocketFactory(
-                    getResources().openRawResource(R.raw.mosquittoorg),
-                    getResources().openRawResource(R.raw.client_crt),
-                    getResources().openRawResource(R.raw.client_key),
-                    "mosquitto"));
+
+
+            if(protocol.equalsIgnoreCase("ssl")) {
+                // specific SSL configuration options
+                String password = configurationsTable.getRowForName(PUBLISH_SERVER_PASSWORD).getValue();
+
+                // TODO: also store the content of these files in the database? might be best...
+                options.setSocketFactory(SslUtil.getSocketFactory(
+                        getResources().openRawResource(R.raw.mosquittoorg),
+                        getResources().openRawResource(R.raw.client_crt),
+                        getResources().openRawResource(R.raw.client_key),
+                        password));
+            }
 
             try {
+                // detail the actions that should follow a connection & start SSL connection
                 mqttAndroidClient.connect(options, null, new IMqttActionListener() {
 
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
                         Log.d("MQTT", "Connection Success");
                         try {
-                            Log.d("MQTT", "Subscribing to " + TOPIC);
-                            mqttAndroidClient.subscribe(TOPIC, 0);
-                            Log.d("MQTT", "Subscribed to " + TOPIC);
+                            Log.d("MQTT", "Subscribing to " + topic);
+                            mqttAndroidClient.subscribe(topic, 0);
+                            Log.d("MQTT", "Subscribed to " + topic);
 
                             Log.d("MQTT", "Publishing message...");
-                            mqttAndroidClient.publish(TOPIC, new MqttMessage(dataContent.getBytes()));
+                            mqttAndroidClient.publish(topic, new MqttMessage(dataContent.getBytes()));
 
                         } catch (MqttException ex) {
                             ex.printStackTrace();
