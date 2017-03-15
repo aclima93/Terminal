@@ -1,0 +1,13 @@
+[ssh localhost:2222]
+root
+rootadmin
+
+[web shell localhost:4200]
+root
+rootadmin
+
+[ambari localhost:8080]
+admin
+ambari
+
+[zeppelin localhost:9995]

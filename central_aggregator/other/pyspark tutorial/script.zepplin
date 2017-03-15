@@ -1,0 +1,110 @@
+# -----------------------------------
+# download data
+
+%sh
+cd /tmp
+
+#  Remove old dataset file if already exists in local /tmp directory
+if [ -e /tmp/About-Apache-NiFi.txt ]
+then
+    rm -f /tmp/About-Apache-NiFi.txt
+fi
+
+# Remove old dataset if already exists in hadoop /tmp directory
+if hadoop fs -stat /tmp/About-Apache-NiFi.txt
+then
+   hadoop fs -rm  /tmp/About-Apache-NiFi.txt
+fi
+
+# Download "About-Apache-NiFi" text file
+wget https://raw.githubusercontent.com/roberthryniewicz/datasets/master/About-Apache-NiFi.txt
+
+# Move dataset to hadoop /tmp
+hadoop fs -put About-Apache-NiFi.txt /tmp
+
+# -----------------------------------
+# display content
+
+%sh
+hadoop fs -cat /tmp/About-Apache-NiFi.txt | head
+
+# -----------------------------------
+# Read Text File from HDFS and Preview its Contents
+
+%pyspark
+
+# Parallelize text file using pre-initialized Spark context (sc)
+lines = sc.textFile("/tmp/About-Apache-NiFi.txt")
+
+# Take a look at a few lines with a take() action.
+print lines.take(4)
+
+# Output: Notice that each line has been placed in a seperate array bucket.
+
+# -----------------------------------
+# Extract All Words from the Document
+
+%pyspark
+# Here we're tokenizing our text file by using the split() function. Each original line of text is split into words or tokens on a single space.
+#  Also, since each line of the original text occupies a seperate bucket in the array, we need to use
+#  a flatMap() transformation to flatten all buckets into a asingle/flat array of tokens.
+
+words = lines.flatMap(lambda line: line.split(" "))
+
+# -----------------------------------
+# Remove empty words
+
+%pyspark
+wordsFiltered = words.filter(lambda w: len(w) > 0)
+
+# -----------------------------------
+# Count words and sort them
+
+%pyspark
+wordCounts = wordsFiltered.map(lambda word: (word, 1)).reduceByKey(lambda a,b: a+b)
+
+# -----------------------------------
+# view word count tuples
+
+%pyspark
+print wordCounts.takeOrdered(100, lambda (w,c): -c)
+
+# -----------------------------------
+# Filter out infrequent words
+
+%pyspark
+filteredWordCounts = wordCounts.filter(lambda (w,c): c >= 5)
+
+# -----------------------------------
+# look at results
+
+%pyspark
+print filteredWordCounts.collect()   # we're using a collect() action to pull everything back to the Spark driver
+
+# -----------------------------------
+# perform count in another way and look at results
+
+%pyspark
+result =  words.map(lambda w: (w,1)).countByKey()
+print result
+# Print type of data structure
+print type(result)
+
+# -----------------------------------
+# take a look at first 20 items
+
+%pyspark
+# Print first 20 items
+print result.items()[0:20]
+
+# -----------------------------------
+# take a look at first 20 items, sorted in descending order
+
+%pyspark
+import operator
+
+# Sort in descending order
+sortedResult = sorted(result.items(), key=operator.itemgetter(1), reverse=True)
+
+# Print top 20 items
+print sortedResult[0:20]
