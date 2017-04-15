@@ -106,7 +106,6 @@ public class PeriodicAggregatorIntentService extends IntentService {
                     /*
                      * don't aggregate Data Traffic and Open Ports as each "measurement" is
                      * composed of various measurements.
-                     * TODO: aggregate these measurements as well?
                      */
                     if( !(measurementName.equals(PeriodicIntentService.MEASUREMENT_NAME_DATA_TRAFFIC)
                             || measurementName.equals(PeriodicIntentService.MEASUREMENT_NAME_OPEN_PORTS)) ) {

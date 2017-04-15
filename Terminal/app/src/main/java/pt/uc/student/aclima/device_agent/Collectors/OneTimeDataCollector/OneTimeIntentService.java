@@ -17,11 +17,6 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static helper methods.
- * 
- * Collected Data:
- * - RAM
  */
 public class OneTimeIntentService extends IntentService {
 

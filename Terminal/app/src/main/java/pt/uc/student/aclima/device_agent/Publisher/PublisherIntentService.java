@@ -34,12 +34,6 @@ import pt.uc.student.aclima.device_agent.R;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static helper methods.
- */
 public class PublisherIntentService extends IntentService {
 
     public static final String ACTION_PUBLISH_DATA = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.action.PUBLISH_DATA";
@@ -61,7 +55,7 @@ public class PublisherIntentService extends IntentService {
 
     // MQTT + no encryption
     public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
-    public static final String DEFAULT_SERVER_URI = "localhost";
+    public static final String DEFAULT_SERVER_URI = "192.168.99.100";
     public static final String DEFAULT_SERVER_PORT = "1883";
 
 
