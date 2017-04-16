@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -14,7 +15,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
+
+import java.util.HashMap;
 
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorIntentService;
@@ -53,6 +57,7 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
     // so that we only perform the setup once, after all the permissions have been granted
     private boolean performedAdditionalSetup = false;
+    private HashMap<Integer, Boolean> permissionsGranted = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +66,28 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         // TODO: add Configuration Management Table, logic, period fetch, etc.
 
-        checkPermissions();
+        if(Build.VERSION.SDK_INT >= 23) {
+            checkPermissions();
+        }
+        else {
+            continueAppSetup();
+        }
+    }
+
+    private boolean allPermissionsGranted(){
+        for( Boolean permissionGranted : permissionsGranted.values()){
+
+            // at least one is missing
+            if( !permissionGranted ){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void checkPermissions() {
+
+        Log.d("permissions", "checking if all the necessary permissions have been granted");
 
         /*
         WRITE_EXTERNAL_STORAGE
@@ -73,8 +96,6 @@ public class DeviceAgentActivity extends AppCompatActivity {
         ACCESS_COARSE_LOCATION
         READ_PHONE_STATE
         */
-
-        int grantedPermissionsCounter = 0;
 
         for(int i=0; i<permissionStrings.length; i++) {
 
@@ -106,11 +127,11 @@ public class DeviceAgentActivity extends AppCompatActivity {
                 }
             }
             else{
-                grantedPermissionsCounter++;
+                permissionsGranted.put(permissionCode, Boolean.TRUE);
             }
         }
 
-        if(grantedPermissionsCounter == permissionStrings.length){
+        if( allPermissionsGranted() ){
             continueAppSetup();
         }
 
@@ -124,6 +145,22 @@ public class DeviceAgentActivity extends AppCompatActivity {
                 || requestCode == READ_PHONE_STATE_CODE
                 || requestCode == WRITE_EXTERNAL_STORAGE_CODE
                 || requestCode == READ_EXTERNAL_STORAGE_CODE){
+
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // permission was granted, yay! Do the
+                // functionality-related task you need to do.
+
+                Log.d("permissions", "permission was granted for code "+ requestCode);
+
+            } else {
+
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+
+                Log.d("permissions", "permission was NOT granted for code "+ requestCode);
+            }
 
             /*
              * It doesn't matter if the user confirmed or not, we have to keep checking until all of the permissions are granted.
@@ -140,18 +177,22 @@ public class DeviceAgentActivity extends AppCompatActivity {
      */
     private void continueAppSetup(){
 
-        if( performedAdditionalSetup ) {
+        Log.d("continueAppSetup", "Continuing the app setup");
+
+        if( !performedAdditionalSetup ) {
 
             // performed only once per session
             performedAdditionalSetup = true;
 
-            Context context = getApplicationContext();
+            final Context context = getApplicationContext();
+
+            final DatabaseManager databaseManager = new DatabaseManager(context);
 
             setupScreenBroadcastReceivers(context);
 
             setupTelephonyBroadcastReceivers(context);
 
-            ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
+            ConfigurationsTable configurationsTable = databaseManager.getConfigurationsTable();
 
             schedulePeriodicAlarms(configurationsTable);
 

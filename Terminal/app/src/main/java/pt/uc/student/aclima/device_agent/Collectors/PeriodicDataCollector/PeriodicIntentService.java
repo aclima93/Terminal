@@ -452,14 +452,16 @@ public class PeriodicIntentService extends IntentService {
                 measurements.add(measurement);
             }
 
-            String unitsOfMeasurement = measurements.remove(0);
-            PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
+            if(measurements.size() > 0) {
+                String unitsOfMeasurement = measurements.remove(0);
+                PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
 
-            for( String measurement : measurements ) {
-                boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
-                        MEASUREMENT_NAME_DATA_TRAFFIC, measurement, unitsOfMeasurement, timestamp);
-                if (!success) {
-                    Log.e("DataTraffic", "DataTraffic service failed to add row.");
+                for (String measurement : measurements) {
+                    boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                            MEASUREMENT_NAME_DATA_TRAFFIC, measurement, unitsOfMeasurement, timestamp);
+                    if (!success) {
+                        Log.e("DataTraffic", "DataTraffic service failed to add row.");
+                    }
                 }
             }
         }

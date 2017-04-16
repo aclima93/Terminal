@@ -185,21 +185,21 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         List<Pair<String, String>> namesValuePairs = new ArrayList<>();
 
         // Periodic Collection Actions
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (1000) + "")); // every second
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (1000) + "")); // every second
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (10 * 1000) + "")); // every 10 seconds
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (10 * 1000) + "")); // every 10 seconds
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_BATTERY, (5 * 60 * 1000) + "")); // every 5 minutes
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_OPEN_PORTS, (60 * 1000) + "")); // every minute
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, (5 * 60 * 1000) + "")); // every 5 minutes
 
         // Periodic Aggregation Action
-        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (/* 30 * 60 * */ 1000) + "")); // FIXME: every 30 minutes
+        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Eventful Aggregation Action
-        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (/* 30 * 60 * */ 1000) + "")); // FIXME: every 30 minutes
+        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Device ID
@@ -213,7 +213,7 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         }
 
         // Data Publishing Action
-        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (/* 60 * 60 */ 10 * 1000) + "")); // FIXME: every 60 minutes
+        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (60 * 60 * 1000) + "")); // every 60 minutes
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
         namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
