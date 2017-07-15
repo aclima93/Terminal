@@ -1,0 +1,23 @@
+name,value,timestamp
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.RAM,60000,2017-04-15 16:27:20.806 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.CPU,60000,2017-04-15 16:27:20.807 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.GPS,60000,2017-04-15 16:27:20.807 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.CPU_USAGE,10000,2017-04-15 16:27:20.808 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.RAM_USAGE,10000,2017-04-15 16:27:20.808 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.BATTERY,300000,2017-04-15 16:27:20.808 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.OPEN_PORTS,60000,2017-04-15 16:27:20.810 GMT+01:00
+pt.uc.student.aclima.device_agent.Collectors.PeriodicIntentService.action.DATA_TRAFFIC,300000,2017-04-15 16:27:20.811 GMT+01:00
+pt.uc.student.aclima.device_agent.Aggregators.PeriodicAggregatorIntentService.action.AGGREGATE_PERIODIC_DATA,1800000,2017-04-15 16:27:20.815 GMT+01:00
+pt.uc.student.aclima.device_agent.Aggregators.PeriodicAggregatorIntentService.extra.AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME,2017-04-15 23:35:22.763 GMT+01:00,2017-04-15 16:27:20.815 GMT+01:00
+pt.uc.student.aclima.device_agent.Aggregators.EventfulAggregatorIntentService.action.AGGREGATE_EVENTFUL_DATA,1800000,2017-04-15 16:27:20.816 GMT+01:00
+pt.uc.student.aclima.device_agent.Aggregators.EventfulAggregatorIntentService.extra.AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME,2017-04-15 22:07:07.220 GMT+01:00,2017-04-15 16:27:20.816 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.action.PUBLISH_DATA,3600000,2017-04-15 16:27:20.817 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.PUBLISH_DATA_SAMPLE_START_TIME,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 16:27:20.818 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_TIMEOUT,10,2017-04-15 16:27:20.818 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_KEEP_ALIVE,10,2017-04-15 16:27:20.819 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PROTOCOL,tcp,2017-04-15 16:27:20.819 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_URI,192.168.99.100,2017-04-15 16:27:20.820 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PORT,1883,2017-04-15 16:27:20.821 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_BASE_TOPIC,/COLLECTED_DATA,2017-04-15 16:27:20.821 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PASSWORD,mosquitto,2017-04-15 16:27:20.821 GMT+01:00
+pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID, - 000000000000000 - 89014103211118510720 - f90e38fa6bdf374f,2017-04-15 22:37:08.728 GMT+01:00

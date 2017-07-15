@@ -1,0 +1,1 @@
+/system/bin/sh: cat: proc/uid_stat/2885/tcp_rcv: No such file or directory
