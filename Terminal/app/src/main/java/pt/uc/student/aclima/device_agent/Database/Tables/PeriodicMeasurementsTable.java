@@ -71,7 +71,6 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         }
         finally {
             database.endTransaction();
-            database.close();
         }
 
         return success;
@@ -89,23 +88,18 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         Cursor cursor = database.rawQuery(query, null);
 
         try {
-
             database.beginTransaction();
-
             rows = parseRowObjects(cursor);
-
+            database.setTransactionSuccessful();
             Log.d("getAllRows", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
-
         }
         catch (Exception e){
             e.printStackTrace();
-
             Log.d("getAllRows", "Failed to get rows from table named " + TABLE_NAME + ".");
         }
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return rows;
@@ -129,6 +123,7 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         try {
             database.beginTransaction();
             rows = parseRowObjects(cursor);
+            database.setTransactionSuccessful();
             Log.d("getAllRowsBetween", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
         }
         catch (Exception e){
@@ -138,7 +133,6 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return rows;

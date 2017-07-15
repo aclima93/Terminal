@@ -55,7 +55,7 @@ public class PublisherIntentService extends IntentService {
 
     // MQTT + no encryption
     public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
-    public static final String DEFAULT_SERVER_URI = "192.168.99.100";
+    public static final String DEFAULT_SERVER_URI = "10.3.2.9"; // Oryx machine
     public static final String DEFAULT_SERVER_PORT = "1883";
 
 

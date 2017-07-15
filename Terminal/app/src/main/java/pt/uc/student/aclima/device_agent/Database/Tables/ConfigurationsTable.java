@@ -77,7 +77,6 @@ public class ConfigurationsTable {
         }
         finally {
             database.endTransaction();
-            database.close();
         }
 
         return success;
@@ -110,12 +109,10 @@ public class ConfigurationsTable {
         catch (Exception e){
             e.printStackTrace();
             success = false;
-
             Log.d("editRowForName", "Failed to edit row.");
         }
         finally {
             database.endTransaction();
-            database.close();
         }
 
         return success;
@@ -133,23 +130,18 @@ public class ConfigurationsTable {
         Cursor cursor = database.rawQuery(query, null);
 
         try {
-
             database.beginTransaction();
-
             row = parseRowObjects(cursor).get(0); // entries are unique
-
+            database.setTransactionSuccessful();
             Log.d("getRowForName", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + row.toString());
-
         }
         catch (Exception e){
             e.printStackTrace();
-
             Log.d("getRowForName", "Failed to get rows from table named " + TABLE_NAME + ".");
         }
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return row;
