@@ -49,7 +49,7 @@ public class PublisherIntentService extends IntentService {
     public static final String PUBLISH_SERVER_BASE_TOPIC = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_BASE_TOPIC";
     public static final String PUBLISH_SERVER_PASSWORD = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PASSWORD";
 
-    public static final String DEFAULT_SERVER_BASE_TOPIC = "/COLLECTED_DATA";
+    public static final String DEFAULT_SERVER_BASE_TOPIC = "OryxInput" /*"COLLECTED_DATA"*/;
     public static final String DEFAULT_SERVER_PASSWORD = "mosquitto";
 
 
@@ -150,10 +150,11 @@ public class PublisherIntentService extends IntentService {
         }
     }
 
-    private void publishData(Context context, final String subtopic, final String dataContent, final String stringSampleEndDate) {
+    private void publishData(Context context, final String subtopic, final String payload, final String stringSampleEndDate) {
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
 
+        // get the device's (as unique as possible) ID
         Configuration deviceIdConfiguration = null;
         try {
             deviceIdConfiguration = configurationsTable.getRowForName(PUBLISH_DEVICE_ID);
@@ -174,8 +175,23 @@ public class PublisherIntentService extends IntentService {
          * Messages are delivered to a subtopic corresponding to the ObjectType of the payload,
          * this way we can still send data with little regard for the specifics of the
          * deserialization process on the other end.
+         *
+         * Ideal code:
+         * <code> final String topic = configurationsTable.getRowForName(PUBLISH_SERVER_BASE_TOPIC).getValue() + "/" + deviceId + "/" + subtopic; </code>
+         *
+         * _BUT_
+         *
+         * Kafka does not allow for subtopics, so we need to do everything at root level topics, in order to later bridge the content between
+         * MQTT and Kafka brokers more easily. Thus, we
          */
-        final String topic = configurationsTable.getRowForName(PUBLISH_SERVER_BASE_TOPIC).getValue() + "/" + subtopic + "/" + deviceId;
+
+        // prepare the message that will be sent
+        final Gson gson = new Gson();
+        DeviceMessage deviceMessage = new DeviceMessage(subtopic, deviceId, payload);
+        final String deviceMessageContent = gson.toJson(deviceMessage);
+
+        // prepare the topic's URL
+        final String topic = configurationsTable.getRowForName(PUBLISH_SERVER_BASE_TOPIC).getValue();
         String protocol = configurationsTable.getRowForName(PUBLISH_SERVER_PROTOCOL).getValue();
         String uri = configurationsTable.getRowForName(PUBLISH_SERVER_URI).getValue();
         String port = configurationsTable.getRowForName(PUBLISH_SERVER_PORT).getValue();
@@ -250,7 +266,7 @@ public class PublisherIntentService extends IntentService {
                             Log.d("MQTT", "Subscribed to " + topic);
 
                             Log.d("MQTT", "Publishing message...");
-                            mqttAndroidClient.publish(topic, new MqttMessage(dataContent.getBytes()));
+                            mqttAndroidClient.publish(topic, new MqttMessage(deviceMessageContent.getBytes()));
 
                         } catch (MqttException ex) {
                             ex.printStackTrace();
@@ -276,10 +292,10 @@ public class PublisherIntentService extends IntentService {
 
     private String updateDeviceId(Context context, ConfigurationsTable configurationsTable){
 
-        String deviceId = "";
+        String deviceId;
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-        deviceId += DELIMITER + tm.getDeviceId();
+        deviceId = tm.getDeviceId();
         deviceId += DELIMITER + tm.getSimSerialNumber();
         deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
