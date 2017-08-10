@@ -17,7 +17,10 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver;
@@ -32,6 +35,10 @@ import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
 import pt.uc.student.aclima.device_agent.Publisher.PublisherBroadcastReceiver;
 import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
+
+import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.DEFAULT_SERVER_PORT;
+import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.DEFAULT_SERVER_PROTOCOL;
+import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.DEFAULT_SERVER_URI;
 
 public class DeviceAgentActivity extends AppCompatActivity {
 
@@ -188,6 +195,30 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
             final DatabaseManager databaseManager = new DatabaseManager(context);
 
+            TextView exportTextView = (TextView) findViewById(R.id.export_textview);
+            exportTextView.setVisibility(View.VISIBLE);
+
+            Button exportButton = (Button) findViewById(R.id.export_button);
+            exportButton.setVisibility(View.VISIBLE);
+            exportButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    databaseManager.exportDB(context);
+                }
+            });
+
+            TextView updateTextView = (TextView) findViewById(R.id.update_textview);
+            updateTextView.setVisibility(View.VISIBLE);
+
+            Button updateButton = (Button) findViewById(R.id.update_button);
+            updateButton.setVisibility(View.VISIBLE);
+            updateButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    databaseManager.updateDB(context);
+                }
+            });
+
             setupScreenBroadcastReceivers(context);
 
             setupTelephonyBroadcastReceivers(context);
@@ -232,7 +263,13 @@ public class DeviceAgentActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        Context context = getApplicationContext();
+
         unregisterReceiver(new EventfulBroadcastReceiver());
+
+        // avoid database leak
+        DatabaseManager databaseManager = new DatabaseManager(context);
+        databaseManager.closeDB(context);
     }
 
     private void schedulePublishAlarm(ConfigurationsTable configurationsTable) {

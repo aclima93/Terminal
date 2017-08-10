@@ -4,10 +4,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.support.v4.util.Pair;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,8 +64,6 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
         eventfulAggregatedMeasurementsTable = new EventfulAggregatedMeasurementsTable(this);
         periodicAggregatedMeasurementsTable = new PeriodicAggregatedMeasurementsTable(this);
-
-        //context.deleteDatabase(DATABASE_NAME); // TODO: should i consider this as an option ?
     }
 
     @Override
@@ -83,6 +88,55 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
         // create new tables
         createDatabase(db);
+    }
+
+    // export the database to the SD Card
+    public void exportDB(Context context){
+
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+
+        if (sd.canWrite()) {
+            String currentDBPath = "/data/data/" + context.getPackageName() + "/databases/" + DATABASE_NAME;
+            String backupDBPath = "backupname.db";
+            File currentDB = new File(currentDBPath);
+            File backupDB = new File(sd, backupDBPath);
+
+            if (currentDB.exists()) {
+                try {
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                    Toast.makeText(context, "DB Exported!", Toast.LENGTH_SHORT).show();
+                    Log.d("export", "Exported DB to SD Card");
+
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    // update the database's configurations
+    public void updateDB(Context context){
+
+        SQLiteDatabase database = this.getReadableDatabase();
+        populateConfigurationsTable(database);
+        Toast.makeText(context, "Configurations Updated!", Toast.LENGTH_SHORT).show();
+    }
+
+    // terminate any ongoing transaction, and close the database
+    public void closeDB(Context context){
+
+        SQLiteDatabase database = this.getReadableDatabase();
+        if(database.inTransaction()){
+            database.endTransaction();
+        }
+        database.close();
     }
 
     // Create the database's tables.
