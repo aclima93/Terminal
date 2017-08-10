@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     android:id="@+id/activity_device_agent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +13,35 @@
     tools:context="pt.uc.student.aclima.device_agent.DeviceAgentActivity">
 
     <TextView
+        android:id="@+id/export_textview"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Export SQLite DB to SD"/>
+
+    <Button
+        android:id="@+id/export_button"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-</RelativeLayout>
+        android:visibility="invisible"
+        android:text="Export" />
+
+    <TextView
+        android:id="@+id/update_textview"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Update Configurations Table"/>
+
+    <Button
+        android:id="@+id/update_button"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:text="Update" />
+
+</LinearLayout>

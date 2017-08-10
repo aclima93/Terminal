@@ -1,0 +1,8 @@
+id,name,sample_start_time,sample_end_time,harmonic_value,median_value,units_of_measurement
+1,Available System RAM,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 16:30:26.465 GMT+01:00,1375379456.0,1375379456.0,bytes
+2,CPU Usage - pid 2434 - com.android.exchange,2017-04-15 16:30:26.465 GMT+01:00,2017-04-15 16:35:26.844 GMT+01:00,0.0,0.0,%
+3,Available System RAM,2017-04-15 16:35:26.844 GMT+01:00,2017-04-15 16:39:37.631 GMT+01:00,1361256448.0,1361256448.0,bytes
+4,CPU Usage - pid 2434 - com.android.exchange,2017-04-15 16:35:26.844 GMT+01:00,2017-04-15 22:07:07.019 GMT+01:00,0.0,0.0,%
+5,CPU Usage - pid 2434 - com.android.exchange,2017-04-15 16:35:26.844 GMT+01:00,2017-04-15 22:37:07.936 GMT+01:00,0.0,0.0,%
+6,CPU Usage - pid 2434 - com.android.exchange,2017-04-15 16:35:26.844 GMT+01:00,2017-04-15 23:07:08.733 GMT+01:00,0.0,0.0,%
+7,CPU Usage - pid 2434 - com.android.exchange,2017-04-15 16:35:26.844 GMT+01:00,2017-04-15 23:35:22.763 GMT+01:00,0.0,0.0,%

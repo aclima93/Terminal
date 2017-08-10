@@ -1,0 +1,3 @@
+id,name,value,units_of_measurement,timestamp
+1,PackageChange - android.intent.action.PACKAGE_REMOVED,10053 - pt.uc.student.aclima.device_agent - false - true,packageUID - packageName - isExtraDataRemoved - isReplacingOtherPackage,2017-04-15 16:27:24.486 GMT+01:00
+2,PackageChange - android.intent.action.PACKAGE_REPLACED,10053 - pt.uc.student.aclima.device_agent,packageUID - packageName,2017-04-15 16:27:24.577 GMT+01:00

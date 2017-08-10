@@ -4,10 +4,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.support.v4.util.Pair;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +29,9 @@ import pt.uc.student.aclima.device_agent.Database.Tables.EventfulMeasurementsTab
 import pt.uc.student.aclima.device_agent.Database.Tables.OneTimeMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicAggregatedMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicMeasurementsTable;
-import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
+import pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons;
+import pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService;
+import pt.uc.student.aclima.device_agent.Messaging.Updater.UpdaterIntentService;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
@@ -57,8 +66,6 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
         eventfulAggregatedMeasurementsTable = new EventfulAggregatedMeasurementsTable(this);
         periodicAggregatedMeasurementsTable = new PeriodicAggregatedMeasurementsTable(this);
-
-        //context.deleteDatabase(DATABASE_NAME); // TODO: should i consider this as an option ?
     }
 
     @Override
@@ -83,6 +90,55 @@ public final class DatabaseManager extends SQLiteOpenHelper {
 
         // create new tables
         createDatabase(db);
+    }
+
+    // export the database to the SD Card
+    public void exportDB(Context context){
+
+        File sd = Environment.getExternalStorageDirectory();
+        File data = Environment.getDataDirectory();
+
+        if (sd.canWrite()) {
+            String currentDBPath = "/data/data/" + context.getPackageName() + "/databases/" + DATABASE_NAME;
+            String backupDBPath = "backupname.db";
+            File currentDB = new File(currentDBPath);
+            File backupDB = new File(sd, backupDBPath);
+
+            if (currentDB.exists()) {
+                try {
+
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+
+                    Toast.makeText(context, "DB Exported!", Toast.LENGTH_SHORT).show();
+                    Log.d("export", "Exported DB to SD Card");
+
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    // update the database's configurations
+    public void updateDB(Context context){
+
+        SQLiteDatabase database = this.getReadableDatabase();
+        populateConfigurationsTable(database);
+        Toast.makeText(context, "Configurations Updated!", Toast.LENGTH_SHORT).show();
+    }
+
+    // terminate any ongoing transaction, and close the database
+    public void closeDB(Context context){
+
+        SQLiteDatabase database = this.getReadableDatabase();
+        if(database.inTransaction()){
+            database.endTransaction();
+        }
+        database.close();
     }
 
     // Create the database's tables.
@@ -185,38 +241,50 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         List<Pair<String, String>> namesValuePairs = new ArrayList<>();
 
         // Periodic Collection Actions
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, (10 * 1000) + "")); // every 10 seconds
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (1000) + "")); // every second
-        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (1000) + "")); // every second
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_GPS, (60 * 1000) + "")); // every minute
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_CPU_USAGE, (10 * 1000) + "")); // every 10 seconds
+        namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_RAM_USAGE, (10 * 1000) + "")); // every 10 seconds
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_BATTERY, (5 * 60 * 1000) + "")); // every 5 minutes
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_OPEN_PORTS, (60 * 1000) + "")); // every minute
         namesValuePairs.add(new Pair<>(PeriodicIntentService.ACTION_DATA_TRAFFIC, (5 * 60 * 1000) + "")); // every 5 minutes
 
         // Periodic Aggregation Action
-        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (/* 30 * 60 * */ 1000) + "")); // FIXME: every 30 minutes
+        namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.ACTION_AGGREGATE_PERIODIC_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(PeriodicAggregatorIntentService.EXTRA_AGGREGATE_PERIODIC_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
         // Eventful Aggregation Action
-        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (/* 30 * 60 * */ 1000) + "")); // FIXME: every 30 minutes
+        namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
-        // Device ID
+        // Data Publishing Action
+        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (60 * 60 * 1000) + "")); // every 60 minutes
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
+
+        // Configuration Updating Action
+        namesValuePairs.add(new Pair<>(UpdaterIntentService.ACTION_UPDATE_CONFIGURATIONS, (60 * 60 * 1000) + "")); // every 60 minutes
+        namesValuePairs.add(new Pair<>(UpdaterIntentService.EXTRA_UPDATE_CONFIGURATIONS_TIME, sampleStartTime)); // when the last configuration was updated
+
+        // Device ID Configuration
         if(context != null) {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String deviceId = "";
             deviceId += DELIMITER + tm.getDeviceId();
             deviceId += DELIMITER + tm.getSimSerialNumber();
             deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-            namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId));
+            namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_DEVICE_ID, deviceId));
         }
 
-        // Data Publishing Action
-        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (/* 60 * 60 */ 10 * 1000) + "")); // FIXME: every 60 minutes
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+        // Messaging Common Configurations
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL, MessagingIntentServiceCommons.DEFAULT_SERVER_PROTOCOL));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_URI, MessagingIntentServiceCommons.DEFAULT_SERVER_URI));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PORT, MessagingIntentServiceCommons.DEFAULT_SERVER_PORT));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_PUBLISH_TOPIC, MessagingIntentServiceCommons.DEFAULT_SERVER_BASE_PUBLISH_TOPIC));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_UPDATE_TOPIC, MessagingIntentServiceCommons.DEFAULT_SERVER_BASE_UPDATE_TOPIC));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PASSWORD, MessagingIntentServiceCommons.DEFAULT_SERVER_PASSWORD));
 
         // add them to the Configurations Table
         for( Pair<String, String> namesValuePair : namesValuePairs ) {

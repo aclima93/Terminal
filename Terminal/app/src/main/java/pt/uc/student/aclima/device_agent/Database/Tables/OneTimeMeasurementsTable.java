@@ -70,7 +70,6 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         }
         finally {
             database.endTransaction();
-            database.close();
         }
 
         return success;
@@ -90,6 +89,7 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         try {
             database.beginTransaction();
             rows = parseRowObjects(cursor);
+            database.setTransactionSuccessful();
             Log.d("getAllRows", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
         }
         catch (Exception e){
@@ -99,7 +99,6 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return rows;
@@ -123,6 +122,7 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         try {
             database.beginTransaction();
             rows = parseRowObjects(cursor);
+            database.setTransactionSuccessful();
             Log.d("getAllRowsBetween", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
         }
         catch (Exception e){
@@ -132,7 +132,6 @@ public class OneTimeMeasurementsTable extends MeasurementsTable {
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return rows;

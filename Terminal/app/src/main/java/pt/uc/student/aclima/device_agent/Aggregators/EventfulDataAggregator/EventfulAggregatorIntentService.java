@@ -22,8 +22,6 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static helper methods.
  */
 public class EventfulAggregatorIntentService extends IntentService {
 
@@ -71,12 +69,15 @@ public class EventfulAggregatorIntentService extends IntentService {
         if(context != null) {
 
             try {
-                Configuration configuration = new DatabaseManager(context).getConfigurationsTable().getRowForName(EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME);
+
+                DatabaseManager databaseManager = new DatabaseManager(context);
+
+                Configuration configuration = databaseManager.getConfigurationsTable().getRowForName(EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME);
                 Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
                 Date sampleEndDate = new Date(); // current time
 
                 HashMap<String, List<EventfulMeasurement>> aggregationHashMap = new HashMap<>();
-                List<EventfulMeasurement> allRows = new DatabaseManager(context).getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
+                List<EventfulMeasurement> allRows = databaseManager.getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
 
                 // search each unique type of row name, aggregate them in a hashmap
                 for(EventfulMeasurement eventfulMeasurement : allRows){
@@ -96,14 +97,14 @@ public class EventfulAggregatorIntentService extends IntentService {
                     List<EventfulMeasurement> measurements = aggregationHashMapEntry.getValue();
                     int numberOfEvents = measurements.size();
 
-                    boolean addSuccess = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().addRow(
+                    boolean addSuccess = databaseManager.getEventfulAggregatedMeasurementsTable().addRow(
                             aggregationHashMapEntry.getKey(), sampleStartDate, sampleEndDate, numberOfEvents);
                     if (!addSuccess) {
                         Log.e("EventfulAggregator", "EventfulAggregator" + DELIMITER + aggregationHashMapEntry.getKey() + " service failed to add row.");
                     }
                     else{
 
-                        boolean editSuccess = new DatabaseManager(context).getConfigurationsTable().editRowForName(EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
+                        boolean editSuccess = databaseManager.getConfigurationsTable().editRowForName(EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, simpleDateFormat.format(sampleEndDate));
                         if (!editSuccess) {
                             Log.e("EventfulAggregator", "EventfulAggregator service failed to edit configuration \'"+ EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME +"\' row.");
                         }

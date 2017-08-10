@@ -2,16 +2,24 @@
 <manifest package="pt.uc.student.aclima.device_agent"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
+    Regular Permissions - Don't require additional request to user as of API 23
+    -->
+
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
-    <!-- Internet permission for network comunication -->
+    <!-- Internet permission for network communication -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <!-- Boot Loading Completion -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!--
+    Dangerous Permissions - Require additional request to user as of API 23
+    -->
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <!-- Device location services -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -139,11 +147,22 @@
 
         <!-- Publisher -->
         <service
-            android:name="pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService"
+            android:name="pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService"
             android:exported="false">
         </service>
         <receiver
-            android:name="pt.uc.student.aclima.device_agent.Publisher.PublisherBroadcastReceiver"
+            android:name="pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+        <!-- Updater -->
+        <service
+            android:name="pt.uc.student.aclima.device_agent.Messaging.Updater.UpdaterIntentService"
+            android:exported="false">
+        </service>
+        <receiver
+            android:name="pt.uc.student.aclima.device_agent.Messaging.Updater.UpdaterBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
         </receiver>

@@ -1,0 +1,62 @@
+
+# -----------------------------------
+# create DataFrame for our RDD
+
+%pyspark
+
+# First, let's transform our RDD to a DataFrame.
+# We will use a Row to define column names.
+wordsCountsDF = (filteredWordCounts.map(lambda (w, c): 
+                Row(word=w,
+                    count=c))
+                .toDF())
+
+# Print schema
+wordsCountsDF.printSchema()
+
+# Output: As you can see, the count and word types have been inferred without having to explicitly define long and string types respectively.
+
+# -----------------------------------
+# word count
+
+%pyspark
+
+# Show top 20 rows
+wordsCountsDF.show()
+
+# -----------------------------------
+# register a temporary table
+
+%pyspark
+
+wordsCountsDF.registerTempTable("word_counts")
+
+# -----------------------------------
+# execute sql commands
+
+%sql
+
+-- Display word counts in descending order
+SELECT word, count FROM word_counts ORDER BY count DESC
+
+# -----------------------------------
+# Perform a word count with SQL
+
+%pyspark
+
+# Convert wordsFiltered RDD to a Data Frame
+wordsDF = wordsFiltered.map(lambda w: Row(word=w, count=1)).toDF()
+
+# use dataframe specific functions to perform word count
+(wordsDF.groupBy("word")
+        .sum()
+        .orderBy("sum(count)", ascending=0)
+        .limit(10).show())
+
+# Register as Temp Table
+wordsDF.registerTempTable("words")
+
+# get the word counts in descending order
+%sql
+SELECT word, count(*) as count FROM words GROUP BY word ORDER BY count DESC
+

@@ -119,7 +119,7 @@ public class EventfulBroadcastReceiver extends BroadcastReceiver {
             }
 
             /*
-            // TODO: this method requires API 17, which is not good for this project
+            // FIXME: this method requires API 17, which is not good for this project
             @Override
             public void onCellInfoChanged(List<CellInfo> cellInfo) {
                 super.onCellInfoChanged(cellInfo);

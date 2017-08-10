@@ -1,0 +1,4 @@
+id,name,sample_start_time,sample_end_time,number_of_events
+1,ConnectionChange,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 22:07:07.220 GMT+01:00,1
+2,BaseStationChange - Neighbours,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 22:07:07.220 GMT+01:00,4
+3,BaseStationChange - Current,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 22:07:07.220 GMT+01:00,12

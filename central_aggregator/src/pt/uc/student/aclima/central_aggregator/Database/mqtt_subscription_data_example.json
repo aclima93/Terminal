@@ -1,0 +1,1045 @@
+[
+  {
+    "timestamp":"Mar 14, 2017 3:16:44 PM",
+    "unitsOfMeasurement":"bytes",
+    "value":"1202429952",
+    "id":1,
+    "name":"Available System RAM"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:44 PM",
+    "unitsOfMeasurement":"%",
+    "value":"18.857143",
+    "id":2,
+    "name":"Used System CPU"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":3,
+    "name":"CPU Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":4,
+    "name":"CPU Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":5,
+    "name":"CPU Usage - pid 2285 - com.android.launcher"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":6,
+    "name":"CPU Usage - pid 2317 - android.process.media"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":7,
+    "name":"CPU Usage - pid 2365 - android.process.acore"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":8,
+    "name":"CPU Usage - pid 2446 - com.google.process.gapps"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":9,
+    "name":"CPU Usage - pid 2543 - com.android.deskclock"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":10,
+    "name":"CPU Usage - pid 2672 - com.android.providers.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":11,
+    "name":"CPU Usage - pid 2750 - com.android.mms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":12,
+    "name":"CPU Usage - pid 2817 - com.android.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":13,
+    "name":"CPU Usage - pid 2882 - com.android.email"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":14,
+    "name":"CPU Usage - pid 2915 - com.android.exchange"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":15,
+    "name":"CPU Usage - pid 2981 - com.google.android.gms.ui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":16,
+    "name":"CPU Usage - pid 3392 - com.android.defcontainer"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":17,
+    "name":"CPU Usage - pid 3434 - com.svox.pico"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":18,
+    "name":"CPU Usage - pid 3536 - com.google.android.gms.persistent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":19,
+    "name":"CPU Usage - pid 3605 - com.google.android.gms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":20,
+    "name":"CPU Usage - pid 4806 - com.android.packageinstaller"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":21,
+    "name":"CPU Usage - pid 4845 - com.android.documentsui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":22,
+    "name":"CPU Usage - pid 4878 - com.android.externalstorage"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":23,
+    "name":"CPU Usage - pid 4909 - com.google.android.gms.unstable"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"99.00894",
+    "id":24,
+    "name":"CPU Usage - pid 5181 - pt.uc.student.aclima.device_agent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"77735",
+    "id":25,
+    "name":"RAM Usage - pid 1651 - system"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"38530",
+    "id":26,
+    "name":"RAM Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"8957",
+    "id":27,
+    "name":"RAM Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"5209",
+    "id":28,
+    "name":"RAM Usage - pid 2235 - com.android.server.telecom"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"15421",
+    "id":29,
+    "name":"RAM Usage - pid 2259 - com.android.phone"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"26536",
+    "id":30,
+    "name":"RAM Usage - pid 2285 - com.android.launcher"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"8466",
+    "id":31,
+    "name":"RAM Usage - pid 2317 - android.process.media"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"7648",
+    "id":32,
+    "name":"RAM Usage - pid 2365 - android.process.acore"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"9402",
+    "id":33,
+    "name":"RAM Usage - pid 2446 - com.google.process.gapps"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4620",
+    "id":34,
+    "name":"RAM Usage - pid 2543 - com.android.deskclock"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"3792",
+    "id":35,
+    "name":"RAM Usage - pid 2618 - com.android.keychain"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4890",
+    "id":36,
+    "name":"RAM Usage - pid 2672 - com.android.providers.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"6053",
+    "id":37,
+    "name":"RAM Usage - pid 2750 - com.android.mms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"5728",
+    "id":38,
+    "name":"RAM Usage - pid 2817 - com.android.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"9703",
+    "id":39,
+    "name":"RAM Usage - pid 2882 - com.android.email"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4691",
+    "id":40,
+    "name":"RAM Usage - pid 2915 - com.android.exchange"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"11729",
+    "id":41,
+    "name":"RAM Usage - pid 2981 - com.google.android.gms.ui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4290",
+    "id":42,
+    "name":"RAM Usage - pid 3392 - com.android.defcontainer"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"3073",
+    "id":43,
+    "name":"RAM Usage - pid 3434 - com.svox.pico"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"39488",
+    "id":44,
+    "name":"RAM Usage - pid 3536 - com.google.android.gms.persistent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"48658",
+    "id":45,
+    "name":"RAM Usage - pid 3605 - com.google.android.gms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"28394",
+    "id":46,
+    "name":"RAM Usage - pid 4772 - com.android.settings"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"8315",
+    "id":47,
+    "name":"RAM Usage - pid 4806 - com.android.packageinstaller"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4500",
+    "id":48,
+    "name":"RAM Usage - pid 4845 - com.android.documentsui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"3238",
+    "id":49,
+    "name":"RAM Usage - pid 4878 - com.android.externalstorage"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"19033",
+    "id":50,
+    "name":"RAM Usage - pid 4909 - com.google.android.gms.unstable"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"27124",
+    "id":51,
+    "name":"RAM Usage - pid 5181 - pt.uc.student.aclima.device_agent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"%",
+    "value":"100.0",
+    "id":52,
+    "name":"Battery Level"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":" tcp       0      0 127.0.0.1:5037         0.0.0.0:*              LISTEN",
+    "id":53,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:58723 ::ffff:216.58.211.234:443 ESTABLISHED",
+    "id":54,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:58673 ::ffff:216.58.214.174:443 ESTABLISHED",
+    "id":55,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:37920 ::ffff:216.58.211.234:443 ESTABLISHED",
+    "id":56,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:55574 ::ffff:216.58.210.138:443 ESTABLISHED",
+    "id":57,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:35637 ::ffff:216.58.214.174:443 ESTABLISHED",
+    "id":58,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:08 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:33434 ::ffff:216.58.201.142:80 ESTABLISHED",
+    "id":59,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:10 PM",
+    "unitsOfMeasurement":"bytes",
+    "value":"1211445248",
+    "id":60,
+    "name":"Available System RAM"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"88989",
+    "id":61,
+    "name":"RAM Usage - pid 1651 - system"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"38549",
+    "id":62,
+    "name":"RAM Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"9251",
+    "id":63,
+    "name":"RAM Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"5216",
+    "id":64,
+    "name":"RAM Usage - pid 2235 - com.android.server.telecom"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"15471",
+    "id":65,
+    "name":"RAM Usage - pid 2259 - com.android.phone"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:35 PM",
+    "unitsOfMeasurement":"bytes",
+    "value":"1202241536",
+    "id":66,
+    "name":"Available System RAM"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:35 PM",
+    "unitsOfMeasurement":"%",
+    "value":"21.212122",
+    "id":67,
+    "name":"Used System CPU"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":68,
+    "name":"CPU Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":69,
+    "name":"CPU Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":70,
+    "name":"CPU Usage - pid 2285 - com.android.launcher"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":71,
+    "name":"CPU Usage - pid 2317 - android.process.media"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":72,
+    "name":"CPU Usage - pid 2365 - android.process.acore"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":73,
+    "name":"CPU Usage - pid 2446 - com.google.process.gapps"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":74,
+    "name":"CPU Usage - pid 2543 - com.android.deskclock"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":75,
+    "name":"CPU Usage - pid 2672 - com.android.providers.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":76,
+    "name":"CPU Usage - pid 2750 - com.android.mms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":77,
+    "name":"CPU Usage - pid 2817 - com.android.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":78,
+    "name":"CPU Usage - pid 2882 - com.android.email"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":79,
+    "name":"CPU Usage - pid 2915 - com.android.exchange"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":80,
+    "name":"CPU Usage - pid 2981 - com.google.android.gms.ui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":81,
+    "name":"CPU Usage - pid 3392 - com.android.defcontainer"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":82,
+    "name":"CPU Usage - pid 3434 - com.svox.pico"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":83,
+    "name":"CPU Usage - pid 3536 - com.google.android.gms.persistent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":84,
+    "name":"CPU Usage - pid 3605 - com.google.android.gms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":85,
+    "name":"CPU Usage - pid 4806 - com.android.packageinstaller"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":86,
+    "name":"CPU Usage - pid 4845 - com.android.documentsui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":87,
+    "name":"CPU Usage - pid 4878 - com.android.externalstorage"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":88,
+    "name":"CPU Usage - pid 4909 - com.google.android.gms.unstable"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"200.0",
+    "id":89,
+    "name":"CPU Usage - pid 5995 - pt.uc.student.aclima.device_agent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"81221",
+    "id":90,
+    "name":"RAM Usage - pid 1651 - system"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"38559",
+    "id":91,
+    "name":"RAM Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"9248",
+    "id":92,
+    "name":"RAM Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"5214",
+    "id":93,
+    "name":"RAM Usage - pid 2235 - com.android.server.telecom"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"15247",
+    "id":94,
+    "name":"RAM Usage - pid 2259 - com.android.phone"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"22940",
+    "id":95,
+    "name":"RAM Usage - pid 2285 - com.android.launcher"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"8472",
+    "id":96,
+    "name":"RAM Usage - pid 2317 - android.process.media"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"7655",
+    "id":97,
+    "name":"RAM Usage - pid 2365 - android.process.acore"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"9417",
+    "id":98,
+    "name":"RAM Usage - pid 2446 - com.google.process.gapps"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4626",
+    "id":99,
+    "name":"RAM Usage - pid 2543 - com.android.deskclock"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"3797",
+    "id":100,
+    "name":"RAM Usage - pid 2618 - com.android.keychain"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4897",
+    "id":101,
+    "name":"RAM Usage - pid 2672 - com.android.providers.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"6192",
+    "id":102,
+    "name":"RAM Usage - pid 2750 - com.android.mms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"5738",
+    "id":103,
+    "name":"RAM Usage - pid 2817 - com.android.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"10010",
+    "id":104,
+    "name":"RAM Usage - pid 2882 - com.android.email"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4699",
+    "id":105,
+    "name":"RAM Usage - pid 2915 - com.android.exchange"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"11749",
+    "id":106,
+    "name":"RAM Usage - pid 2981 - com.google.android.gms.ui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4291",
+    "id":107,
+    "name":"RAM Usage - pid 3392 - com.android.defcontainer"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"3078",
+    "id":108,
+    "name":"RAM Usage - pid 3434 - com.svox.pico"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"39755",
+    "id":109,
+    "name":"RAM Usage - pid 3536 - com.google.android.gms.persistent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"47843",
+    "id":110,
+    "name":"RAM Usage - pid 3605 - com.google.android.gms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"27277",
+    "id":111,
+    "name":"RAM Usage - pid 4772 - com.android.settings"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"8317",
+    "id":112,
+    "name":"RAM Usage - pid 4806 - com.android.packageinstaller"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"4506",
+    "id":113,
+    "name":"RAM Usage - pid 4845 - com.android.documentsui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"3246",
+    "id":114,
+    "name":"RAM Usage - pid 4878 - com.android.externalstorage"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"19141",
+    "id":115,
+    "name":"RAM Usage - pid 4909 - com.google.android.gms.unstable"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Kilobytes",
+    "value":"29659",
+    "id":116,
+    "name":"RAM Usage - pid 5995 - pt.uc.student.aclima.device_agent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"%",
+    "value":"100.0",
+    "id":117,
+    "name":"Battery Level"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":" tcp       0      0 127.0.0.1:5037         0.0.0.0:*              LISTEN",
+    "id":118,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:58723 ::ffff:216.58.211.234:443 ESTABLISHED",
+    "id":119,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      1 ::ffff:10.0.2.15:60189 ::ffff:74.125.130.188:5228 SYN_SENT",
+    "id":120,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:58673 ::ffff:216.58.214.174:443 ESTABLISHED",
+    "id":121,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:37920 ::ffff:216.58.211.234:443 ESTABLISHED",
+    "id":122,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:55574 ::ffff:216.58.210.138:443 ESTABLISHED",
+    "id":123,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:35637 ::ffff:216.58.214.174:443 ESTABLISHED",
+    "id":124,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"Proto Recv-Q Send-Q Local Address          Foreign Address        State",
+    "value":"tcp6       0      0 ::ffff:10.0.2.15:33434 ::ffff:216.58.201.142:80 ESTABLISHED",
+    "id":125,
+    "name":"Open Ports"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:19:17 PM",
+    "unitsOfMeasurement":"bytes",
+    "value":"1204641792",
+    "id":126,
+    "name":"Available System RAM"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:44 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - NetworkType",
+    "value":"0 - 0 - 0 - GSM - \n",
+    "id":1,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:44 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm",
+    "value":"0 - 0 - 2147483647 - GSM - -113\n",
+    "id":2,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:44 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":3,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:58 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":4,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - NetworkType",
+    "value":"0 - 0 - 0 - GSM - \n",
+    "id":5,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm",
+    "value":"0 - 0 - 2147483647 - GSM - -113\n",
+    "id":6,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:17:51 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":7,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:34 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - NetworkType",
+    "value":"0 - 0 - 0 - GSM - \n",
+    "id":8,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:34 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm",
+    "value":"0 - 0 - 2147483647 - GSM - -113\n",
+    "id":9,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:34 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":10,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:38 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":11,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:58 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":12,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:19:17 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - NetworkType",
+    "value":"0 - 0 - 0 - GSM - \n",
+    "id":13,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:19:17 PM",
+    "unitsOfMeasurement":"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm",
+    "value":"0 - 0 - 2147483647 - GSM - -113\n",
+    "id":14,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:19:17 PM",
+    "unitsOfMeasurement":"GSM SignalStrength",
+    "value":"12",
+    "id":15,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "numberOfEvents":1,
+    "sampleEndTime":"Mar 14, 2017 3:16:45 PM",
+    "sampleStartTime":"Mar 14, 2017 3:16:44 PM",
+    "id":1,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "numberOfEvents":2,
+    "sampleEndTime":"Mar 14, 2017 3:16:45 PM",
+    "sampleStartTime":"Mar 14, 2017 3:16:44 PM",
+    "id":2,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "numberOfEvents":1,
+    "sampleEndTime":"Mar 14, 2017 3:16:59 PM",
+    "sampleStartTime":"Mar 14, 2017 3:16:45 PM",
+    "id":3,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "numberOfEvents":1,
+    "sampleEndTime":"Mar 14, 2017 3:17:51 PM",
+    "sampleStartTime":"Mar 14, 2017 3:16:59 PM",
+    "id":4,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "numberOfEvents":2,
+    "sampleEndTime":"Mar 14, 2017 3:18:35 PM",
+    "sampleStartTime":"Mar 14, 2017 3:16:59 PM",
+    "id":5,
+    "name":"BaseStationChange - Neighbours"
+  },
+  {
+    "numberOfEvents":4,
+    "sampleEndTime":"Mar 14, 2017 3:18:35 PM",
+    "sampleStartTime":"Mar 14, 2017 3:16:59 PM",
+    "id":6,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "numberOfEvents":1,
+    "sampleEndTime":"Mar 14, 2017 3:18:38 PM",
+    "sampleStartTime":"Mar 14, 2017 3:18:35 PM",
+    "id":7,
+    "name":"BaseStationChange - Current"
+  },
+  {
+    "numberOfEvents":1,
+    "sampleEndTime":"Mar 14, 2017 3:18:58 PM",
+    "sampleStartTime":"Mar 14, 2017 3:18:38 PM",
+    "id":8,
+    "name":"BaseStationChange - Current"
+  }
+]

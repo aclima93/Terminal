@@ -1,0 +1,310 @@
+[
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":3,
+    "name":"CPU Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":4,
+    "name":"CPU Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":5,
+    "name":"CPU Usage - pid 2285 - com.android.launcher"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":6,
+    "name":"CPU Usage - pid 2317 - android.process.media"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":7,
+    "name":"CPU Usage - pid 2365 - android.process.acore"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":8,
+    "name":"CPU Usage - pid 2446 - com.google.process.gapps"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":9,
+    "name":"CPU Usage - pid 2543 - com.android.deskclock"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":10,
+    "name":"CPU Usage - pid 2672 - com.android.providers.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":11,
+    "name":"CPU Usage - pid 2750 - com.android.mms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":12,
+    "name":"CPU Usage - pid 2817 - com.android.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":13,
+    "name":"CPU Usage - pid 2882 - com.android.email"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":14,
+    "name":"CPU Usage - pid 2915 - com.android.exchange"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":15,
+    "name":"CPU Usage - pid 2981 - com.google.android.gms.ui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":16,
+    "name":"CPU Usage - pid 3392 - com.android.defcontainer"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":17,
+    "name":"CPU Usage - pid 3434 - com.svox.pico"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":18,
+    "name":"CPU Usage - pid 3536 - com.google.android.gms.persistent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":19,
+    "name":"CPU Usage - pid 3605 - com.google.android.gms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":20,
+    "name":"CPU Usage - pid 4806 - com.android.packageinstaller"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":21,
+    "name":"CPU Usage - pid 4845 - com.android.documentsui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":22,
+    "name":"CPU Usage - pid 4878 - com.android.externalstorage"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":23,
+    "name":"CPU Usage - pid 4909 - com.google.android.gms.unstable"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:16:45 PM",
+    "unitsOfMeasurement":"%",
+    "value":"99.00894",
+    "id":24,
+    "name":"CPU Usage - pid 5181 - pt.uc.student.aclima.device_agent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":68,
+    "name":"CPU Usage - pid 2069 - com.android.systemui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":69,
+    "name":"CPU Usage - pid 2150 - com.android.inputmethod.latin"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":70,
+    "name":"CPU Usage - pid 2285 - com.android.launcher"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":71,
+    "name":"CPU Usage - pid 2317 - android.process.media"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":72,
+    "name":"CPU Usage - pid 2365 - android.process.acore"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":73,
+    "name":"CPU Usage - pid 2446 - com.google.process.gapps"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":74,
+    "name":"CPU Usage - pid 2543 - com.android.deskclock"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":75,
+    "name":"CPU Usage - pid 2672 - com.android.providers.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":76,
+    "name":"CPU Usage - pid 2750 - com.android.mms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":77,
+    "name":"CPU Usage - pid 2817 - com.android.calendar"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":78,
+    "name":"CPU Usage - pid 2882 - com.android.email"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":79,
+    "name":"CPU Usage - pid 2915 - com.android.exchange"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":80,
+    "name":"CPU Usage - pid 2981 - com.google.android.gms.ui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":81,
+    "name":"CPU Usage - pid 3392 - com.android.defcontainer"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":82,
+    "name":"CPU Usage - pid 3434 - com.svox.pico"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":83,
+    "name":"CPU Usage - pid 3536 - com.google.android.gms.persistent"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":84,
+    "name":"CPU Usage - pid 3605 - com.google.android.gms"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":85,
+    "name":"CPU Usage - pid 4806 - com.android.packageinstaller"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":86,
+    "name":"CPU Usage - pid 4845 - com.android.documentsui"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":87,
+    "name":"CPU Usage - pid 4878 - com.android.externalstorage"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"0.0",
+    "id":88,
+    "name":"CPU Usage - pid 4909 - com.google.android.gms.unstable"
+  },
+  {
+    "timestamp":"Mar 14, 2017 3:18:36 PM",
+    "unitsOfMeasurement":"%",
+    "value":"200.0",
+    "id":89,
+    "name":"CPU Usage - pid 5995 - pt.uc.student.aclima.device_agent"
+  }
+]

@@ -73,7 +73,6 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         }
         finally {
             database.endTransaction();
-            database.close();
         }
 
         return success;
@@ -93,6 +92,7 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         try {
             database.beginTransaction();
             rows = parseRowObjects(cursor);
+            database.setTransactionSuccessful();
             Log.d("getAllRows", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
         }
         catch (Exception e){
@@ -102,7 +102,6 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return rows;
@@ -125,6 +124,7 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         try {
             database.beginTransaction();
             rows = parseRowObjects(cursor);
+            database.setTransactionSuccessful();
             Log.d("getAllRowsBetween", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
         }
         catch (Exception e){
@@ -134,7 +134,6 @@ public class PeriodicAggregatedMeasurementsTable extends AggregatedMeasurementsT
         finally {
             cursor.close();
             database.endTransaction();
-            database.close();
         }
 
         return rows;
