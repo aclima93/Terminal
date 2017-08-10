@@ -1,10 +1,10 @@
-package pt.uc.student.aclima.device_agent.Publisher;
+package pt.uc.student.aclima.device_agent.Messaging.Publisher;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.ACTION_PUBLISH_DATA;
+import static pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.ACTION_PUBLISH_DATA;
 
 public class PublisherBroadcastReceiver extends BroadcastReceiver {
 

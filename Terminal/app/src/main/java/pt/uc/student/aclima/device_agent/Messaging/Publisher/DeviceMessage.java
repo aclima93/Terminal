@@ -1,4 +1,4 @@
-package pt.uc.student.aclima.device_agent.Publisher;
+package pt.uc.student.aclima.device_agent.Messaging.Publisher;
 
 /**
  * Created by aclima on 22/07/2017.

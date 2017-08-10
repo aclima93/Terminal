@@ -1,4 +1,4 @@
-package pt.uc.student.aclima.device_agent.Publisher;
+package pt.uc.student.aclima.device_agent.Messaging;
 
 /**
  * Created by aclima on 01/03/2017.
@@ -23,8 +23,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 public class SslUtil {
 
-    static SSLSocketFactory getSocketFactory (final InputStream caCrtInputStream, final InputStream crtInputStream, final InputStream keyInputStream,
-                                              final String password) throws Exception {
+    public static SSLSocketFactory getSocketFactory(final InputStream caCrtInputStream, final InputStream crtInputStream, final InputStream keyInputStream,
+                                                    final String password) throws Exception {
 
         Security.addProvider(new BouncyCastleProvider());
 

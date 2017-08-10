@@ -29,7 +29,9 @@ import pt.uc.student.aclima.device_agent.Database.Tables.EventfulMeasurementsTab
 import pt.uc.student.aclima.device_agent.Database.Tables.OneTimeMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicAggregatedMeasurementsTable;
 import pt.uc.student.aclima.device_agent.Database.Tables.PeriodicMeasurementsTable;
-import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
+import pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons;
+import pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService;
+import pt.uc.student.aclima.device_agent.Messaging.Updater.UpdaterIntentService;
 
 import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
 
@@ -256,26 +258,33 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.ACTION_AGGREGATE_EVENTFUL_DATA, (30 * 60 * 1000) + "")); // every 30 minutes
         namesValuePairs.add(new Pair<>(EventfulAggregatorIntentService.EXTRA_AGGREGATE_EVENTFUL_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last aggregation was made
 
-        // Device ID
+        // Data Publishing Action
+        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (60 * 60 * 1000) + "")); // every 60 minutes
+        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
+
+        // Configuration Updating Action
+        namesValuePairs.add(new Pair<>(UpdaterIntentService.ACTION_UPDATE_CONFIGURATIONS, (60 * 60 * 1000) + "")); // every 60 minutes
+        namesValuePairs.add(new Pair<>(UpdaterIntentService.EXTRA_UPDATE_CONFIGURATIONS_TIME, sampleStartTime)); // when the last configuration was updated
+
+        // Device ID Configuration
         if(context != null) {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String deviceId = "";
             deviceId += DELIMITER + tm.getDeviceId();
             deviceId += DELIMITER + tm.getSimSerialNumber();
             deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-            namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId));
+            namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_DEVICE_ID, deviceId));
         }
 
-        // Data Publishing Action
-        namesValuePairs.add(new Pair<>(PublisherIntentService.ACTION_PUBLISH_DATA, (60 * 60 * 1000) + "")); // every 60 minutes
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, sampleStartTime)); // when the last data publish was made
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
-        namesValuePairs.add(new Pair<>(PublisherIntentService.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
-        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_PROTOCOL, PublisherIntentService.DEFAULT_SERVER_PROTOCOL));
-        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_URI, PublisherIntentService.DEFAULT_SERVER_URI));
-        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_PORT, PublisherIntentService.DEFAULT_SERVER_PORT));
-        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_BASE_TOPIC, PublisherIntentService.DEFAULT_SERVER_BASE_TOPIC));
-        namesValuePairs.add(new Pair<>(PublisherIntentService.PUBLISH_SERVER_PASSWORD, PublisherIntentService.DEFAULT_SERVER_PASSWORD));
+        // Messaging Common Configurations
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL, MessagingIntentServiceCommons.DEFAULT_SERVER_PROTOCOL));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_URI, MessagingIntentServiceCommons.DEFAULT_SERVER_URI));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PORT, MessagingIntentServiceCommons.DEFAULT_SERVER_PORT));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_PUBLISH_TOPIC, MessagingIntentServiceCommons.DEFAULT_SERVER_BASE_PUBLISH_TOPIC));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_UPDATE_TOPIC, MessagingIntentServiceCommons.DEFAULT_SERVER_BASE_UPDATE_TOPIC));
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PASSWORD, MessagingIntentServiceCommons.DEFAULT_SERVER_PASSWORD));
 
         // add them to the Configurations Table
         for( Pair<String, String> namesValuePair : namesValuePairs ) {

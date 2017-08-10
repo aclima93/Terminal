@@ -1,9 +1,8 @@
-package pt.uc.student.aclima.device_agent.Publisher;
+package pt.uc.student.aclima.device_agent.Messaging.Publisher;
 
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -30,54 +29,23 @@ import pt.uc.student.aclima.device_agent.Database.Entries.OneTimeMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicAggregatedMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Entries.PeriodicMeasurement;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+import pt.uc.student.aclima.device_agent.Messaging.SslUtil;
 import pt.uc.student.aclima.device_agent.R;
 
-import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DELIMITER;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_DEVICE_ID;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_PUBLISH_TOPIC;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PASSWORD;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PORT;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_URI;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.updateDeviceId;
 
 public class PublisherIntentService extends IntentService {
 
-    public static final String ACTION_PUBLISH_DATA = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.action.PUBLISH_DATA";
-    public static final String EXTRA_PUBLISH_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.PUBLISH_DATA_SAMPLE_START_TIME";
-
-    public static final String EXTRA_MQTT_TIMEOUT = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_TIMEOUT";
-    public static final String EXTRA_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.extra.MQTT_KEEP_ALIVE";
-
-    public static final String PUBLISH_DEVICE_ID = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_DEVICE_ID";
-    public static final String PUBLISH_SERVER_PROTOCOL = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PROTOCOL";
-    public static final String PUBLISH_SERVER_URI = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_URI";
-    public static final String PUBLISH_SERVER_PORT = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PORT";
-    public static final String PUBLISH_SERVER_BASE_TOPIC = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_BASE_TOPIC";
-    public static final String PUBLISH_SERVER_PASSWORD = "pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.PUBLISH_SERVER_PASSWORD";
-
-    public static final String DEFAULT_SERVER_BASE_TOPIC = "OryxInput" /*"COLLECTED_DATA"*/;
-    public static final String DEFAULT_SERVER_PASSWORD = "mosquitto";
-
-
-    // MQTT + no encryption
-    public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
-    public static final String DEFAULT_SERVER_URI = "10.3.2.9"; // Oryx machine
-    public static final String DEFAULT_SERVER_PORT = "1883";
-
-
-    /*
-    // MQTT + no encryption
-    public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
-    public static final String DEFAULT_SERVER_URI = "test.mosquitto.org";
-    public static final String DEFAULT_SERVER_PORT = "1883";
-    */
-
-    /*
-    // MQTT + SSL
-    public static final String DEFAULT_SERVER_PROTOCOL = "ssl";
-    public static final String DEFAULT_SERVER_URI = "test.mosquitto.org";
-    public static final String DEFAULT_SERVER_PORT = "8883";
-    */
-
-    /*
-    public static final String DEFAULT_SERVER_PROTOCOL = "ssl";
-    public static final String DEFAULT_SERVER_URI = "test.mosquitto.org";
-    public static final String DEFAULT_SERVER_PORT = "8884";
-    */
+    public static final String ACTION_PUBLISH_DATA = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.action.PUBLISH_DATA";
+    public static final String EXTRA_PUBLISH_DATA_SAMPLE_START_TIME = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.extra.PUBLISH_DATA_SAMPLE_START_TIME";
 
     public PublisherIntentService() {
         super("PublisherIntentService");
@@ -157,7 +125,7 @@ public class PublisherIntentService extends IntentService {
         // get the device's (as unique as possible) ID
         Configuration deviceIdConfiguration = null;
         try {
-            deviceIdConfiguration = configurationsTable.getRowForName(PUBLISH_DEVICE_ID);
+            deviceIdConfiguration = configurationsTable.getRowForName(MESSAGING_DEVICE_ID);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -177,7 +145,7 @@ public class PublisherIntentService extends IntentService {
          * deserialization process on the other end.
          *
          * Ideal code:
-         * <code> final String topic = configurationsTable.getRowForName(PUBLISH_SERVER_BASE_TOPIC).getValue() + "/" + deviceId + "/" + subtopic; </code>
+         * <code> final String topic = configurationsTable.getRowForName(MESSAGING_SERVER_BASE_PUBLISH_TOPIC).getValue() + "/" + deviceId + "/" + subtopic; </code>
          *
          * _BUT_
          *
@@ -191,10 +159,10 @@ public class PublisherIntentService extends IntentService {
         final String deviceMessageContent = gson.toJson(deviceMessage);
 
         // prepare the topic's URL
-        final String topic = configurationsTable.getRowForName(PUBLISH_SERVER_BASE_TOPIC).getValue();
-        String protocol = configurationsTable.getRowForName(PUBLISH_SERVER_PROTOCOL).getValue();
-        String uri = configurationsTable.getRowForName(PUBLISH_SERVER_URI).getValue();
-        String port = configurationsTable.getRowForName(PUBLISH_SERVER_PORT).getValue();
+        final String topic = configurationsTable.getRowForName(MESSAGING_SERVER_BASE_PUBLISH_TOPIC).getValue();
+        String protocol = configurationsTable.getRowForName(MESSAGING_SERVER_PROTOCOL).getValue();
+        String uri = configurationsTable.getRowForName(MESSAGING_SERVER_URI).getValue();
+        String port = configurationsTable.getRowForName(MESSAGING_SERVER_PORT).getValue();
 
         final MqttAndroidClient mqttAndroidClient = new MqttAndroidClient(context,
                 protocol + "://" + uri + ":" + port, deviceId);
@@ -243,7 +211,7 @@ public class PublisherIntentService extends IntentService {
 
             if(protocol.equalsIgnoreCase("ssl")) {
                 // specific SSL configuration options
-                String password = configurationsTable.getRowForName(PUBLISH_SERVER_PASSWORD).getValue();
+                String password = configurationsTable.getRowForName(MESSAGING_SERVER_PASSWORD).getValue();
 
                 // TODO: also store the content of these files in the database? might be best...
                 options.setSocketFactory(SslUtil.getSocketFactory(
@@ -288,23 +256,6 @@ public class PublisherIntentService extends IntentService {
             e.printStackTrace();
         }
 
-    }
-
-    private String updateDeviceId(Context context, ConfigurationsTable configurationsTable){
-
-        String deviceId;
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-
-        deviceId = tm.getDeviceId();
-        deviceId += DELIMITER + tm.getSimSerialNumber();
-        deviceId += DELIMITER + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-        boolean success = configurationsTable.addRow(PublisherIntentService.PUBLISH_DEVICE_ID, deviceId, new Date());
-        if (!success) {
-            Log.e("Configuration", "Configuration" + DELIMITER + PublisherIntentService.PUBLISH_DEVICE_ID + " service failed to add row.");
-        }
-
-        return deviceId;
     }
 
 }

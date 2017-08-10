@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import pt.uc.student.aclima.device_agent.Aggregators.EventfulDataAggregator.EventfulAggregatorBroadcastReceiver;
@@ -33,12 +32,11 @@ import pt.uc.student.aclima.device_agent.Collectors.PeriodicDataCollector.Period
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
-import pt.uc.student.aclima.device_agent.Publisher.PublisherBroadcastReceiver;
-import pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService;
-
-import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.DEFAULT_SERVER_PORT;
-import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.DEFAULT_SERVER_PROTOCOL;
-import static pt.uc.student.aclima.device_agent.Publisher.PublisherIntentService.DEFAULT_SERVER_URI;
+import pt.uc.student.aclima.device_agent.Messaging.IPUtil;
+import pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherBroadcastReceiver;
+import pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService;
+import pt.uc.student.aclima.device_agent.Messaging.Updater.UpdaterBroadcastReceiver;
+import pt.uc.student.aclima.device_agent.Messaging.Updater.UpdaterIntentService;
 
 public class DeviceAgentActivity extends AppCompatActivity {
 
@@ -71,7 +69,7 @@ public class DeviceAgentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_agent);
 
-        // TODO: add Configuration Management Table, logic, period fetch, etc.
+        IPUtil.pingServer();
 
         if(Build.VERSION.SDK_INT >= 23) {
             checkPermissions();
@@ -232,6 +230,8 @@ public class DeviceAgentActivity extends AppCompatActivity {
             scheduleEventfulAggregatorAlarm(configurationsTable);
 
             schedulePublishAlarm(configurationsTable);
+
+            scheduleUpdateAlarm(configurationsTable);
         }
     }
 
@@ -276,6 +276,12 @@ public class DeviceAgentActivity extends AppCompatActivity {
 
         Configuration configuration = configurationsTable.getRowForName(PublisherIntentService.ACTION_PUBLISH_DATA);
         scheduleAlarm(PublisherBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
+    }
+
+    private void scheduleUpdateAlarm(ConfigurationsTable configurationsTable) {
+
+        Configuration configuration = configurationsTable.getRowForName(UpdaterIntentService.ACTION_UPDATE_CONFIGURATIONS);
+        scheduleAlarm(UpdaterBroadcastReceiver.class, configuration.getName(), Long.parseLong(configuration.getValue()));
     }
 
     private void scheduleEventfulAggregatorAlarm(ConfigurationsTable configurationsTable) {
