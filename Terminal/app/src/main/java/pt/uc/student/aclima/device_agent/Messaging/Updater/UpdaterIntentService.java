@@ -26,8 +26,8 @@ import pt.uc.student.aclima.device_agent.DeviceAgentAlarmManager;
 import pt.uc.student.aclima.device_agent.Messaging.SslUtil;
 import pt.uc.student.aclima.device_agent.R;
 
-import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE;
-import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_MQTT_KEEP_ALIVE;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_MQTT_TIMEOUT;
 import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_DEVICE_ID;
 import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_UPDATE_TOPIC;
 import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PASSWORD;
@@ -168,12 +168,12 @@ public class UpdaterIntentService extends IntentService {
         // setup configuration options for MQTT connection
         MqttConnectOptions options = new MqttConnectOptions();
 
-        Configuration timeoutConfiguration = configurationsTable.getRowForName(EXTRA_MQTT_TIMEOUT);
+        Configuration timeoutConfiguration = configurationsTable.getRowForName(MESSAGING_MQTT_TIMEOUT);
         if(timeoutConfiguration != null && timeoutConfiguration.getValue() != null ) {
             options.setConnectionTimeout(Integer.valueOf(timeoutConfiguration.getValue()));
         }
 
-        Configuration keepAliveConfiguration = configurationsTable.getRowForName(EXTRA_MQTT_KEEP_ALIVE);
+        Configuration keepAliveConfiguration = configurationsTable.getRowForName(MESSAGING_MQTT_KEEP_ALIVE);
         if(keepAliveConfiguration != null && keepAliveConfiguration.getValue() != null ) {
             options.setKeepAliveInterval(Integer.valueOf(keepAliveConfiguration.getValue()));
         }

@@ -12,8 +12,8 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
 
 public class MessagingIntentServiceCommons {
 
-    public static final String EXTRA_MQTT_TIMEOUT = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.extra.MQTT_TIMEOUT";
-    public static final String EXTRA_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.extra.MQTT_KEEP_ALIVE";
+    public static final String MESSAGING_MQTT_TIMEOUT = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_MQTT_TIMEOUT";
+    public static final String MESSAGING_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_.MQTT_KEEP_ALIVE";
 
     public static final String MESSAGING_DEVICE_ID = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_DEVICE_ID";
     public static final String MESSAGING_SERVER_PROTOCOL = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL";

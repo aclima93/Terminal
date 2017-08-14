@@ -277,8 +277,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         }
 
         // Messaging Common Configurations
-        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
-        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_MQTT_TIMEOUT, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
         namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL, MessagingIntentServiceCommons.DEFAULT_SERVER_PROTOCOL));
         namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_URI, MessagingIntentServiceCommons.DEFAULT_SERVER_URI));
         namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PORT, MessagingIntentServiceCommons.DEFAULT_SERVER_PORT));
