@@ -22,6 +22,7 @@ import java.util.Date;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+import pt.uc.student.aclima.device_agent.DeviceAgentAlarmManager;
 import pt.uc.student.aclima.device_agent.Messaging.SslUtil;
 import pt.uc.student.aclima.device_agent.R;
 
@@ -82,7 +83,7 @@ public class UpdaterIntentService extends IntentService {
         }
     }
 
-    private void updateConfigurations(Context context) {
+    private void updateConfigurations(final Context context) {
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
 
@@ -129,8 +130,21 @@ public class UpdaterIntentService extends IntentService {
                 final Gson gson = new Gson();
                 ConfigurationMessage configurationMessage = gson.fromJson(jsonConfigurationMessage, ConfigurationMessage.class);
 
-                boolean editConfigurationSuccess = configurationsTable.editRowForName(configurationMessage.getConfigurationName(), configurationMessage.getConfigurationValue());
+                String configurationName = configurationMessage.getConfigurationName();
+                String configurationValue = configurationMessage.getConfigurationValue();
+
+                boolean editConfigurationSuccess = configurationsTable.editRowForName(configurationName, configurationValue);
                 if (editConfigurationSuccess) {
+
+                    /*
+                     * Some configurations have alarms associated with them, and value changes
+                     * call for the rescheduling of their respective alarms with the updated value.
+                     */
+                    DeviceAgentAlarmManager alarmScheduler = new DeviceAgentAlarmManager(context);
+                    if(alarmScheduler.isActionManagedByAlarm(configurationName)){
+                        // reschedule the alarm
+                        alarmScheduler.rescheduleAlarm(configurationName, Long.parseLong(configurationValue));
+                    }
 
                     // update the record of the last successful configuration update
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
