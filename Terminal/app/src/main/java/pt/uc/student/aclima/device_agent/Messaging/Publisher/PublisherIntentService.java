@@ -170,18 +170,18 @@ public class PublisherIntentService extends IntentService {
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-                Log.d("MQTT", "Connection was lost");
+                Log.d("MQTT", "Publisher: Connection was lost");
                 cause.printStackTrace();
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.d("MQTT", "Message Arrived: " + topic + ": " + new String(message.getPayload()));
+                Log.d("MQTT", "Publisher: Message Arrived: " + topic + ": " + new String(message.getPayload()));
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Log.d("MQTT", "Delivery Complete");
+                Log.d("MQTT", "Publisher: Delivery Complete");
 
                 // update the record of the last successful data publish
                 boolean editSuccess = configurationsTable.editRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME, stringSampleEndDate);
@@ -227,13 +227,13 @@ public class PublisherIntentService extends IntentService {
 
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        Log.d("MQTT", "Connection Success");
+                        Log.d("MQTT", "Publisher: Connection Success");
                         try {
-                            Log.d("MQTT", "Subscribing to " + topic);
+                            Log.d("MQTT", "Publisher: Subscribing to " + topic);
                             mqttAndroidClient.subscribe(topic, 0);
-                            Log.d("MQTT", "Subscribed to " + topic);
+                            Log.d("MQTT", "Publisher: Subscribed to " + topic);
 
-                            Log.d("MQTT", "Publishing message...");
+                            Log.d("MQTT", "Publisher: Publishing message...");
                             mqttAndroidClient.publish(topic, new MqttMessage(deviceMessageContent.getBytes()));
 
                         } catch (MqttException ex) {
@@ -244,7 +244,7 @@ public class PublisherIntentService extends IntentService {
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                        Log.d("MQTT", "Connection Failure");
+                        Log.d("MQTT", "Publisher: Connection Failure");
                         exception.printStackTrace();
                     }
                 });

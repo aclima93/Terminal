@@ -117,13 +117,13 @@ public class UpdaterIntentService extends IntentService {
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-                Log.d("MQTT", "Connection was lost");
+                Log.d("MQTT", "Updater: Connection was lost");
                 cause.printStackTrace();
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.d("MQTT", "Message Arrived: " + topic + ": " + message);
+                Log.d("MQTT", "Updater: Message Arrived: " + topic + ": " + message);
 
                 // parse message config and update it
                 String jsonConfigurationMessage = new String(message.getPayload());
@@ -161,7 +161,7 @@ public class UpdaterIntentService extends IntentService {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Log.d("MQTT", "Delivery Complete");
+                Log.d("MQTT", "Updater: Delivery Complete");
             }
         });
 
@@ -199,18 +199,18 @@ public class UpdaterIntentService extends IntentService {
 
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        Log.d("MQTT", "Connection Success");
+                        Log.d("MQTT", "Updater: Connection Success");
                         try {
-                            Log.d("MQTT", "Subscribing to " + topic);
+                            Log.d("MQTT", "Updater: Subscribing to " + topic);
                             mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                                 @Override
                                 public void onSuccess(IMqttToken asyncActionToken) {
-                                    Log.d("MQTT", "Successfully subscribed to topic " + topic);
+                                    Log.d("MQTT", "Updater: Successfully subscribed to topic " + topic);
                                 }
 
                                 @Override
                                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                                    Log.d("MQTT", "Failed to subscribedto topic " + topic);
+                                    Log.d("MQTT", "Updater: Failed to subscribedto topic " + topic);
                                 }
                             });
 
@@ -222,7 +222,7 @@ public class UpdaterIntentService extends IntentService {
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                        Log.d("MQTT", "Connection Failure");
+                        Log.d("MQTT", "Updater: Connection Failure");
                         exception.printStackTrace();
                     }
                 });
