@@ -30,8 +30,8 @@ public class MessagingIntentServiceCommons {
 
     // MQTT + no encryption
     public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
-    public static final String DEFAULT_SERVER_URI = "188.37.251.133" /*"193.136.212.199"*/ /*"oryx.aclima.dei.uc.pt"*/; // Oryx machine - 10.3.2.9
-    public static final String DEFAULT_SERVER_PORT = "1883";
+    public static final String DEFAULT_SERVER_URI = "10.3.2.9";
+    public static final String DEFAULT_SERVER_PORT = "9000";
 
 
     /*
