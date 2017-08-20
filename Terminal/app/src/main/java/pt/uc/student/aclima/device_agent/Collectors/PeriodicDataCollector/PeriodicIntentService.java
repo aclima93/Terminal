@@ -265,6 +265,8 @@ public class PeriodicIntentService extends IntentService {
 
             List<ProcessManager.Process> processes = ProcessManager.getRunningApps();
 
+            PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
+
             for (ProcessManager.Process process : processes) {
 
                 // Source <a>https://stackoverflow.com/questions/3118234/get-memory-usage-in-android</a>
@@ -312,7 +314,7 @@ public class PeriodicIntentService extends IntentService {
                     // FIXME: ? almost always at 0
 
                     String entryName = MEASUREMENT_NAME_CPU_USAGE + DELIMITER + "pid " + process.pid + DELIMITER + process.name;
-                    boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                    boolean success = periodicMeasurementsTable.addRow(
                             entryName,
                             entryValue + "", "%", timestamp);
                     if (!success) {
@@ -347,6 +349,8 @@ public class PeriodicIntentService extends IntentService {
                 pidMap.put(runningAppProcessInfo.pid, runningAppProcessInfo.processName);
             }
 
+            PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
+
             Collection<Integer> keys = pidMap.keySet();
             for (int key : keys) {
 
@@ -357,7 +361,7 @@ public class PeriodicIntentService extends IntentService {
                 for (android.os.Debug.MemoryInfo pidMemoryInfo : memoryInfoArray) {
 
                     String entryName = MEASUREMENT_NAME_RAM_USAGE + DELIMITER + "pid " + pids[0] + DELIMITER + pidMap.get(pids[0]);
-                    boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                    boolean success = periodicMeasurementsTable.addRow(
                             entryName,
                             pidMemoryInfo.getTotalPss() + "", "Kilobytes", timestamp);
                     if( !success){
@@ -453,11 +457,12 @@ public class PeriodicIntentService extends IntentService {
             }
 
             if(measurements.size() > 0) {
+
                 String unitsOfMeasurement = measurements.remove(0);
                 PeriodicMeasurementsTable periodicMeasurementsTable = new DatabaseManager(context).getPeriodicMeasurementsTable();
 
                 for (String measurement : measurements) {
-                    boolean success = new DatabaseManager(context).getPeriodicMeasurementsTable().addRow(
+                    boolean success = periodicMeasurementsTable.addRow(
                             MEASUREMENT_NAME_DATA_TRAFFIC, measurement, unitsOfMeasurement, timestamp);
                     if (!success) {
                         Log.e("DataTraffic", "DataTraffic service failed to add row.");
