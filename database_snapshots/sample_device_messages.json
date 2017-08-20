@@ -1,0 +1,101 @@
+{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:52 PM\",\"unitsOfMeasurement\":\"bytes\",\"value\":\"1340223488\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:52 PM\",\"unitsOfMeasurement\":\"bytes\",\"value\":\"1340223488\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:52 PM\",\"unitsOfMeasurement\":\"bytes\",\"value\":\"1340223488\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:52 PM\",\"unitsOfMeasurement\":\"bytes\",\"value\":\"1340223488\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:52 PM\",\"unitsOfMeasurement\":\"bytes\",\"value\":\"1340223488\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - NetworkType\",\"value\":\"0 - 0 - 0 - GSM - \\n\",\"id\":1,\"name\":\"BaseStationChange - Current\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm\",\"value\":\"0 - 0 - 2147483647 - GSM - -113\\n\",\"id\":2,\"name\":\"BaseStationChange - Neighbours\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"GSM SignalStrength\",\"value\":\"12\",\"id\":3,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - NetworkType\",\"value\":\"0 - 0 - 0 - GSM - \\n\",\"id\":1,\"name\":\"BaseStationChange - Current\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm\",\"value\":\"0 - 0 - 2147483647 - GSM - -113\\n\",\"id\":2,\"name\":\"BaseStationChange - Neighbours\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"GSM SignalStrength\",\"value\":\"12\",\"id\":3,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - NetworkType\",\"value\":\"0 - 0 - 0 - GSM - \\n\",\"id\":1,\"name\":\"BaseStationChange - Current\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm\",\"value\":\"0 - 0 - 2147483647 - GSM - -113\\n\",\"id\":2,\"name\":\"BaseStationChange - Neighbours\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"GSM SignalStrength\",\"value\":\"12\",\"id\":3,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - NetworkType\",\"value\":\"0 - 0 - 0 - GSM - \\n\",\"id\":1,\"name\":\"BaseStationChange - Current\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm\",\"value\":\"0 - 0 - 2147483647 - GSM - -113\\n\",\"id\":2,\"name\":\"BaseStationChange - Neighbours\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"GSM SignalStrength\",\"value\":\"12\",\"id\":3,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - NetworkType\",\"value\":\"0 - 0 - 0 - GSM - \\n\",\"id\":1,\"name\":\"BaseStationChange - Current\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"CID - LAC - PSC - Latitude - Longitude - NetworkType - RSSI dBm\",\"value\":\"0 - 0 - 2147483647 - GSM - -113\\n\",\"id\":2,\"name\":\"BaseStationChange - Neighbours\"},{\"timestamp\":\"Jul 22, 2017 11:38:47 PM\",\"unitsOfMeasurement\":\"GSM SignalStrength\",\"value\":\"12\",\"id\":3,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[]",
+   "subtopic":"OneTimeMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[]",
+   "subtopic":"OneTimeMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[]",
+   "subtopic":"OneTimeMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[]",
+   "subtopic":"OneTimeMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[]",
+   "subtopic":"OneTimeMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"harmonicValue\":1.340223488E9,\"medianValue\":1.340223488E9,\"unitsOfMeasurement\":\"bytes\",\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"harmonicValue\":1.340223488E9,\"medianValue\":1.340223488E9,\"unitsOfMeasurement\":\"bytes\",\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"harmonicValue\":1.340223488E9,\"medianValue\":1.340223488E9,\"unitsOfMeasurement\":\"bytes\",\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"harmonicValue\":1.340223488E9,\"medianValue\":1.340223488E9,\"unitsOfMeasurement\":\"bytes\",\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"harmonicValue\":1.340223488E9,\"medianValue\":1.340223488E9,\"unitsOfMeasurement\":\"bytes\",\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"Available System RAM\"}]",
+   "subtopic":"PeriodicAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"numberOfEvents\":1,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"BaseStationChange - Neighbours\"},{\"numberOfEvents\":2,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":2,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"numberOfEvents\":1,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"BaseStationChange - Neighbours\"},{\"numberOfEvents\":2,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":2,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"numberOfEvents\":1,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"BaseStationChange - Neighbours\"},{\"numberOfEvents\":2,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":2,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"numberOfEvents\":1,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"BaseStationChange - Neighbours\"},{\"numberOfEvents\":2,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":2,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulAggregatedMeasurement"
+}{
+   "deviceId":" - 000000000000000 - 89014103211118510720 - 8c240a5bf3a293e5",
+   "payload":"[{\"numberOfEvents\":1,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":1,\"name\":\"BaseStationChange - Neighbours\"},{\"numberOfEvents\":2,\"sampleEndTime\":\"Jul 22, 2017 11:38:52 PM\",\"sampleStartTime\":\"Jul 22, 2017 11:38:47 PM\",\"id\":2,\"name\":\"BaseStationChange - Current\"}]",
+   "subtopic":"EventfulAggregatedMeasurement"
+}

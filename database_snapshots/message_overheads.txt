@@ -1,0 +1,29 @@
+**Base DeviceMessage overhead**
+[124 bytes]{"deviceId":" - 000000000000000 - 89014103211118510720 - 8c24
+0a5bf3a293e5","payload":"[]","subtopic":"EventfulMeasurement"}
+
+**Base overhead**
+[73 bytes]{timestamp:Jul 22, 2017 11:38:47 PM,unitsOfMeasurement:,value:,id:,name:}
+
+**Periodic**
+[37]Available System RAM,1377308672,bytes
+[21]Used System CPU,0.0,%
+[35]GPS,37.421997 - -122.084,lat - long
+[44]CPU Usage - pid 2324 - com.android.mms,0.0,%
+[72]RAM Usage - pid 2874 - pt.uc.student.aclima.device_agent,17877,Kilobytes
+[13]Battery Level
+[155]Open Ports, tcp       0      0 127.0.0.1:5037         0.0.0.0:*              LISTEN,Proto Recv-Q Send-Q Local Address          Foreign Address        State
+[84]Data Traffic =XXXXXXXXXX bytes received (delta=XX), YYYYYYYYYY bytes sent (delta=YY)
+
+**Eventful**
+[65]TimeChange - TIME_CHANGED,Sat Apr 15 16:27:20 GMT+01:00 2017,time
+[63]ConnectionChange,"isConnected - true\nconnectedMethod - Mobile",
+
+**One Time**
+[150]PackageChange - android.intent.action.PACKAGE_REPLACED,10053 - pt.uc.student.aclima.device_agent,packageUID - packageName
+
+**Aggregated Periodic**
+[120]Available System RAM,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 16:30:26.465 GMT+01:00,1375379456.0,1375379456.0,bytes
+
+**Aggregated Eventful**
+[90]ConnectionChange,2017-04-15 16:27:20.805 GMT+01:00,2017-04-15 22:07:07.220 GMT+01:00,1
