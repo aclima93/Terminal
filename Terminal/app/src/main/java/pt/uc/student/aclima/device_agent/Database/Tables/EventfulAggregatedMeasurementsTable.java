@@ -106,7 +106,7 @@ public class EventfulAggregatedMeasurementsTable extends AggregatedMeasurementsT
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
         String endDateString = simpleDateFormat.format(endDate);
 
-        Log.d("getAllRowsBetween", "Getting rows from table named " + TABLE_NAME + " older than " + endDateString);
+        Log.d("getAllRowsOlderThan", "Getting rows from table named " + TABLE_NAME + " older than " + endDateString);
 
         List<EventfulAggregatedMeasurement> rows = new ArrayList<>();
 
@@ -119,11 +119,11 @@ public class EventfulAggregatedMeasurementsTable extends AggregatedMeasurementsT
             database.beginTransaction();
             rows = parseRowObjects(cursor);
             database.setTransactionSuccessful();
-            Log.d("getAllRowsBetween", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
+            Log.d("getAllRowsOlderThan", "Got rows from table named " + TABLE_NAME + ".\nRows:\n" + rows.toString());
         }
         catch (Exception e){
             e.printStackTrace();
-            Log.d("getAllRowsBetween", "Failed to get rows from table named " + TABLE_NAME + ".");
+            Log.d("getAllRowsOlderThan", "Failed to get rows from table named " + TABLE_NAME + ".");
         }
         finally {
             cursor.close();
@@ -131,6 +131,37 @@ public class EventfulAggregatedMeasurementsTable extends AggregatedMeasurementsT
         }
 
         return rows;
+    }
+
+    public boolean deleteAllRowsOlderThan(Date endDate) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+        String endDateString = simpleDateFormat.format(endDate);
+
+        Log.d("deleteAllRowsOlderThan", "Deleting rows from table named " + TABLE_NAME + " older than " + endDateString);
+
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + SAMPLE_END_TIME + " < \'" + endDateString + "\'" ;
+
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+
+        boolean success = true;
+        try {
+            database.beginTransaction();
+            database.setTransactionSuccessful();
+            Log.d("deleteAllRowsOlderThan", "Deleted rows from table named " + TABLE_NAME + ".");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.d("deleteAllRowsOlderThan", "Failed to delete rows from table named " + TABLE_NAME + ".");
+            success = false;
+        }
+        finally {
+            cursor.close();
+            database.endTransaction();
+        }
+
+        return success;
     }
 
     private List<EventfulAggregatedMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
