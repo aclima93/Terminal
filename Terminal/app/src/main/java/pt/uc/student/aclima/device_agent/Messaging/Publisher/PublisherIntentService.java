@@ -93,22 +93,21 @@ public class PublisherIntentService extends IntentService {
                 Configuration configuration = new DatabaseManager(context).getConfigurationsTable().getRowForName(EXTRA_PUBLISH_DATA_SAMPLE_START_TIME);
                 Date sampleStartDate = simpleDateFormat.parse(configuration.getValue());
                 Date sampleEndDate = new Date(); // current time
-                String stringSampleEndDate = simpleDateFormat.format(sampleEndDate); // current time
 
                 List<PeriodicMeasurement> periodicMeasurementRows = new DatabaseManager(context).getPeriodicMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
-                publishData(context, "PeriodicMeasurement", gson.toJson(periodicMeasurementRows), stringSampleEndDate);
+                publishData(context, "PeriodicMeasurement", gson.toJson(periodicMeasurementRows), sampleStartDate, sampleEndDate);
 
                 List<EventfulMeasurement> eventfulMeasurementRows = new DatabaseManager(context).getEventfulMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
-                publishData(context, "EventfulMeasurement", gson.toJson(eventfulMeasurementRows), stringSampleEndDate);
+                publishData(context, "EventfulMeasurement", gson.toJson(eventfulMeasurementRows), sampleStartDate, sampleEndDate);
 
                 List<OneTimeMeasurement> oneTimeMeasurementRows = new DatabaseManager(context).getOneTimeMeasurementsTable().getAllRowsBetween(sampleStartDate, sampleEndDate);
-                publishData(context, "OneTimeMeasurement", gson.toJson(oneTimeMeasurementRows), stringSampleEndDate);
+                publishData(context, "OneTimeMeasurement", gson.toJson(oneTimeMeasurementRows), sampleStartDate, sampleEndDate);
 
                 List<PeriodicAggregatedMeasurement> periodicAggregatedMeasurementRows = new DatabaseManager(context).getPeriodicAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
-                publishData(context, "PeriodicAggregatedMeasurement", gson.toJson(periodicAggregatedMeasurementRows), stringSampleEndDate);
+                publishData(context, "PeriodicAggregatedMeasurement", gson.toJson(periodicAggregatedMeasurementRows), sampleStartDate, sampleEndDate);
 
                 List<EventfulAggregatedMeasurement> eventfulAggregatedMeasurementRows = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().getAllRowsOlderThan(sampleEndDate);
-                publishData(context, "EventfulAggregatedMeasurement", gson.toJson(eventfulAggregatedMeasurementRows), stringSampleEndDate);
+                publishData(context, "EventfulAggregatedMeasurement", gson.toJson(eventfulAggregatedMeasurementRows), sampleStartDate, sampleEndDate);
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -118,7 +117,11 @@ public class PublisherIntentService extends IntentService {
         }
     }
 
-    private void publishData(Context context, final String subtopic, final String payload, final String stringSampleEndDate) {
+    private void publishData(final Context context, final String subtopic, final String payload, final Date sampleStartDate, final Date sampleEndDate) {
+
+        // dates as trings
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+        final String stringSampleEndDate = simpleDateFormat.format(sampleEndDate);
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
 
@@ -188,7 +191,8 @@ public class PublisherIntentService extends IntentService {
                 if (!editSuccess) {
                     Log.e("Publisher", "Publisher service failed to edit configuration \'"+ EXTRA_PUBLISH_DATA_SAMPLE_START_TIME +"\' row.");
                 }else {
-                    // TODO: delete sent data from database
+                    // delete sent data from database
+                    deleteSentData(context, subtopic, sampleStartDate, sampleEndDate);
                 }
             }
         });
@@ -254,6 +258,47 @@ public class PublisherIntentService extends IntentService {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+    }
+
+    private void deleteSentData(Context context, String subtopic, Date sampleStartDate, Date sampleEndDate) {
+
+        boolean success;
+
+        // delete the data for the specified time frame, from the corresponding table
+        switch (subtopic){
+            case "PeriodicMeasurement":
+                success = new DatabaseManager(context).getPeriodicMeasurementsTable().deleteAllRowsBetween(sampleStartDate, sampleEndDate);
+                break;
+
+            case "EventfulMeasurement":
+                success = new DatabaseManager(context).getEventfulMeasurementsTable().deleteAllRowsBetween(sampleStartDate, sampleEndDate);
+                break;
+
+            case "OneTimeMeasurement":
+                success = new DatabaseManager(context).getOneTimeMeasurementsTable().deleteAllRowsBetween(sampleStartDate, sampleEndDate);
+                break;
+
+            case "PeriodicAggregatedMeasurement":
+                success = new DatabaseManager(context).getPeriodicAggregatedMeasurementsTable().deleteAllRowsOlderThan(sampleEndDate);
+                break;
+
+            case "EventfulAggregatedMeasurement":
+                success = new DatabaseManager(context).getEventfulAggregatedMeasurementsTable().deleteAllRowsOlderThan(sampleEndDate);
+                break;
+
+            default:
+                success = false;
+                Log.d("Publisher", "No matching table to delete published content.");
+                break;
+        }
+
+        if(success){
+            Log.d("Publisher", "Deleted published content.");
+        }
+        else{
+            Log.d("Publisher", "Failed to delete published content.");
         }
 
     }
