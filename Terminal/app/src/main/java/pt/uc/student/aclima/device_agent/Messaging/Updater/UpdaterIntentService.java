@@ -22,11 +22,12 @@ import java.util.Date;
 import pt.uc.student.aclima.device_agent.Database.DatabaseManager;
 import pt.uc.student.aclima.device_agent.Database.Entries.Configuration;
 import pt.uc.student.aclima.device_agent.Database.Tables.ConfigurationsTable;
+import pt.uc.student.aclima.device_agent.DeviceAgentAlarmManager;
 import pt.uc.student.aclima.device_agent.Messaging.SslUtil;
 import pt.uc.student.aclima.device_agent.R;
 
-import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE;
-import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_MQTT_KEEP_ALIVE;
+import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_MQTT_TIMEOUT;
 import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_DEVICE_ID;
 import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_UPDATE_TOPIC;
 import static pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PASSWORD;
@@ -82,7 +83,7 @@ public class UpdaterIntentService extends IntentService {
         }
     }
 
-    private void updateConfigurations(Context context) {
+    private void updateConfigurations(final Context context) {
 
         final ConfigurationsTable configurationsTable = new DatabaseManager(context).getConfigurationsTable();
 
@@ -116,21 +117,34 @@ public class UpdaterIntentService extends IntentService {
         mqttAndroidClient.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-                Log.d("MQTT", "Connection was lost");
+                Log.d("MQTT", "Updater: Connection was lost");
                 cause.printStackTrace();
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.d("MQTT", "Message Arrived: " + topic + ": " + message);
+                Log.d("MQTT", "Updater: Message Arrived: " + topic + ": " + message);
 
                 // parse message config and update it
                 String jsonConfigurationMessage = new String(message.getPayload());
                 final Gson gson = new Gson();
                 ConfigurationMessage configurationMessage = gson.fromJson(jsonConfigurationMessage, ConfigurationMessage.class);
 
-                boolean editConfigurationSuccess = configurationsTable.editRowForName(configurationMessage.getConfigurationName(), configurationMessage.getConfigurationValue());
+                String configurationName = configurationMessage.getConfigurationName();
+                String configurationValue = configurationMessage.getConfigurationValue();
+
+                boolean editConfigurationSuccess = configurationsTable.editRowForName(configurationName, configurationValue);
                 if (editConfigurationSuccess) {
+
+                    /*
+                     * Some configurations have alarms associated with them, and value changes
+                     * call for the rescheduling of their respective alarms with the updated value.
+                     */
+                    DeviceAgentAlarmManager alarmScheduler = new DeviceAgentAlarmManager(context);
+                    if(alarmScheduler.isActionManagedByAlarm(configurationName)){
+                        // reschedule the alarm
+                        alarmScheduler.rescheduleAlarm(configurationName, Long.parseLong(configurationValue));
+                    }
 
                     // update the record of the last successful configuration update
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
@@ -147,19 +161,19 @@ public class UpdaterIntentService extends IntentService {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Log.d("MQTT", "Delivery Complete");
+                Log.d("MQTT", "Updater: Delivery Complete");
             }
         });
 
         // setup configuration options for MQTT connection
         MqttConnectOptions options = new MqttConnectOptions();
 
-        Configuration timeoutConfiguration = configurationsTable.getRowForName(EXTRA_MQTT_TIMEOUT);
+        Configuration timeoutConfiguration = configurationsTable.getRowForName(MESSAGING_MQTT_TIMEOUT);
         if(timeoutConfiguration != null && timeoutConfiguration.getValue() != null ) {
             options.setConnectionTimeout(Integer.valueOf(timeoutConfiguration.getValue()));
         }
 
-        Configuration keepAliveConfiguration = configurationsTable.getRowForName(EXTRA_MQTT_KEEP_ALIVE);
+        Configuration keepAliveConfiguration = configurationsTable.getRowForName(MESSAGING_MQTT_KEEP_ALIVE);
         if(keepAliveConfiguration != null && keepAliveConfiguration.getValue() != null ) {
             options.setKeepAliveInterval(Integer.valueOf(keepAliveConfiguration.getValue()));
         }
@@ -185,18 +199,18 @@ public class UpdaterIntentService extends IntentService {
 
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        Log.d("MQTT", "Connection Success");
+                        Log.d("MQTT", "Updater: Connection Success");
                         try {
-                            Log.d("MQTT", "Subscribing to " + topic);
+                            Log.d("MQTT", "Updater: Subscribing to " + topic);
                             mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
                                 @Override
                                 public void onSuccess(IMqttToken asyncActionToken) {
-                                    Log.d("MQTT", "Successfully subscribed to topic " + topic);
+                                    Log.d("MQTT", "Updater: Successfully subscribed to topic " + topic);
                                 }
 
                                 @Override
                                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                                    Log.d("MQTT", "Failed to subscribedto topic " + topic);
+                                    Log.d("MQTT", "Updater: Failed to subscribedto topic " + topic);
                                 }
                             });
 
@@ -208,7 +222,7 @@ public class UpdaterIntentService extends IntentService {
 
                     @Override
                     public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                        Log.d("MQTT", "Connection Failure");
+                        Log.d("MQTT", "Updater: Connection Failure");
                         exception.printStackTrace();
                     }
                 });

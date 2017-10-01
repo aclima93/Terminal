@@ -12,16 +12,16 @@ import static pt.uc.student.aclima.device_agent.Database.Entries.Measurement.DEL
 
 public class MessagingIntentServiceCommons {
 
-    public static final String EXTRA_MQTT_TIMEOUT = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.extra.MQTT_TIMEOUT";
-    public static final String EXTRA_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.extra.MQTT_KEEP_ALIVE";
+    public static final String MESSAGING_MQTT_TIMEOUT = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_MQTT_TIMEOUT";
+    public static final String MESSAGING_MQTT_KEEP_ALIVE = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_.MQTT_KEEP_ALIVE";
 
-    public static final String MESSAGING_DEVICE_ID = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentService.MESSAGING_DEVICE_ID";
-    public static final String MESSAGING_SERVER_PROTOCOL = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.MESSAGING_SERVER_PROTOCOL";
-    public static final String MESSAGING_SERVER_URI = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.MESSAGING_SERVER_URI";
-    public static final String MESSAGING_SERVER_PORT = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.MESSAGING_SERVER_PORT";
-    public static final String MESSAGING_SERVER_BASE_PUBLISH_TOPIC = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.MESSAGING_SERVER_BASE_PUBLISH_TOPIC";
-    public static final String MESSAGING_SERVER_BASE_UPDATE_TOPIC = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.MESSAGING_SERVER_BASE_UPDATE_TOPIC";
-    public static final String MESSAGING_SERVER_PASSWORD = "pt.uc.student.aclima.device_agent.Messaging.Publisher.PublisherIntentService.MESSAGING_SERVER_PASSWORD";
+    public static final String MESSAGING_DEVICE_ID = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_DEVICE_ID";
+    public static final String MESSAGING_SERVER_PROTOCOL = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL";
+    public static final String MESSAGING_SERVER_URI = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_URI";
+    public static final String MESSAGING_SERVER_PORT = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PORT";
+    public static final String MESSAGING_SERVER_BASE_PUBLISH_TOPIC = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_PUBLISH_TOPIC";
+    public static final String MESSAGING_SERVER_BASE_UPDATE_TOPIC = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_BASE_UPDATE_TOPIC";
+    public static final String MESSAGING_SERVER_PASSWORD = "pt.uc.student.aclima.device_agent.Messaging.MessagingIntentServiceCommons.MESSAGING_SERVER_PASSWORD";
 
     public static final String DEFAULT_SERVER_BASE_PUBLISH_TOPIC = "OryxInput";
     public static final String DEFAULT_SERVER_BASE_UPDATE_TOPIC = "Configurations";
@@ -30,8 +30,8 @@ public class MessagingIntentServiceCommons {
 
     // MQTT + no encryption
     public static final String DEFAULT_SERVER_PROTOCOL = "tcp";
-    public static final String DEFAULT_SERVER_URI = "188.37.251.133" /*"193.136.212.199"*/ /*"oryx.aclima.dei.uc.pt"*/; // Oryx machine - 10.3.2.9
-    public static final String DEFAULT_SERVER_PORT = "1883";
+    public static final String DEFAULT_SERVER_URI = "10.3.2.9";
+    public static final String DEFAULT_SERVER_PORT = "9000";
 
 
     /*

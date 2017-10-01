@@ -149,6 +149,9 @@ public final class DatabaseManager extends SQLiteOpenHelper {
             database = SQLiteDatabase.openDatabase(DATABASE_NAME, null, SQLiteDatabase.OPEN_READWRITE);
             Log.d("createDatabase", "Opened database");
 
+            // set max size limit of 100 MB
+            database.setMaximumSize(100_000_000);
+
         } catch (Exception e){
 
             // if an exception occurs it is best to just re-create the tables and re-populate them from scratch
@@ -277,8 +280,8 @@ public final class DatabaseManager extends SQLiteOpenHelper {
         }
 
         // Messaging Common Configurations
-        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_TIMEOUT, (10) + "")); // 10 seconds
-        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.EXTRA_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_MQTT_TIMEOUT, (10) + "")); // 10 seconds
+        namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_MQTT_KEEP_ALIVE, (10) + "")); // 10 seconds
         namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PROTOCOL, MessagingIntentServiceCommons.DEFAULT_SERVER_PROTOCOL));
         namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_URI, MessagingIntentServiceCommons.DEFAULT_SERVER_URI));
         namesValuePairs.add(new Pair<>(MessagingIntentServiceCommons.MESSAGING_SERVER_PORT, MessagingIntentServiceCommons.DEFAULT_SERVER_PORT));

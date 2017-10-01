@@ -138,6 +138,38 @@ public class PeriodicMeasurementsTable extends MeasurementsTable {
         return rows;
     }
 
+    public boolean deleteAllRowsBetween(Date startDate, Date endDate) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DatabaseManager.TimestampFormat);
+        String startDateString = simpleDateFormat.format(startDate);
+        String endDateString = simpleDateFormat.format(endDate);
+
+        Log.d("deleteAllRowsBetween", "Deleting rows from table named " + TABLE_NAME + " between " + startDateString + " and " + endDateString);
+
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + TIMESTAMP + " BETWEEN \'" + startDateString + "\' AND \'" + endDateString + "\'" ;
+
+        SQLiteDatabase database = databaseManager.getReadableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+
+        boolean success = true;
+        try {
+            database.beginTransaction();
+            database.setTransactionSuccessful();
+            Log.d("deleteAllRowsBetween", "Deleted rows from table named " + TABLE_NAME + ".");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Log.d("deleteAllRowsBetween", "Failed to delete rows from table named " + TABLE_NAME + ".");
+            success = false;
+        }
+        finally {
+            cursor.close();
+            database.endTransaction();
+        }
+
+        return success;
+    }
+
     private List<PeriodicMeasurement> parseRowObjects(Cursor cursor) throws ParseException {
 
         List<PeriodicMeasurement> rows = new ArrayList<>();
